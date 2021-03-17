@@ -1,4 +1,5 @@
 import { apiClientFactory } from '@vue-storefront/core';
+import { makeClient } from '@spree/storefront-api-v2-sdk'
 import getProduct from './api/getProduct';
 import getCategory from './api/getCategory';
 
@@ -9,11 +10,11 @@ const onSetup = (settings) => ({
     ...defaultSettings,
     ...settings
   },
-  client: {}
+  client: makeClient({ host: 'https://demo.spreecommerce.org' })
 });
 
 const { createApiClient } = apiClientFactory<any, any>({
-  tag: 'boilerplate',
+  tag: 'spree',
   onSetup,
   api: {
     getProduct,
