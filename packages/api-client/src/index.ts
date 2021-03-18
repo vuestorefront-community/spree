@@ -2,6 +2,9 @@ import { apiClientFactory } from '@vue-storefront/core';
 import { makeClient } from '@spree/storefront-api-v2-sdk'
 import getProduct from './api/getProduct';
 import getCategory from './api/getCategory';
+import logIn from './api/logIn';
+import logOut from './api/logOut';
+import isGuest from './api/isGuest';
 
 const defaultSettings = {};
 
@@ -18,7 +21,10 @@ const { createApiClient } = apiClientFactory<any, any>({
   onSetup,
   api: {
     getProduct,
-    getCategory
+    getCategory,
+    logIn,
+    logOut,
+    isGuest,
   }
 });
 
