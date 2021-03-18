@@ -10,15 +10,16 @@ import { User } from '../types';
 // @todo useUser
 
 const params: UseUserFactoryParams<User, any, any> = {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context) => {
-    console.log('Mocked: loadUser');
-    return {};
+    if (context.$spree.api.isGuest()) {
+      return null;
+    }
+
+    return await context.$spree.api.getCurrentUser();
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logOut: async (context: Context) => {
-    console.log('Mocked: logOut');
+    context.$spree.api.logOut();
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -33,10 +34,9 @@ const params: UseUserFactoryParams<User, any, any> = {
     return {};
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logIn: async (context: Context, { username, password }) => {
-    console.log('Mocked: logIn');
-    return {};
+    const bearerToken = await context.$spree.api.logIn({ username, password });
+    return bearerToken;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
