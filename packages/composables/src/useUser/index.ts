@@ -28,9 +28,9 @@ const params: UseUserFactoryParams<User, any, any> = {
     return {};
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   register: async (context: Context, { email, password, firstName, lastName }) => {
-    console.log('Mocked: register');
+    await context.$spree.api.registerUser({ email, password, firstName, lastName });
+
     return {};
   },
 
@@ -39,9 +39,8 @@ const params: UseUserFactoryParams<User, any, any> = {
     return bearerToken;
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  changePassword: async (context: Context, { currentUser, currentPassword, newPassword }) => {
-    console.log('Mocked: changePassword');
+  changePassword: async (context: Context, { newPassword }) => {
+    await context.$spree.api.changePassword({ newPassword: newPassword })
     return {};
   }
 };
