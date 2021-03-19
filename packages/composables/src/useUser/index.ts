@@ -12,6 +12,7 @@ import { User } from '../types';
 const params: UseUserFactoryParams<User, any, any> = {
   load: async (context: Context) => {
     if (context.$spree.api.isGuest()) {
+      console.log('is guest true');
       return null;
     }
 

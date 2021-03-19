@@ -4,6 +4,7 @@ import getProduct from './api/getProduct';
 import getCategory from './api/getCategory';
 import logIn from './api/logIn';
 import logOut from './api/logOut';
+import getCurrentUser from './api/getCurrentUser';
 import isGuest from './api/isGuest';
 import changePassword from './api/changePassword';
 import registerUser from './api/registerUser';
@@ -24,6 +25,7 @@ const { createApiClient } = apiClientFactory<any, any>({
   api: {
     getProduct,
     getCategory,
+    getCurrentUser,
     logIn,
     logOut,
     isGuest,
