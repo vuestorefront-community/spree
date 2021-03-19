@@ -8,6 +8,8 @@ import getCurrentUser from './api/getCurrentUser';
 import isGuest from './api/isGuest';
 import changePassword from './api/changePassword';
 import registerUser from './api/registerUser';
+import addAddress from './api/addAddress';
+import getAddresses from './api/getAddresses';
 
 const defaultSettings = {};
 
@@ -30,7 +32,9 @@ const { createApiClient } = apiClientFactory<any, any>({
     logOut,
     isGuest,
     changePassword,
-    registerUser
+    registerUser,
+    addAddress,
+    getAddresses
   }
 });
 

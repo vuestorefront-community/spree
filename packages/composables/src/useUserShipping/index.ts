@@ -39,8 +39,6 @@ const shipping = {
   addresses
 };
 
-const findBiggestId = () => addresses.reduce((highest, { id }) => Math.max(highest, id), 0);
-
 const disableOldDefault = () => {
   const oldDefault = addresses.find(address => address.isDefault);
   if (oldDefault) {
@@ -59,21 +57,7 @@ const sortDefaultAtTop = (a, b) => {
 
 const params: UseUserShippingFactoryParams<any, any> = {
   addAddress: async (context: Context, params?) => {
-    console.log('Mocked: addAddress', params.address);
-
-    const newAddress = {
-      ...params.address,
-      id: findBiggestId() + 1
-    };
-
-    if (params.address.isDefault) {
-      disableOldDefault();
-      addresses.unshift(newAddress);
-    } else {
-      addresses.push(newAddress);
-    }
-
-    return Promise.resolve(shipping);
+    await context.$spree.api.addAddress(params.address);
   },
 
   deleteAddress: async (context: Context, params?) => {
@@ -110,10 +94,9 @@ const params: UseUserShippingFactoryParams<any, any> = {
     return Promise.resolve(shipping);
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  load: async (context: Context, params?) => {
-    console.log('Mocked: load');
-    return Promise.resolve(shipping);
+  load: async (context: Context, _params?) => {
+    const addresses = await context.$spree.api.getAddresses();
+    return { addresses }
   },
 
   setDefaultAddress: async (context: Context, params?) => {
