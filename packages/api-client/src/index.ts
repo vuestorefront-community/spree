@@ -4,7 +4,12 @@ import getProduct from './api/getProduct';
 import getCategory from './api/getCategory';
 import logIn from './api/logIn';
 import logOut from './api/logOut';
+import getCurrentUser from './api/getCurrentUser';
 import isGuest from './api/isGuest';
+import changePassword from './api/changePassword';
+import registerUser from './api/registerUser';
+import addAddress from './api/addAddress';
+import getAddresses from './api/getAddresses';
 
 const defaultSettings = {};
 
@@ -22,9 +27,14 @@ const { createApiClient } = apiClientFactory<any, any>({
   api: {
     getProduct,
     getCategory,
+    getCurrentUser,
     logIn,
     logOut,
     isGuest,
+    changePassword,
+    registerUser,
+    addAddress,
+    getAddresses
   }
 });
 
