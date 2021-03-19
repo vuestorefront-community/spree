@@ -28,18 +28,22 @@ const getLimitedVariants = (productsData) =>
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default async function getProduct(context, params, _customQuery?: CustomQuery) {
-  const response = await context.client.products.axios.get('/api/v2/storefront/products', {
-    params: {
-      filter: {
-        ids: params.id,
-        taxons: params.catId
-      },
-      include: 'variants',
-      page: 1,
-      // eslint-disable-next-line camelcase
-      per_page: params.limit || 10
-    }
+  const result = await context.client.products.list({
+    filter: {
+      ids: params.id,
+      taxons: params.catId
+    },
+    include: 'variants',
+    page: 1,
+    // eslint-disable-next-line camelcase
+    per_page: params.limit || 10
   });
-  return params.limit ? getLimitedVariants(response.data) : getVariants(response.data);
+
+  if (result.isSuccess()) {
+    const productsData = result.success();
+    return params.limit ? getLimitedVariants(productsData) : getVariants(productsData);
+  } else {
+    throw result.fail();
+  }
 }
 
