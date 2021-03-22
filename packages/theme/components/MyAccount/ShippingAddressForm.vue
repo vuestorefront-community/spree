@@ -263,10 +263,14 @@ export default {
 
     onSSR(async () => {
       countries.value = await $spree.api.getAvailableCountries();
+      const countryDetails = await $spree.api.getCountryDetails({ iso: form.country });
+      states.value = countryDetails.states || [];
     });
 
     onMounted(async () => {
       countries.value = await $spree.api.getAvailableCountries();
+      const countryDetails = await $spree.api.getCountryDetails({ iso: form.country });
+      states.value = countryDetails.states || [];
     });
 
     watch(() => form.country, async (newValue, oldValue) => {
