@@ -36,8 +36,8 @@ const params: UseUserFactoryParams<User, any, any> = {
   },
 
   logIn: async (context: Context, { username, password }) => {
-    const bearerToken = await context.$spree.api.logIn({ username, password });
-    return bearerToken;
+    await context.$spree.api.logIn({ username, password });
+    return {};
   },
 
   changePassword: async (context: Context, { newPassword }) => {

@@ -44,7 +44,7 @@
       >
         <SfInput
           data-cy="shipping-details-input_streetName"
-          v-model="form.streetName"
+          v-model="form.addressLine1"
           name="streetName"
           label="Street Name"
           required
@@ -54,7 +54,7 @@
       </ValidationProvider>
       <SfInput
         data-cy="shipping-details-input_apartment"
-        v-model="form.apartment"
+        v-model="form.addressLine2"
         name="apartment"
         label="House/Apartment number"
         required
@@ -170,7 +170,8 @@ import {
 } from '@storefront-ui/vue';
 import { required, min, oneOf } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { reactive } from '@vue/composition-api';
+import { reactive, ref, onMounted } from '@vue/composition-api';
+import { useVSFContext, onSSR } from '@vue-storefront/core';
 
 extend('required', {
   ...required,
@@ -206,8 +207,8 @@ export default {
         id: undefined,
         firstName: '',
         lastName: '',
-        streetName: '',
-        apartment: '',
+        addressLine1: '',
+        addressLine2: '',
         city: '',
         state: '',
         postalCode: '',
@@ -223,13 +224,13 @@ export default {
   },
 
   setup(props, { emit }) {
-    // const { $ct: { config } } = useVSFContext();
+    const { $spree } = useVSFContext();
     const form = reactive({
       id: props.address.id,
       firstName: props.address.firstName,
       lastName: props.address.lastName,
-      streetName: props.address.streetName,
-      apartment: props.address.apartment,
+      addressLine1: props.address.addressLine1,
+      addressLine2: props.address.addressLine2,
       city: props.address.city,
       state: props.address.state,
       postalCode: props.address.postalCode,
@@ -237,6 +238,7 @@ export default {
       phone: props.address.phone,
       isDefault: props.address.isDefault
     });
+    const countries = ref([]);
 
     const submitForm = () => {
       emit('submit', {
@@ -247,11 +249,18 @@ export default {
       });
     };
 
+    onSSR(async () => {
+      countries.value = await $spree.api.getAvailableCountries();
+    });
+
+    onMounted(async () => {
+      countries.value = await $spree.api.getAvailableCountries();
+    });
+
     return {
       form,
       submitForm,
-      countries: [],
-      // countries: config.countries
+      countries
     };
   }
 };
