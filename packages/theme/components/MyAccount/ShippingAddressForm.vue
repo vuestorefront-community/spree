@@ -77,19 +77,29 @@
           />
         </ValidationProvider>
         <ValidationProvider
-          rules="required|min:2"
+          :rules="`required|oneOf:${states.map(s => s.code).join(',')}`"
+          v-if="states.length > 0"
           v-slot="{ errors }"
           class="form__element"
         >
-          <SfInput
+          <SfSelect
             data-cy="shipping-details-input_state"
+            class="form__select sf-select--underlined"
             v-model="form.state"
             name="state"
             label="State/Province"
-            required
+            :required="isStateRequired"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
-          />
+          >
+            <SfSelectOption
+              v-for="{ code, name } in states"
+              :key="code"
+              :value="code"
+            >
+              {{ name }}
+            </SfSelectOption>
+          </SfSelect>
         </ValidationProvider>
       </div>
       <div class="form__horizontal">
@@ -109,7 +119,7 @@
           />
         </ValidationProvider>
         <ValidationProvider
-          :rules="`required|oneOf:${countries.map(c => c.name).join(',')}`"
+          :rules="`required|oneOf:${countries.map(c => c.iso).join(',')}`"
           v-slot="{ errors }"
           class="form__element"
         >
@@ -124,11 +134,11 @@
             :errorMessage="errors[0]"
           >
             <SfSelectOption
-              v-for="{ name, label } in countries"
-              :key="name"
-              :value="name"
+              v-for="{ iso, name } in countries"
+              :key="iso"
+              :value="iso"
             >
-              {{ label }}
+              {{ name }}
             </SfSelectOption>
           </SfSelect>
         </ValidationProvider>
@@ -170,7 +180,7 @@ import {
 } from '@storefront-ui/vue';
 import { required, min, oneOf } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { reactive, ref, onMounted } from '@vue/composition-api';
+import { reactive, ref, watch, computed, onMounted } from '@vue/composition-api';
 import { useVSFContext, onSSR } from '@vue-storefront/core';
 
 extend('required', {
@@ -239,6 +249,8 @@ export default {
       isDefault: props.address.isDefault
     });
     const countries = ref([]);
+    const states = ref([]);
+    const isStateRequired = computed(() => form.country && countries.value.find(e => e.iso === form.country).isStateRequired)
 
     const submitForm = () => {
       emit('submit', {
@@ -257,10 +269,21 @@ export default {
       countries.value = await $spree.api.getAvailableCountries();
     });
 
+    watch(() => form.country, async (newValue, oldValue) => {
+      if (newValue !== oldValue) {
+        form.state = null;
+
+        const countryDetails = await $spree.api.getCountryDetails({ iso: newValue });
+        states.value = countryDetails.states || [];
+      }
+    });
+
     return {
       form,
       submitForm,
-      countries
+      countries,
+      states,
+      isStateRequired
     };
   }
 };

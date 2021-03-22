@@ -11,6 +11,7 @@ import registerUser from './api/registerUser';
 import addAddress from './api/addAddress';
 import getAddresses from './api/getAddresses';
 import getAvailableCountries from './api/getAvailableCountries';
+import getCountryDetails from './api/getCountryDetails';
 
 const defaultSettings = {};
 
@@ -37,6 +38,7 @@ const { createApiClient } = apiClientFactory<any, any>({
     addAddress,
     getAddresses,
     getAvailableCountries,
+    getCountryDetails
   }
 });
 
