@@ -58,6 +58,8 @@ const sortDefaultAtTop = (a, b) => {
 const params: UseUserShippingFactoryParams<any, any> = {
   addAddress: async (context: Context, params?) => {
     await context.$spree.api.addAddress(params.address);
+    const addresses = await context.$spree.api.getAddresses();
+    return { addresses };
   },
 
   deleteAddress: async (context: Context, params?) => {
@@ -73,25 +75,9 @@ const params: UseUserShippingFactoryParams<any, any> = {
   },
 
   updateAddress: async (context: Context, params?) => {
-    console.log('Mocked: updateAddress', params);
-
-    const indexToUpdate = addresses.findIndex(address => address.id === params.address.id);
-    if (indexToUpdate < 0) {
-      return Promise.reject('This address does not exist');
-    }
-
-    const isNewDefault = params.address.isDefault && addresses[0].id !== params.address.id;
-
-    if (isNewDefault) {
-      disableOldDefault();
-    }
-
-    addresses[indexToUpdate] = params.address;
-
-    if (isNewDefault) {
-      addresses.sort(sortDefaultAtTop);
-    }
-    return Promise.resolve(shipping);
+    await context.$spree.api.updateAddress(params.address);
+    const addresses = await context.$spree.api.getAddresses();
+    return { addresses };
   },
 
   load: async (context: Context, _params?) => {

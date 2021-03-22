@@ -77,7 +77,7 @@
           />
         </ValidationProvider>
         <ValidationProvider
-          :rules="`required|oneOf:${states.map(s => s.code).join(',')}`"
+          :rules="`required|oneOf:${states.map(s => s.name).join(',')}`"
           v-if="states.length > 0"
           v-slot="{ errors }"
           class="form__element"
@@ -95,7 +95,7 @@
             <SfSelectOption
               v-for="{ code, name } in states"
               :key="code"
-              :value="code"
+              :value="name"
             >
               {{ name }}
             </SfSelectOption>
@@ -263,14 +263,20 @@ export default {
 
     onSSR(async () => {
       countries.value = await $spree.api.getAvailableCountries();
-      const countryDetails = await $spree.api.getCountryDetails({ iso: form.country });
-      states.value = countryDetails.states || [];
+
+      if (form.country) {
+        const countryDetails = await $spree.api.getCountryDetails({ iso: form.country });
+        states.value = countryDetails.states || [];
+      }
     });
 
     onMounted(async () => {
       countries.value = await $spree.api.getAvailableCountries();
-      const countryDetails = await $spree.api.getCountryDetails({ iso: form.country });
-      states.value = countryDetails.states || [];
+
+      if (form.country) {
+        const countryDetails = await $spree.api.getCountryDetails({ iso: form.country });
+        states.value = countryDetails.states || [];
+      }
     });
 
     watch(() => form.country, async (newValue, oldValue) => {
