@@ -1,6 +1,6 @@
-import { integrationPlugin } from '@upsidelab/vue-storefront-spree';
+import { integrationPlugin } from '@vue-storefront/core';
 
-const moduleOptions = JSON.parse('<%= JSON.stringify(options) %>');
+const moduleOptions = <%= serialize(options) %>;
 
 const spreeAuthCookie = 'spree-bearer-token'
 
@@ -17,7 +17,7 @@ export default integrationPlugin(({ app, integration }) => {
     return app.$cookies.get(spreeAuthCookie)
   };
 
-  integration.configure({
+  integration.configure('spree', {
     ...moduleOptions,
     auth: {
       changeToken,

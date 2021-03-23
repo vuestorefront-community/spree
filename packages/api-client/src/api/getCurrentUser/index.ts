@@ -1,12 +1,10 @@
-import { CustomQuery } from '@vue-storefront/core';
-
-export default async function getCurrentUser(context, _params, _customQuery?: CustomQuery) {
-  const bearerToken = context.auth.getToken();
+export default async function getCurrentUser(context) {
+  const bearerToken = context.config.auth.getToken();
 
   const response = await context.client.account.accountInfo({ bearerToken });
   if (response.isSuccess()) {
-    return response.success()
+    return response.success();
   } else {
-    throw response.fail()
+    throw response.fail();
   }
 }
