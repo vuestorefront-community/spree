@@ -1,4 +1,4 @@
-import { apiClientFactory } from '@vue-storefront/core';
+import { apiClientFactory, ApiClientExtension } from '@vue-storefront/core';
 import { makeClient } from '@spree/storefront-api-v2-sdk';
 import getProduct from './api/getProduct';
 import getCategory from './api/getCategory';
@@ -24,6 +24,33 @@ const onCreate = (settings) => ({
   client: makeClient({ host: 'https://demo.spreecommerce.org' })
 });
 
+const tokenExtension: ApiClientExtension = {
+  name: 'tokenExtension',
+  hooks: (req, res) => {
+    const currentToken = req.cookies['spree-bearer-token'];
+
+    return {
+      beforeCreate: ({ configuration }) => ({
+        ...configuration,
+        auth: {
+          changeToken: (newToken) => {
+            if (!currentToken || currentToken !== newToken.access_token) {
+              res.cookie('spree-bearer-token', newToken);
+            }
+          },
+          getToken: () => {
+            res.cookie('spree-bearer-token', currentToken);
+            return currentToken;
+          },
+          removeToken: () => {
+            delete req.cookies['spree-bearer-token'];
+          }
+        }
+      })
+    };
+  }
+};
+
 const { createApiClient } = apiClientFactory<any, any>({
   onCreate,
   api: {
@@ -40,7 +67,8 @@ const { createApiClient } = apiClientFactory<any, any>({
     getAvailableCountries,
     getCountryDetails,
     updateAddress
-  }
+  },
+  extensions: [tokenExtension]
 });
 
 export {

@@ -1,8 +1,7 @@
-import { CustomQuery } from "@vue-storefront/core";
 import { serializeAddress } from '../serializers/address';
 
-export default async function updateAddress(context, params, _customQuery: CustomQuery) {
-  const bearerToken = context.auth.getToken();
+export default async function updateAddress(context, params) {
+  const bearerToken = context.config.auth.getToken();
   const serializedAddress = serializeAddress(params);
   const result = await context.client.account.updateAddress({ bearerToken }, params.id, { address: serializedAddress });
 

@@ -1,8 +1,7 @@
-import { CustomQuery } from "@vue-storefront/core";
 import { deserializeAddress } from '../serializers/address';
 
-export default async function getAddresses(context, _params, _customQuery?: CustomQuery) {
-  const bearerToken = context.auth.getToken();
+export default async function getAddresses(context) {
+  const bearerToken = context.config.auth.getToken();
   const result = await context.client.account.addressesList({ bearerToken });
 
   if (result.isSuccess()) {
