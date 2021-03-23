@@ -1,15 +1,15 @@
 <template>
   <div>
-    <p><strong>{{ address.firstname }} {{ address.lastname }}</strong></p>
+    <p><strong>{{ address.firstName }} {{ address.lastName }}</strong></p>
     <p v-if="address.company">{{ address.company }}</p>
     <p>
-      {{ address.address1 }}
+      {{ address.addressLine1 }}
       <br />
-      {{ address.address2 }}
+      {{ address.addressLine2 }}
       <br />
       {{ city }}
       <br>
-      {{ address.country_name }}
+      {{ address.countryName }}
     </p>
     <p>{{ address.phone }}</p>
   </div>
@@ -29,10 +29,10 @@ export default {
   computed: {
     city() {
       if (this.address.state) {
-        return `${this.address.zipcode} ${this.address.city}, ${this.address.state}`
+        return `${this.address.postalCode} ${this.address.city}, ${this.address.state}`
       }
 
-      return `${this.address.zipcode} ${this.address.city}`
+      return `${this.address.postalCode} ${this.address.city}`
     }
   }
 };

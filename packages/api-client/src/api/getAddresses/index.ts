@@ -1,4 +1,5 @@
 import { CustomQuery } from "@vue-storefront/core";
+import { deserializeAddress } from '../serializers/address';
 
 export default async function getAddresses(context, _params, _customQuery?: CustomQuery) {
   const bearerToken = context.auth.getToken();
@@ -6,7 +7,7 @@ export default async function getAddresses(context, _params, _customQuery?: Cust
 
   if (result.isSuccess()) {
     const data = result.success().data;
-    const addresses = data.map(e => ({ id: e.id, ...e.attributes }));
+    const addresses = data.map(deserializeAddress);
 
     return addresses;
   } else {

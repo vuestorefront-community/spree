@@ -44,7 +44,7 @@
       >
         <SfInput
           data-cy="shipping-details-input_streetName"
-          v-model="form.streetName"
+          v-model="form.addressLine1"
           name="streetName"
           label="Street Name"
           required
@@ -54,7 +54,7 @@
       </ValidationProvider>
       <SfInput
         data-cy="shipping-details-input_apartment"
-        v-model="form.apartment"
+        v-model="form.addressLine2"
         name="apartment"
         label="House/Apartment number"
         required
@@ -77,19 +77,29 @@
           />
         </ValidationProvider>
         <ValidationProvider
-          rules="required|min:2"
+          :rules="`required|oneOf:${states.map(s => s.name).join(',')}`"
+          v-if="states.length > 0"
           v-slot="{ errors }"
           class="form__element"
         >
-          <SfInput
+          <SfSelect
             data-cy="shipping-details-input_state"
+            class="form__select sf-select--underlined"
             v-model="form.state"
             name="state"
             label="State/Province"
-            required
+            :required="isStateRequired"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
-          />
+          >
+            <SfSelectOption
+              v-for="{ code, name } in states"
+              :key="code"
+              :value="name"
+            >
+              {{ name }}
+            </SfSelectOption>
+          </SfSelect>
         </ValidationProvider>
       </div>
       <div class="form__horizontal">
@@ -109,7 +119,7 @@
           />
         </ValidationProvider>
         <ValidationProvider
-          :rules="`required|oneOf:${countries.map(c => c.name).join(',')}`"
+          :rules="`required|oneOf:${countries.map(c => c.iso).join(',')}`"
           v-slot="{ errors }"
           class="form__element"
         >
@@ -124,11 +134,11 @@
             :errorMessage="errors[0]"
           >
             <SfSelectOption
-              v-for="{ name, label } in countries"
-              :key="name"
-              :value="name"
+              v-for="{ iso, name } in countries"
+              :key="iso"
+              :value="iso"
             >
-              {{ label }}
+              {{ name }}
             </SfSelectOption>
           </SfSelect>
         </ValidationProvider>
@@ -170,7 +180,8 @@ import {
 } from '@storefront-ui/vue';
 import { required, min, oneOf } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { reactive } from '@vue/composition-api';
+import { reactive, ref, watch, computed, onMounted } from '@vue/composition-api';
+import { useVSFContext, onSSR } from '@vue-storefront/core';
 
 extend('required', {
   ...required,
@@ -206,8 +217,8 @@ export default {
         id: undefined,
         firstName: '',
         lastName: '',
-        streetName: '',
-        apartment: '',
+        addressLine1: '',
+        addressLine2: '',
         city: '',
         state: '',
         postalCode: '',
@@ -223,13 +234,13 @@ export default {
   },
 
   setup(props, { emit }) {
-    // const { $ct: { config } } = useVSFContext();
+    const { $spree } = useVSFContext();
     const form = reactive({
       id: props.address.id,
       firstName: props.address.firstName,
       lastName: props.address.lastName,
-      streetName: props.address.streetName,
-      apartment: props.address.apartment,
+      addressLine1: props.address.addressLine1,
+      addressLine2: props.address.addressLine2,
       city: props.address.city,
       state: props.address.state,
       postalCode: props.address.postalCode,
@@ -237,6 +248,9 @@ export default {
       phone: props.address.phone,
       isDefault: props.address.isDefault
     });
+    const countries = ref([]);
+    const states = ref([]);
+    const isStateRequired = computed(() => form.country && countries.value.find(e => e.iso === form.country).isStateRequired)
 
     const submitForm = () => {
       emit('submit', {
@@ -247,11 +261,39 @@ export default {
       });
     };
 
+    onSSR(async () => {
+      countries.value = await $spree.api.getAvailableCountries();
+
+      if (form.country) {
+        const countryDetails = await $spree.api.getCountryDetails({ iso: form.country });
+        states.value = countryDetails.states || [];
+      }
+    });
+
+    onMounted(async () => {
+      countries.value = await $spree.api.getAvailableCountries();
+
+      if (form.country) {
+        const countryDetails = await $spree.api.getCountryDetails({ iso: form.country });
+        states.value = countryDetails.states || [];
+      }
+    });
+
+    watch(() => form.country, async (newValue, oldValue) => {
+      if (newValue !== oldValue) {
+        form.state = null;
+
+        const countryDetails = await $spree.api.getCountryDetails({ iso: newValue });
+        states.value = countryDetails.states || [];
+      }
+    });
+
     return {
       form,
       submitForm,
-      countries: [],
-      // countries: config.countries
+      countries,
+      states,
+      isStateRequired
     };
   }
 };
