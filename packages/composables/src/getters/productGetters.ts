@@ -6,6 +6,8 @@ import {
 } from '@vue-storefront/core';
 import { ProductVariant } from '@upsidelab/vue-storefront-spree-api/src/types';
 
+import _ from 'lodash';
+
 type ProductVariantFilters = any
 
 // TODO: Add interfaces for some of the methods in core
@@ -87,7 +89,35 @@ export const getProductFiltered = (products: ProductVariant[], filters: ProductV
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getProductAttributes = (products: ProductVariant[] | ProductVariant, filterByAttributeName?: string[]): Record<string, AgnosticAttribute | string> => {
-  return {};
+  const isSingleProduct = !Array.isArray(products);
+  const productList = (isSingleProduct ? [products] : products) as ProductVariant[];
+  if (!products || productList.length === 0) {
+    return {};
+  }
+
+  const optionTypes = _.uniqBy(productList.flatMap((product) => product.optionTypes), (ot) => ot.id);
+  const optionValues = _.uniqBy(productList.flatMap((product) => product.optionValues), (ov) => ov.id);
+
+  const findOptionTypeName = (optionValue) => {
+    const optionType = optionTypes.find((optionType) => optionType.id === optionValue.relationships.option_type.data.id);
+
+    return optionType ? optionType.attributes.name : undefined;
+  };
+
+  const options = optionValues.map((currOptionValue) => {
+    const currOptionTypeName = findOptionTypeName(currOptionValue);
+
+    return {
+      name: currOptionTypeName,
+      value: currOptionValue.attributes.presentation,
+      label: currOptionValue.attributes.presentation
+    };
+  }).filter((option) => filterByAttributeName ? filterByAttributeName.includes(option.name) : true);
+
+  return options.reduce((acc, currAttr) => ({
+    ...acc,
+    [currAttr.name]: isSingleProduct ? currAttr.value : (acc[currAttr.name] || []).concat([currAttr])
+  }), {});
 };
 
 export const getProductDescription = (product: ProductVariant): any => (product as any)?._description || '';
