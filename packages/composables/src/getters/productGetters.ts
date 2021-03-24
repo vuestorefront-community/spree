@@ -44,50 +44,27 @@ export const getProductGallery = (product: ProductVariant): AgnosticMediaGallery
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getProductCoverImage = (product: ProductVariant): string => 'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getProductFiltered = (products: ProductVariant[], filters: ProductVariantFilters | any = {}): ProductVariant[] => {
-  // return [
-  //   {
-  //     _id: 1,
-  //     _description: 'Some description',
-  //     _categoriesRef: [
-  //       '1',
-  //       '2'
-  //     ],
-  //     name: 'Black jacket',
-  //     sku: 'black-jacket',
-  //     images: [
-  //       'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg'
-  //     ],
-  //     price: {
-  //       original: 12.34,
-  //       current: 10.00
-  //     }
-  //   },
-  //   {
-  //     _id: 2,
-  //     _description: 'Some different description',
-  //     _categoriesRef: [
-  //       '1',
-  //       '2',
-  //       '3'
-  //     ],
-  //     name: 'White shirt',
-  //     sku: 'white-shirt',
-  //     images: [
-  //       'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg'
-  //     ],
-  //     price: {
-  //       original: 15.11,
-  //       current: 11.00
-  //     }
-  //   }
-  // ];
-  // PoC: Filtering disabled
-  return products;
+  if (!products) return [];
+
+  const filterAttributes = filters.attributes;
+
+  const filterByAttributes = (product: ProductVariant) => {
+    if (filterAttributes) {
+      return Object.entries(filterAttributes).every(([attrName, attrVal]) => {
+        const optionType = product.optionTypes.find((ot) => ot.attributes.name === attrName);
+        if (!optionType) return false;
+
+        return product.optionValues.some((ov) => ov.relationships.option_type.data.id === optionType.id && ov.attributes.presentation === attrVal);
+      });
+    }
+
+    return true;
+  };
+
+  return products.filter(filterByAttributes);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getProductAttributes = (products: ProductVariant[] | ProductVariant, filterByAttributeName?: string[]): Record<string, AgnosticAttribute | string> => {
   const isSingleProduct = !Array.isArray(products);
   const productList = (isSingleProduct ? [products] : products) as ProductVariant[];
