@@ -205,8 +205,9 @@ export default {
     const { reviews: productReviews, search: searchReviews } = useReview('productReviews');
 
     const product = computed(() => productGetters.getFiltered(products.value, { master: true, attributes: context.root.$route.query })[0]);
-    const options = computed(() => productGetters.getAttributes(products.value, ['color', 'size']));
-    const configuration = computed(() => productGetters.getAttributes(product.value, ['color', 'size']));
+    const optionTypes = computed(() => productGetters.getOptionTypeNames(product.value));
+    const options = computed(() => productGetters.getAttributes(products.value, optionTypes.value));
+    const configuration = computed(() => productGetters.getAttributes(product.value, optionTypes.value));
     const categories = computed(() => productGetters.getCategoryIds(product.value));
     const reviews = computed(() => reviewGetters.getItems(productReviews.value));
 
@@ -250,7 +251,8 @@ export default {
       addItem,
       loading,
       productGetters,
-      productGallery
+      productGallery,
+      optionTypes
     };
   },
   components: {

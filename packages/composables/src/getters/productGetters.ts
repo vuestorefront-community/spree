@@ -97,6 +97,10 @@ export const getProductAttributes = (products: ProductVariant[] | ProductVariant
   }), {});
 };
 
+export const getProductOptionTypeNames = (product: ProductVariant): string[] => {
+  return product.optionTypes.map((optionType) => optionType.attributes.name);
+};
+
 export const getProductDescription = (product: ProductVariant): any => (product as any)?._description || '';
 
 export const getProductCategoryIds = (product: ProductVariant): string[] => (product as any)?._categoriesRef || '';
@@ -124,7 +128,8 @@ const productGetters: ProductGetters<ProductVariant, ProductVariantFilters> = {
   getId: getProductId,
   getFormattedPrice: getFormattedPrice,
   getTotalReviews: getProductTotalReviews,
-  getAverageRating: getProductAverageRating
+  getAverageRating: getProductAverageRating,
+  getOptionTypeNames: getProductOptionTypeNames
 };
 
 export default productGetters;
