@@ -15,6 +15,9 @@ import getCountryDetails from './api/getCountryDetails';
 import updateAddress from './api/updateAddress';
 import getCart from './api/getCart';
 import addToCart from './api/addToCart';
+import updateItemQuantity from './api/updateItemQuantity';
+import removeFromCart from './api/removeFromCart';
+import clearCart from './api/clearCart';
 
 const defaultSettings = {};
 
@@ -70,7 +73,10 @@ const { createApiClient } = apiClientFactory<any, any>({
     getCountryDetails,
     updateAddress,
     getCart,
-    addToCart
+    addToCart,
+    updateItemQuantity,
+    removeFromCart,
+    clearCart
   },
   extensions: [tokenExtension]
 });

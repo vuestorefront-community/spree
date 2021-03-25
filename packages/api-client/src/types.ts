@@ -35,7 +35,26 @@ export type OptionType = {
   }
 }
 
-export type Cart = Record<string, unknown>;
+export type LineItem = {
+  _id: number;
+  _variantId: number;
+  _description: string;
+  _categoriesRef: string[];
+  name: string;
+  sku: string;
+  images: string[];
+  price: {
+    original: number;
+    current: number;
+  };
+  qty: number;
+}
+
+export type Cart = {
+  _id: number;
+  lineItems: LineItem[];
+};
+
 export type Wishlist = Record<string, unknown>;
 export type ProductVariant = {
   _id: number;
@@ -59,7 +78,6 @@ export type Category = {
 };
 export type CategoryFilter = Record<string, unknown>;
 export type ShippingMethod = Record<string, unknown>;
-export type LineItem = Record<string, unknown>;
 
 export type ApiContext = {
   client: Client;

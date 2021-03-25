@@ -10,9 +10,9 @@ export type User = {
   email?: string;
 };
 
-export type UserAddress = Record<string, unknown>;
+export { Cart } from '@upsidelab/vue-storefront-spree-api';
 
-export type Cart = Record<string, unknown>;
+export type UserAddress = Record<string, unknown>;
 
 export type CartItem = Record<string, unknown>;
 

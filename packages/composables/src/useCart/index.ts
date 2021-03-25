@@ -13,47 +13,46 @@ const params: UseCartFactoryParams<Cart, CartItem, Product, Coupon> = {
     return cart;
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addItem: async (context: Context, { product, quantity }) => {
     await context.$spree.api.addToCart({ variantId: product._variantId, quantity });
     const cart = await context.$spree.api.getCart();
     return cart;
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  removeItem: async (context: Context, { currentCart, product, customQuery }) => {
-    console.log('Mocked: removeFromCart');
-    return {};
+  removeItem: async (context: Context, { product }) => {
+    await context.$spree.api.removeFromCart({ lineItemId: product._id });
+    const cart = await context.$spree.api.getCart();
+    return cart;
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  updateItemQty: async (context: Context, { currentCart, product, quantity, customQuery }) => {
-    console.log('Mocked: updateQuantity');
-    return {};
+  updateItemQty: async (context: Context, { product, quantity }) => {
+    await context.$spree.api.updateItemQuantity({ lineItemId: product._id, quantity });
+    const cart = await context.$spree.api.getCart();
+    return cart;
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  clear: async (context: Context, { currentCart }) => {
-    console.log('Mocked: clearCart');
-    return {};
+  clear: async (context: Context) => {
+    await context.$spree.api.clearCart();
+    const cart = await context.$spree.api.getCart();
+    return cart;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   applyCoupon: async (context: Context, { currentCart, couponCode, customQuery }) => {
     console.log('Mocked: applyCoupon');
-    return {updatedCart: {}, updatedCoupon: {}};
+    const cart = await context.$spree.api.getCart();
+    return cart;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeCoupon: async (context: Context, { currentCart, coupon, customQuery }) => {
     console.log('Mocked: removeCoupon');
-    return {updatedCart: {}};
+    const cart = await context.$spree.api.getCart();
+    return cart;
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isInCart: (context: Context, { currentCart, product }) => {
-    console.log('Mocked: isInCart');
-    return false;
+    return currentCart.lineItems.find(e => e._variantId === product._variantId) !== undefined;
   }
 };
 
