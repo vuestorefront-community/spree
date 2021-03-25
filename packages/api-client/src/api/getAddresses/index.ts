@@ -1,7 +1,7 @@
 import { deserializeAddress } from '../serializers/address';
 
 export default async function getAddresses(context) {
-  const bearerToken = context.config.auth.getToken();
+  const bearerToken = await context.config.auth.getToken();
   const result = await context.client.account.addressesList({ bearerToken });
 
   if (result.isSuccess()) {

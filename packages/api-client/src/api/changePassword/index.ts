@@ -2,7 +2,7 @@
 
 export default async function changePassword(context, params) {
   const { newPassword } = params;
-  const { bearerToken } = context.config.auth.getToken();
+  const { bearerToken } = await context.config.auth.getToken();
 
   const passwordData = {
     password: newPassword,

@@ -5,7 +5,7 @@ export default async function logIn(context, params) {
 
   if (response.isSuccess()) {
     const bearerToken = response.success().access_token;
-    context.config.auth.changeToken(bearerToken);
+    await context.config.auth.changeToken(bearerToken);
   } else {
     throw response.fail();
   }

@@ -1,5 +1,5 @@
 export default async function getCurrentUser(context) {
-  const bearerToken = context.config.auth.getToken();
+  const bearerToken = await context.config.auth.getToken();
 
   const response = await context.client.account.accountInfo({ bearerToken });
   if (response.isSuccess()) {

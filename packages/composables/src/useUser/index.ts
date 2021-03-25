@@ -11,8 +11,7 @@ import { User } from '../types';
 
 const params: UseUserFactoryParams<User, any, any> = {
   load: async (context: Context) => {
-    if (context.$spree.api.isGuest()) {
-      console.log('is guest true');
+    if (await context.$spree.api.isGuest()) {
       return null;
     }
 
@@ -41,7 +40,7 @@ const params: UseUserFactoryParams<User, any, any> = {
   },
 
   changePassword: async (context: Context, { newPassword }) => {
-    await context.$spree.api.changePassword({ newPassword: newPassword })
+    await context.$spree.api.changePassword({ newPassword: newPassword });
     return {};
   }
 };
