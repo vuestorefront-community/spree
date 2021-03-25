@@ -1,5 +1,40 @@
 import { Client } from '@spree/storefront-api-v2-sdk';
 
+export type OptionValue = {
+  id: number;
+  type: string;
+  attributes?: {
+    name: string;
+    position: number;
+    presentation: string;
+  };
+  relationships?: {
+    // eslint-disable-next-line camelcase
+    option_type: {
+      data: {
+        id: number;
+        type: string;
+      }
+    }
+  }
+}
+
+export type OptionType = {
+  id: number;
+  type: string;
+  attributes?: {
+    name: string;
+    position: number;
+    presentation: string;
+  };
+  relationships?: {
+    // eslint-disable-next-line camelcase
+    option_values: {
+      data: OptionValue[];
+    }
+  }
+}
+
 export type Cart = Record<string, unknown>;
 export type Wishlist = Record<string, unknown>;
 export type ProductVariant = {
@@ -13,6 +48,8 @@ export type ProductVariant = {
     original: number;
     current: number;
   };
+  optionTypes: OptionType[];
+  optionValues: OptionValue[];
 };
 export type Category = {
   id: number;

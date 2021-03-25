@@ -1,10 +1,22 @@
 import { CustomQuery } from '@vue-storefront/core';
 
-const formatProductVariant = (product, variant) => ({
+const findProductOptionTypes = (product, attachments) => {
+  const productOptionTypesIds = product.relationships.option_types.data.map((e) => e.id);
+  return attachments.filter((e) => e.type === 'option_type' && productOptionTypesIds.includes(e.id));
+};
+
+const findVariantOptionValues = (variant, attachments) => {
+  const variantOptionValuesIds = variant.relationships.option_values.data.map((e) => e.id);
+  return attachments.filter((e) => e.type === 'option_value' && variantOptionValuesIds.includes(e.id));
+};
+
+const formatProductVariant = (product, variant, attachments) => ({
   _id: product.id,
   _variantId: variant.id,
   _description: variant.attributes.description || product.attributes.description,
   _categoriesRef: product.relationships.taxons.data.map((t) => t.id),
+  optionTypes: findProductOptionTypes(product, attachments),
+  optionValues: findVariantOptionValues(variant, attachments),
   ...product.attributes,
   ...variant.attributes
 });
@@ -14,16 +26,18 @@ const findProductVariants = (product, attachments) =>
 
 const getVariants = (productsData) =>
   productsData.data.flatMap((product) => {
-    const variants = findProductVariants(product, productsData.included);
-    return variants.map((variant) => formatProductVariant(product, variant));
+    const attachments = productsData.included;
+    const variants = findProductVariants(product, attachments);
+    return variants.map((variant) => formatProductVariant(product, variant, attachments));
   });
 
 const getLimitedVariants = (productsData) =>
   productsData.data.map((product) => {
-    const variants = findProductVariants(product, productsData.included);
+    const attachments = productsData.included;
+    const variants = findProductVariants(product, attachments);
     const defaultVariant = variants.find((e) => e.attributes.is_master) || variants[0];
 
-    return formatProductVariant(product, defaultVariant);
+    return formatProductVariant(product, defaultVariant, attachments);
   });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -33,7 +47,7 @@ export default async function getProduct(context, params, _customQuery?: CustomQ
       ids: params.id,
       taxons: params.catId
     },
-    include: 'variants',
+    include: 'variants.option_values,option_types',
     page: 1,
     // eslint-disable-next-line camelcase
     per_page: params.limit || 10
