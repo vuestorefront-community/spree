@@ -1,3 +1,4 @@
+import { SpreeError } from '@spree/storefront-api-v2-sdk/types/errors';
 import { ApiContext } from '../../types';
 
 export default async function getCart({ client, config }: ApiContext) {
@@ -7,7 +8,7 @@ export default async function getCart({ client, config }: ApiContext) {
   if (result.isSuccess()) {
     return result.success().data;
   } else {
-    const error = result.fail();
+    const error = result.fail() as SpreeError;
     const serverResponse = error.serverResponse;
     if (serverResponse && serverResponse.status === 404) {
       const createCartResult = await client.cart.create({ bearerToken });
