@@ -1,7 +1,8 @@
 /* eslint-disable camelcase */
 
 import { OrderAttr } from '@spree/storefront-api-v2-sdk/types/interfaces/Order';
-import { Cart, LineItem } from '../../types';
+import { CouponCode as CouponCodeAttr } from '@spree/storefront-api-v2-sdk/types/interfaces/endpoints/CartClass';
+import { Cart, CouponCode, LineItem } from '../../types';
 
 export const deserializeLineItem = (lineItem: any): LineItem => {
   return {
@@ -27,4 +28,8 @@ const filterIncludedLineItems = (included: any[]) => {
 export const deserializeCart = (apiCart: OrderAttr, included: any[]): Cart => ({
   _id: parseInt(apiCart.id, 10),
   lineItems: filterIncludedLineItems(included).map(deserializeLineItem)
+});
+
+export const serializeCouponCode = ({ couponCode }: CouponCode): CouponCodeAttr => ({
+  coupon_code: couponCode
 });

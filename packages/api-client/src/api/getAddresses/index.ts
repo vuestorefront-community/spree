@@ -1,7 +1,7 @@
-import { ApiContext } from '../../types';
+import { Address, ApiContext } from '../../types';
 import { deserializeAddress } from '../serializers/address';
 
-export default async function getAddresses({ client, config }: ApiContext) {
+export default async function getAddresses({ client, config }: ApiContext): Promise<Address[]> {
   const bearerToken = await config.auth.getToken();
   const result = await client.account.addressesList({ bearerToken });
 

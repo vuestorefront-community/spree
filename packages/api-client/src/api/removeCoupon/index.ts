@@ -1,6 +1,6 @@
-import { ApiContext } from '../../types';
+import { ApiContext, CouponCode } from '../../types';
 
-export default async function removeCoupon({ client, config }: ApiContext, { couponCode }): Promise<void> {
+export default async function removeCoupon({ client, config }: ApiContext, { couponCode }: CouponCode): Promise<void> {
   const bearerToken = await config.auth.getToken();
   const result = await client.cart.removeCouponCode({ bearerToken }, couponCode);
 

@@ -1,6 +1,10 @@
 /* eslint-disable camelcase */
 
-export const deserializeAddress = (apiAddress) => ({
+import { AccountAddressAttr } from '@spree/storefront-api-v2-sdk/types/interfaces/Account';
+import { IAddress } from '@spree/storefront-api-v2-sdk/types/interfaces/attributes/Address';
+import { Address } from '../../types';
+
+export const deserializeAddress = (apiAddress: AccountAddressAttr): Address => ({
   id: apiAddress.id,
   firstName: apiAddress.attributes.firstname,
   lastName: apiAddress.attributes.lastname,
@@ -14,7 +18,7 @@ export const deserializeAddress = (apiAddress) => ({
   phone: apiAddress.attributes.phone
 });
 
-export const serializeAddress = (address) => ({
+export const serializeAddress = (address: Address): IAddress => ({
   firstname: address.firstName,
   lastname: address.lastName,
   company: address.company,
