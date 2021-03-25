@@ -1,3 +1,10 @@
+/* eslint-disable camelcase */
+
+export const deserializeState = (apiState) => ({
+  code: apiState.attributes.abbr,
+  name: apiState.attributes.name
+});
+
 export const deserializeCountry = (apiCountry, includedStates) => ({
   iso: apiCountry.attributes.iso,
   name: apiCountry.attributes.name,
@@ -5,9 +12,4 @@ export const deserializeCountry = (apiCountry, includedStates) => ({
   postalCodeRequired: apiCountry.attributes.zipcode_required,
   isDefault: apiCountry.attributes.default,
   states: includedStates.map(deserializeState)
-});
-
-export const deserializeState = (apiState) => ({
-  code: apiState.attributes.abbr,
-  name: apiState.attributes.name
 });

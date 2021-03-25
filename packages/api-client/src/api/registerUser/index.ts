@@ -1,14 +1,13 @@
-import { CustomQuery } from "@vue-storefront/core";
+import { ApiContext } from '../../types';
 
-export default async function registerUser(context, params, _customQuery?: CustomQuery) {
-  const { email, password } = params;
+export default async function registerUser({ client }: ApiContext, { email, password }) {
   const userData = {
     email,
     password,
     passwordConfirmation: password
   };
 
-  await context.client.account.create({
+  await client.account.create({
     user: userData
   });
 }

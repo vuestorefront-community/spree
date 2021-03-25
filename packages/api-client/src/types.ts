@@ -1,3 +1,5 @@
+import { Client } from '@spree/storefront-api-v2-sdk';
+
 export type Cart = Record<string, unknown>;
 export type Wishlist = Record<string, unknown>;
 export type ProductVariant = {
@@ -21,3 +23,14 @@ export type Category = {
 export type CategoryFilter = Record<string, unknown>;
 export type ShippingMethod = Record<string, unknown>;
 export type LineItem = Record<string, unknown>;
+
+export type ApiContext = {
+  client: Client;
+  config: {
+    auth: {
+      getToken: () => Promise<string>;
+      changeToken: (newValue: string) => Promise<void>;
+      removeToken: () => Promise<void>;
+    };
+  };
+}

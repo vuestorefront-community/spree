@@ -250,7 +250,7 @@ export default {
     });
     const countries = ref([]);
     const states = ref([]);
-    const isStateRequired = computed(() => form.country && countries.value.find(e => e.iso === form.country).isStateRequired)
+    const isStateRequired = computed(() => form.country && countries.value.find(e => e.iso === form.country).isStateRequired);
 
     const submitForm = () => {
       emit('submit', {

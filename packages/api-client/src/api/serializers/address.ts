@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 export const deserializeAddress = (apiAddress) => ({
   id: apiAddress.id,
   firstName: apiAddress.attributes.firstname,

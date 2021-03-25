@@ -1,13 +1,15 @@
 /* eslint-disable camelcase */
 
-export default async function changePassword(context, params) {
+import { ApiContext } from '../../types';
+
+export default async function changePassword({ client, config }: ApiContext, params) {
   const { newPassword } = params;
-  const { bearerToken } = context.config.auth.getToken();
+  const bearerToken = await config.auth.getToken();
 
   const passwordData = {
     password: newPassword,
     password_confirmation: newPassword
   };
 
-  await context.client.account.update({ bearerToken }, passwordData);
+  await client.account.update({ bearerToken }, passwordData);
 }

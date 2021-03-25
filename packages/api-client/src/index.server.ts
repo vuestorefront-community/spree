@@ -13,6 +13,8 @@ import getAddresses from './api/getAddresses';
 import getAvailableCountries from './api/getAvailableCountries';
 import getCountryDetails from './api/getCountryDetails';
 import updateAddress from './api/updateAddress';
+import getCart from './api/getCart';
+import addToCart from './api/addToCart';
 
 const defaultSettings = {};
 
@@ -21,7 +23,7 @@ const onCreate = (settings) => ({
     ...defaultSettings,
     ...settings
   },
-  client: makeClient({ host: 'https://demo.spreecommerce.org' })
+  client: makeClient({ host: 'http://localhost:4000' })
 });
 
 const tokenExtension: ApiClientExtension = {
@@ -66,7 +68,9 @@ const { createApiClient } = apiClientFactory<any, any>({
     getAddresses,
     getAvailableCountries,
     getCountryDetails,
-    updateAddress
+    updateAddress,
+    getCart,
+    addToCart
   },
   extensions: [tokenExtension]
 });
