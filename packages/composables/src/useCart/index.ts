@@ -8,16 +8,16 @@ import {
 import { Cart, CartItem, Coupon, Product } from '../types';
 
 const params: UseCartFactoryParams<Cart, CartItem, Product, Coupon> = {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  load: async (context: Context, { customQuery }) => {
-    console.log('Mocked: loadCart');
-    return {};
+  load: async (context: Context) => {
+    const cart = await context.$spree.api.getCart();
+    return cart;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  addItem: async (context: Context, { currentCart, product, quantity, customQuery }) => {
-    console.log('Mocked: addToCart');
-    return {};
+  addItem: async (context: Context, { product, quantity }) => {
+    await context.$spree.api.addToCart({ variantId: product._variantId, quantity });
+    const cart = await context.$spree.api.getCart();
+    return cart;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

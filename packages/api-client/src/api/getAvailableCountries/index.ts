@@ -1,8 +1,8 @@
-import { CustomQuery } from "@vue-storefront/core";
+import { ApiContext } from '../../types';
 import { deserializeCountry } from '../serializers/country';
 
-export default async function getAvailableCountries(context, _params, _customQuery?: CustomQuery) {
-  const result = await context.client.countries.list({ include: 'states' });
+export default async function getAvailableCountries({ client }: ApiContext) {
+  const result = await client.countries.list();
   if (result.isSuccess()) {
     return result.success().data.map(c => deserializeCountry(c, []));
   } else {

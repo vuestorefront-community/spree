@@ -29,10 +29,10 @@ export default {
   computed: {
     city() {
       if (this.address.state) {
-        return `${this.address.postalCode} ${this.address.city}, ${this.address.state}`
+        return `${this.address.postalCode} ${this.address.city}, ${this.address.state}`;
       }
 
-      return `${this.address.postalCode} ${this.address.city}`
+      return `${this.address.postalCode} ${this.address.city}`;
     }
   }
 };

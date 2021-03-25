@@ -1,7 +1,9 @@
-export default async function getCurrentUser(context) {
-  const bearerToken = await context.config.auth.getToken();
+import { ApiContext } from '../../types';
 
-  const response = await context.client.account.accountInfo({ bearerToken });
+export default async function getCurrentUser({ client, config }: ApiContext) {
+  const bearerToken = await config.auth.getToken();
+
+  const response = await client.account.accountInfo({ bearerToken });
   if (response.isSuccess()) {
     return response.success();
   } else {

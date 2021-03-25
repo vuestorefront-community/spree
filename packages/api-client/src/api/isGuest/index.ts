@@ -1,5 +1,7 @@
-export default async function isGuest(context) {
-  if (await context.config.auth.getToken()) {
+import { ApiContext } from '../../types';
+
+export default async function isGuest({ config }: ApiContext) {
+  if (await config.auth.getToken()) {
     return false;
   }
 
