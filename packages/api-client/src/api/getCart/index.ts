@@ -1,26 +1,31 @@
 import { SpreeError } from '@spree/storefront-api-v2-sdk/types/errors';
-import { ApiContext } from '../../types';
+import { IQuery } from '@spree/storefront-api-v2-sdk/types/interfaces/Query';
+import { ApiContext, Cart } from '../../types';
+import { deserializeCart } from '../serializers/cart';
 
-export default async function getCart({ client, config }: ApiContext) {
+const cartParams: IQuery = { include: 'line_items' };
+
+export default async function getCart({ client, config }: ApiContext): Promise<Cart> {
   const bearerToken = await config.auth.getToken();
-  const result = await client.cart.show({ bearerToken });
+  const result = await client.cart.show({ bearerToken }, cartParams);
 
   if (result.isSuccess()) {
-    return result.success().data;
+    const payload = result.success();
+    const cart = deserializeCart(payload.data, payload.included);
+    return cart;
   } else {
     const error = result.fail() as SpreeError;
     const serverResponse = error.serverResponse;
     if (serverResponse && serverResponse.status === 404) {
-      const createCartResult = await client.cart.create({ bearerToken });
+      const createCartResult = await client.cart.create({ bearerToken }, cartParams);
 
       if (createCartResult.isSuccess()) {
-        return createCartResult.success().data;
+        const payload = createCartResult.success();
+        const cart = deserializeCart(payload.data, payload.included);
+        return cart;
       } else {
-        return {};
+        throw result.fail();
       }
     }
-
-    // throw result.fail();
-    return {};
   }
 }
