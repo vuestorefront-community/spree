@@ -2,7 +2,7 @@
 
 import { ApiContext } from '../../types';
 
-export default async function addToCart({ client, config }: ApiContext, params) {
+export default async function addToCart({ client, config }: ApiContext, params): Promise<void> {
   const bearerToken = await config.auth.getToken();
 
   const result = await client.cart.addItem({ bearerToken }, {
@@ -10,9 +10,7 @@ export default async function addToCart({ client, config }: ApiContext, params) 
     quantity: params.quantity
   });
 
-  if (result.isSuccess()) {
-    return true;
-  } else {
+  if (result.isFail()) {
     throw result.fail();
   }
 }

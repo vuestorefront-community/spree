@@ -18,6 +18,8 @@ import addToCart from './api/addToCart';
 import updateItemQuantity from './api/updateItemQuantity';
 import removeFromCart from './api/removeFromCart';
 import clearCart from './api/clearCart';
+import applyCoupon from './api/applyCoupon';
+import removeCoupon from './api/removeCoupon';
 
 const defaultSettings = {};
 
@@ -76,7 +78,9 @@ const { createApiClient } = apiClientFactory<any, any>({
     addToCart,
     updateItemQuantity,
     removeFromCart,
-    clearCart
+    clearCart,
+    applyCoupon,
+    removeCoupon
   },
   extensions: [tokenExtension]
 });
