@@ -81,14 +81,12 @@ export type CategoryFilter = Record<string, unknown>;
 export type ShippingMethod = Record<string, unknown>;
 
 export type AuthIntegration = {
-  getToken: () => string;
   getOAuthToken: () => IOAuthToken;
   changeToken: (newValue: IOAuthToken) => void;
   removeToken: () => void;
 }
 
 export type AuthIntegrationContext = {
-  getToken: () => Promise<string>;
   getOAuthToken: () => Promise<IOAuthToken>;
   changeToken: (newValue: IOAuthToken) => Promise<void>;
   removeToken: () => Promise<void>;

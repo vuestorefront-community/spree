@@ -11,10 +11,6 @@ export default function createAuthIntegration(req, res): AuthIntegration {
         res.cookie('spree-bearer-token', JSON.stringify(newToken));
       }
     },
-    getToken: () => {
-      res.cookie('spree-bearer-token', currentSerializedToken);
-      return currentBearerToken;
-    },
     getOAuthToken: () => {
       res.cookie('spree-bearer-token', currentSerializedToken);
       return currentToken;
