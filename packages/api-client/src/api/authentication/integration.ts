@@ -12,7 +12,10 @@ export default function createAuthIntegration(req, res): AuthIntegration {
 
   return {
     getOAuthToken: () => {
-      res.cookie(oauthTokenCookieName, currentOAuthSerializedToken);
+      if (currentOAuthToken) {
+        res.cookie(oauthTokenCookieName, currentOAuthSerializedToken);
+      }
+
       return currentOAuthToken;
     },
 
@@ -28,7 +31,10 @@ export default function createAuthIntegration(req, res): AuthIntegration {
     },
 
     getCartToken: () => {
-      res.cookie(cartTokenCookieName, currentCartToken);
+      if (currentCartToken) {
+        res.cookie(cartTokenCookieName, currentCartToken);
+      }
+
       return currentCartToken;
     },
 
