@@ -1,7 +1,8 @@
 import { ApiContext } from '../../types';
+import getCurrentBearerToken from '../authentication/getCurrentBearerToken';
 
-export default async function isGuest({ config }: ApiContext): Promise<boolean> {
-  if (await config.auth.getToken()) {
+export default async function isGuest({ client, config }: ApiContext): Promise<boolean> {
+  if (await getCurrentBearerToken({ client, config })) {
     return false;
   }
 

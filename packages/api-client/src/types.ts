@@ -1,4 +1,5 @@
 import { Client } from '@spree/storefront-api-v2-sdk';
+import { IOAuthToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
 
 export type OptionValue = {
   id: number;
@@ -79,14 +80,30 @@ export type Category = {
 export type CategoryFilter = Record<string, unknown>;
 export type ShippingMethod = Record<string, unknown>;
 
+export type AuthIntegration = {
+  getOAuthToken: () => IOAuthToken;
+  changeOAuthToken: (newValue: IOAuthToken) => void;
+  removeOAuthToken: () => void;
+
+  getCartToken: () => string;
+  changeCartToken: (newValue: string) => void;
+  removeCartToken: () => void;
+}
+
+export type AuthIntegrationContext = {
+  getOAuthToken: () => Promise<IOAuthToken>;
+  changeOAuthToken: (newValue: IOAuthToken) => Promise<void>;
+  removeOAuthToken: () => Promise<void>;
+
+  getCartToken: () => Promise<string>;
+  changeCartToken: (newValue: string) => Promise<void>;
+  removeCartToken: () => Promise<void>;
+}
+
 export type ApiContext = {
   client: Client;
   config: {
-    auth: {
-      getToken: () => Promise<string>;
-      changeToken: (newValue: string) => Promise<void>;
-      removeToken: () => Promise<void>;
-    };
+    auth: AuthIntegrationContext;
   };
 }
 
