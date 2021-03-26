@@ -18,6 +18,11 @@ import addToCart from './api/addToCart';
 import updateItemQuantity from './api/updateItemQuantity';
 import removeFromCart from './api/removeFromCart';
 import clearCart from './api/clearCart';
+import applyCoupon from './api/applyCoupon';
+import removeCoupon from './api/removeCoupon';
+import getCheckout from './api/getCheckout';
+import saveCheckoutShippingAddress from './api/saveCheckoutShippingAddress';
+import saveCheckoutBillingAddress from './api/saveCheckoutBillingAddress';
 
 const defaultSettings = {};
 
@@ -48,7 +53,7 @@ const tokenExtension: ApiClientExtension = {
             return currentToken;
           },
           removeToken: () => {
-            delete req.cookies['spree-bearer-token'];
+            res.clearCookie('spree-bearer-token');
           }
         }
       })
@@ -76,7 +81,12 @@ const { createApiClient } = apiClientFactory<any, any>({
     addToCart,
     updateItemQuantity,
     removeFromCart,
-    clearCart
+    clearCart,
+    applyCoupon,
+    removeCoupon,
+    getCheckout,
+    saveCheckoutShippingAddress,
+    saveCheckoutBillingAddress
   },
   extensions: [tokenExtension]
 });

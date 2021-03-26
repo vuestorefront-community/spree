@@ -37,21 +37,19 @@ const params: UseCartFactoryParams<Cart, CartItem, Product, Coupon> = {
     return cart;
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  applyCoupon: async (context: Context, { currentCart, couponCode, customQuery }) => {
-    console.log('Mocked: applyCoupon');
+  applyCoupon: async (context: Context, { couponCode }) => {
+    await context.$spree.api.applyCoupon({ couponCode });
     const cart = await context.$spree.api.getCart();
     return cart;
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  removeCoupon: async (context: Context, { currentCart, coupon, customQuery }) => {
-    console.log('Mocked: removeCoupon');
+  removeCoupon: async (context: Context, { coupon }) => {
+    await context.$spree.api.removeCoupon({ couponCode: coupon });
     const cart = await context.$spree.api.getCart();
     return cart;
   },
 
-  isInCart: (context: Context, { currentCart, product }) => {
+  isInCart: (_context: Context, { currentCart, product }) => {
     return currentCart.lineItems.find(e => e._variantId === product._variantId) !== undefined;
   }
 };

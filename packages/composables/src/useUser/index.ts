@@ -6,10 +6,13 @@ import {
   UseUserFactoryParams
 } from '@vue-storefront/core';
 import { User } from '../types';
-
-// @todo useUser
+import useCart from '../useCart';
 
 const params: UseUserFactoryParams<User, any, any> = {
+  provide() {
+    return useCart();
+  },
+
   load: async (context: Context) => {
     if (await context.$spree.api.isGuest()) {
       return null;
@@ -19,7 +22,8 @@ const params: UseUserFactoryParams<User, any, any> = {
   },
 
   logOut: async (context: Context) => {
-    context.$spree.api.logOut();
+    await context.$spree.api.logOut();
+    context.setCart({_id: 0, lineItems: []});
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -36,6 +40,10 @@ const params: UseUserFactoryParams<User, any, any> = {
 
   logIn: async (context: Context, { username, password }) => {
     await context.$spree.api.logIn({ username, password });
+
+    const cart = await context.$spree.api.getCart();
+    context.setCart(cart);
+
     return {};
   },
 
