@@ -52,7 +52,7 @@ const tokenExtension: ApiClientExtension = {
             return currentToken;
           },
           removeToken: () => {
-            delete req.cookies['spree-bearer-token'];
+            res.clearCookie('spree-bearer-token');
           }
         }
       })
