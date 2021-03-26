@@ -40,7 +40,7 @@ export default async function getCart({ client, config }: ApiContext): Promise<C
     const serverResponse = error.serverResponse;
 
     if (serverResponse && serverResponse.status === 404) {
-      createCart({ client, config }, token);
+      return await createCart({ client, config }, token);
     } else {
       throw result.fail();
     }
