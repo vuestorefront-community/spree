@@ -20,6 +20,8 @@ import removeFromCart from './api/removeFromCart';
 import clearCart from './api/clearCart';
 import applyCoupon from './api/applyCoupon';
 import removeCoupon from './api/removeCoupon';
+import getCheckout from './api/getCheckout';
+import saveCheckoutShippingAddress from './api/saveCheckoutShippingAddress';
 
 const defaultSettings = {};
 
@@ -80,7 +82,9 @@ const { createApiClient } = apiClientFactory<any, any>({
     removeFromCart,
     clearCart,
     applyCoupon,
-    removeCoupon
+    removeCoupon,
+    getCheckout,
+    saveCheckoutShippingAddress
   },
   extensions: [tokenExtension]
 });

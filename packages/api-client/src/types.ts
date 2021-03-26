@@ -107,3 +107,8 @@ export type Address = {
 export type CouponCode = {
   couponCode: string;
 }
+
+export type Checkout = {
+  shippingAddress: Address;
+  billingAddress: Address;
+}

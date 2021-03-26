@@ -1,20 +1,15 @@
 import { useShippingFactory, UseShippingParams, Context } from '@vue-storefront/core';
-import { Address } from '../types';
-
-let details = {};
+import { Address } from '@upsidelab/vue-storefront-spree-api';
 
 const params: UseShippingParams<Address, any> = {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  load: async (context: Context, { customQuery }) => {
-    console.log('Mocked: loadShipping');
-    return details;
+  load: async (context: Context): Promise<Address> => {
+    const checkout = await context.$spree.api.getCheckout();
+    return checkout.shippingAddress;
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  save: async (context: Context, { shippingDetails, customQuery }) => {
-    console.log('Mocked: saveShipping');
-    details = shippingDetails;
-    return details;
+  save: async (context: Context, { shippingDetails }: { shippingDetails: Address }): Promise<Address> => {
+    await context.$spree.api.saveCheckoutShippingAddress({ shippingAddress: shippingDetails });
+    return shippingDetails;
   }
 };
 
