@@ -17,7 +17,7 @@ async function createCart({ client, config }: ApiContext, token: IToken): Promis
     const isGuestUser = !token.bearerToken;
     if (isGuestUser) {
       const newCartToken = payload.data.attributes.token;
-      config.auth.changeCartToken(newCartToken);
+      await config.auth.changeCartToken(newCartToken);
     }
 
     return cart;
