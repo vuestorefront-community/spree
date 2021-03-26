@@ -1,20 +1,15 @@
 import { useBillingFactory, UseBillingParams, Context } from '@vue-storefront/core';
-import { Address } from '../types';
-
-let details = {};
+import { Address } from '@upsidelab/vue-storefront-spree-api';
 
 const params: UseBillingParams<Address, any> = {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  load: async (context: Context, { customQuery }) => {
-    console.log('Mocked: loadBilling');
-    return details;
+  load: async (context: Context): Promise<Address> => {
+    const checkout = await context.$spree.api.getCheckout();
+    return checkout.billingAddress;
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  save: async (context: Context, { billingDetails, customQuery }) => {
-    console.log('Mocked: saveBilling');
-    details = billingDetails;
-    return details;
+  save: async (context: Context, { billingDetails }: { billingDetails: Address }): Promise<Address> => {
+    await context.$spree.api.saveCheckoutBillingAddress({ billingAddress: billingDetails });
+    return billingDetails;
   }
 };
 

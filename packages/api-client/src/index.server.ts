@@ -22,6 +22,7 @@ import applyCoupon from './api/applyCoupon';
 import removeCoupon from './api/removeCoupon';
 import getCheckout from './api/getCheckout';
 import saveCheckoutShippingAddress from './api/saveCheckoutShippingAddress';
+import saveCheckoutBillingAddress from './api/saveCheckoutBillingAddress';
 
 const defaultSettings = {};
 
@@ -84,7 +85,8 @@ const { createApiClient } = apiClientFactory<any, any>({
     applyCoupon,
     removeCoupon,
     getCheckout,
-    saveCheckoutShippingAddress
+    saveCheckoutShippingAddress,
+    saveCheckoutBillingAddress
   },
   extensions: [tokenExtension]
 });
