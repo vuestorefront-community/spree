@@ -1,8 +1,9 @@
 import { Address, ApiContext } from '../../types';
+import getCurrentBearerToken from '../authentication/getCurrentBearerToken';
 import { serializeAddress } from '../serializers/address';
 
 export default async function updateAddress({ client, config }: ApiContext, params: Address) {
-  const bearerToken = await config.auth.getToken();
+  const bearerToken = await getCurrentBearerToken({ client, config });
   const serializedAddress = serializeAddress(params);
   const result = await client.account.updateAddress({ bearerToken }, params._id, { address: serializedAddress });
 

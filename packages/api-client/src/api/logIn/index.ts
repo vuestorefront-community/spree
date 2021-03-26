@@ -6,8 +6,8 @@ export default async function logIn({ client, config }: ApiContext, params) {
   const response = await client.authentication.getToken({ username, password });
 
   if (response.isSuccess()) {
-    const bearerToken = response.success().access_token;
-    await config.auth.changeToken(bearerToken);
+    const token = response.success();
+    await config.auth.changeToken(token);
   } else {
     throw response.fail();
   }

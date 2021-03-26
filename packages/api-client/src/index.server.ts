@@ -23,6 +23,7 @@ import removeCoupon from './api/removeCoupon';
 import getCheckout from './api/getCheckout';
 import saveCheckoutShippingAddress from './api/saveCheckoutShippingAddress';
 import saveCheckoutBillingAddress from './api/saveCheckoutBillingAddress';
+import createAuthIntegration from './api/authentication/integration';
 
 const defaultSettings = {};
 
@@ -37,25 +38,12 @@ const onCreate = (settings) => ({
 const tokenExtension: ApiClientExtension = {
   name: 'tokenExtension',
   hooks: (req, res) => {
-    const currentToken = req.cookies['spree-bearer-token'];
+    const auth = createAuthIntegration(req, res);
 
     return {
       beforeCreate: ({ configuration }) => ({
         ...configuration,
-        auth: {
-          changeToken: (newToken) => {
-            if (!currentToken || currentToken !== newToken.access_token) {
-              res.cookie('spree-bearer-token', newToken);
-            }
-          },
-          getToken: () => {
-            res.cookie('spree-bearer-token', currentToken);
-            return currentToken;
-          },
-          removeToken: () => {
-            res.clearCookie('spree-bearer-token');
-          }
-        }
+        auth
       })
     };
   }
