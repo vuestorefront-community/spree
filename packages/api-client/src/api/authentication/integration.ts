@@ -1,22 +1,45 @@
 import { AuthIntegration } from '../../types';
 
+const oauthTokenCookieName = 'spree-bearer-token';
+const cartTokenCookieName = 'spree-cart-token';
+
 export default function createAuthIntegration(req, res): AuthIntegration {
-  const currentSerializedToken = req.cookies['spree-bearer-token'];
-  const currentToken = currentSerializedToken ? JSON.parse(currentSerializedToken) : null;
-  const currentBearerToken = currentToken?.access_token;
+  const currentOAuthSerializedToken = req.cookies[oauthTokenCookieName];
+  const currentOAuthToken = currentOAuthSerializedToken ? JSON.parse(currentOAuthSerializedToken) : null;
+  const currentBearerToken = currentOAuthToken?.access_token;
+
+  const currentCartToken = req.cookies[cartTokenCookieName];
 
   return {
-    changeToken: (newToken) => {
+    getOAuthToken: () => {
+      res.cookie(oauthTokenCookieName, currentOAuthSerializedToken);
+      return currentOAuthToken;
+    },
+
+    changeOAuthToken: (newToken) => {
       if (!currentBearerToken || currentBearerToken !== newToken.access_token) {
-        res.cookie('spree-bearer-token', JSON.stringify(newToken));
+        res.cookie(oauthTokenCookieName, JSON.stringify(newToken));
+        res.clearCookie(cartTokenCookieName);
       }
     },
-    getOAuthToken: () => {
-      res.cookie('spree-bearer-token', currentSerializedToken);
-      return currentToken;
+
+    removeOAuthToken: () => {
+      res.clearCookie(oauthTokenCookieName);
     },
-    removeToken: () => {
-      res.clearCookie('spree-bearer-token');
+
+    getCartToken: () => {
+      res.cookie(cartTokenCookieName, currentCartToken);
+      return currentCartToken;
+    },
+
+    changeCartToken: (newToken) => {
+      if (!currentCartToken || currentCartToken !== newToken) {
+        res.cookie(cartTokenCookieName, newToken);
+      }
+    },
+
+    removeCartToken: () => {
+      res.clearCookie(cartTokenCookieName);
     }
   };
 }

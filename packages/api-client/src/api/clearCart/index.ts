@@ -1,9 +1,9 @@
 import { ApiContext } from '../../types';
-import getCurrentBearerToken from '../authentication/getCurrentBearerToken';
+import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 
 export default async function clearCart({ client, config }: ApiContext): Promise<void> {
-  const bearerToken = await getCurrentBearerToken({ client, config });
-  const result = await client.cart.emptyCart({ bearerToken });
+  const token = await getCurrentBearerOrCartToken({ client, config });
+  const result = await client.cart.emptyCart(token);
 
   if (result.isFail()) {
     throw result.fail();

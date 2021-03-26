@@ -82,14 +82,22 @@ export type ShippingMethod = Record<string, unknown>;
 
 export type AuthIntegration = {
   getOAuthToken: () => IOAuthToken;
-  changeToken: (newValue: IOAuthToken) => void;
-  removeToken: () => void;
+  changeOAuthToken: (newValue: IOAuthToken) => void;
+  removeOAuthToken: () => void;
+
+  getCartToken: () => string;
+  changeCartToken: (newValue: string) => void;
+  removeCartToken: () => void;
 }
 
 export type AuthIntegrationContext = {
   getOAuthToken: () => Promise<IOAuthToken>;
-  changeToken: (newValue: IOAuthToken) => Promise<void>;
-  removeToken: () => Promise<void>;
+  changeOAuthToken: (newValue: IOAuthToken) => Promise<void>;
+  removeOAuthToken: () => Promise<void>;
+
+  getCartToken: () => Promise<string>;
+  changeCartToken: (newValue: string) => Promise<void>;
+  removeCartToken: () => Promise<void>;
 }
 
 export type ApiContext = {

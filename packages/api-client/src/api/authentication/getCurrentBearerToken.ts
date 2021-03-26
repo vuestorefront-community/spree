@@ -21,7 +21,7 @@ export default async function getCurrentBearerToken({ client, config }: ApiConte
   }
 
   const newToken = result.success();
-  await config.auth.changeToken(newToken);
+  await config.auth.changeOAuthToken(newToken);
 
   return newToken.access_token;
 }
