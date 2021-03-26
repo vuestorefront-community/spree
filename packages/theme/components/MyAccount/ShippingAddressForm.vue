@@ -214,7 +214,7 @@ export default {
     address: {
       type: Object,
       default: () => ({
-        id: undefined,
+        _id: undefined,
         firstName: '',
         lastName: '',
         addressLine1: '',
@@ -236,7 +236,7 @@ export default {
   setup(props, { emit }) {
     const { $spree } = useVSFContext();
     const form = reactive({
-      id: props.address.id,
+      _id: props.address._id,
       firstName: props.address.firstName,
       lastName: props.address.lastName,
       addressLine1: props.address.addressLine1,

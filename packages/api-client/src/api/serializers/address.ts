@@ -5,7 +5,7 @@ import { IAddress } from '@spree/storefront-api-v2-sdk/types/interfaces/attribut
 import { Address } from '../../types';
 
 export const deserializeAddress = (apiAddress: AccountAddressAttr): Address => ({
-  id: apiAddress.id,
+  _id: apiAddress.id,
   firstName: apiAddress.attributes.firstname,
   lastName: apiAddress.attributes.lastname,
   company: apiAddress.attributes.company,

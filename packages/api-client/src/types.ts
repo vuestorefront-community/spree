@@ -91,7 +91,7 @@ export type ApiContext = {
 }
 
 export type Address = {
-  id: string;
+  _id: string;
   firstName: string;
   lastName: string;
   company: string;
