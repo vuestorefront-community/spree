@@ -1,5 +1,3 @@
-import { CustomQuery } from '@vue-storefront/core';
-
 const findProductOptionTypes = (product, attachments) => {
   const productOptionTypesIds = product.relationships.option_types.data.map((e) => e.id);
   return attachments.filter((e) => e.type === 'option_type' && productOptionTypesIds.includes(e.id));
@@ -10,6 +8,14 @@ const findVariantOptionValues = (variant, attachments) => {
   return attachments.filter((e) => e.type === 'option_value' && variantOptionValuesIds.includes(e.id));
 };
 
+const findProductVariantImages = (product, variant, attachments) => {
+  const productImageIds = product.relationships.images.data.map((image) => image.id);
+  const variantImageIds = variant.relationships.images.data.map((image) => image.id);
+  const imageIds = variantImageIds.concat(productImageIds);
+
+  return attachments.filter((e) => e.type === 'image' && imageIds.includes(e.id));
+};
+
 const formatProductVariant = (product, variant, attachments) => ({
   _id: product.id,
   _variantId: variant.id,
@@ -17,6 +23,7 @@ const formatProductVariant = (product, variant, attachments) => ({
   _categoriesRef: product.relationships.taxons.data.map((t) => t.id),
   optionTypes: findProductOptionTypes(product, attachments),
   optionValues: findVariantOptionValues(variant, attachments),
+  images: findProductVariantImages(product, variant, attachments),
   ...product.attributes,
   ...variant.attributes
 });
@@ -40,21 +47,42 @@ const getLimitedVariants = (productsData) =>
     return formatProductVariant(product, defaultVariant, attachments);
   });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default async function getProduct(context, params, _customQuery?: CustomQuery) {
+const addHostToImageUrls = (image, context) => ({
+  ...image,
+  attributes: {
+    ...image.attributes,
+    styles: image.attributes?.styles ? image.attributes.styles.map((style) => ({
+      width: style.width,
+      height: style.height,
+      url: context.config.backendUrl.concat(style.url)
+    })) : []
+  }
+});
+
+const addHostToUrls = (attachments, context) =>
+  attachments.map((e) =>
+    e.type === 'image' ? addHostToImageUrls(context, e) : e
+  );
+
+const preprocessProductsData = (productsData, context) => ({
+  ...productsData,
+  included: addHostToUrls(productsData.included, context)
+});
+
+export default async function getProduct(context, params) {
   const result = await context.client.products.list({
     filter: {
       ids: params.id,
       taxons: params.catId
     },
-    include: 'variants.option_values,option_types',
+    include: 'variants.option_values,option_types,images',
     page: 1,
     // eslint-disable-next-line camelcase
     per_page: params.limit || 10
   });
 
   if (result.isSuccess()) {
-    const productsData = result.success();
+    const productsData = preprocessProductsData(result.success(), context);
     return params.limit ? getLimitedVariants(productsData) : getVariants(productsData);
   } else {
     throw result.fail();

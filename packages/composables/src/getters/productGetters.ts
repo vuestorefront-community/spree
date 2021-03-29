@@ -4,7 +4,7 @@ import {
   AgnosticPrice,
   ProductGetters
 } from '@vue-storefront/core';
-import { ProductVariant } from '@upsidelab/vue-storefront-spree-api/src/types';
+import { ProductVariant, Image } from '@upsidelab/vue-storefront-spree-api/src/types';
 
 import _ from 'lodash';
 
@@ -28,18 +28,30 @@ export const getProductPrice = (product: ProductVariant): AgnosticPrice => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getProductGallery = (product: ProductVariant): AgnosticMediaGalleryItem[] => [
-  {
-    small: 'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg',
-    normal: 'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg',
-    big: 'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg'
-  },
-  {
-    small: 'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg',
-    normal: 'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg',
-    big: 'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg'
-  }
-];
+export const getProductGallery = (product: ProductVariant): AgnosticMediaGalleryItem[] => {
+  const findImageStyleByDimensions = (image: Image, width: number, height: number) => {
+    if (!image.attributes?.styles) return undefined;
+
+    const sortedStyles = _.sortBy(image.attributes.styles, (style) => {
+      const widthLoss = Math.abs(width - parseInt(style.width, 10));
+      const heightLoss = Math.abs(height - parseInt(style.height, 10));
+
+      return widthLoss + heightLoss;
+    });
+
+    return sortedStyles[0].url;
+  };
+
+  const findSmallImageStyle = (image: Image) => findImageStyleByDimensions(image, 240, 240);
+  const findNormalImageStyle = (image: Image) => findImageStyleByDimensions(image, 350, 468);
+  const findBigImageStyle = (image: Image) => findImageStyleByDimensions(image, 650, 870);
+
+  return product.images.map((image) => ({
+    small: findSmallImageStyle(image),
+    normal: findNormalImageStyle(image),
+    big: findBigImageStyle(image)
+  }));
+};
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getProductCoverImage = (product: ProductVariant): string => 'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg';

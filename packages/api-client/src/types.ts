@@ -36,6 +36,24 @@ export type OptionType = {
   }
 }
 
+export type ImageStyle = {
+  height: string;
+  width: string;
+  url: string;
+}
+
+export type Image = {
+  id: number;
+  type: string;
+  attributes?: {
+    // eslint-disable-next-line camelcase
+    viewable_id: number;
+    // eslint-disable-next-line camelcase
+    viewable_type: string;
+    styles: ImageStyle[];
+  }
+}
+
 export type LineItem = {
   _id: number;
   _variantId: number;
@@ -63,7 +81,7 @@ export type ProductVariant = {
   _categoriesRef: string[];
   name: string;
   sku: string;
-  images: string[];
+  images: Image[];
   price: {
     original: number;
     current: number;
