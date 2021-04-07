@@ -25,15 +25,19 @@ import saveCheckoutShippingAddress from './api/saveCheckoutShippingAddress';
 import saveCheckoutBillingAddress from './api/saveCheckoutBillingAddress';
 import createAuthIntegration from './api/authentication/integration';
 
-const defaultSettings = {};
+const defaultSettings = {
+  backendUrl: 'http://localhost:4000'
+};
 
-const onCreate = (settings) => ({
-  config: {
-    ...defaultSettings,
-    ...settings
-  },
-  client: makeClient({ host: 'http://localhost:4000' })
-});
+const onCreate = (settings) => {
+  return {
+    config: {
+      ...defaultSettings,
+      ...settings
+    },
+    client: makeClient({ host: defaultSettings.backendUrl })
+  };
+};
 
 const tokenExtension: ApiClientExtension = {
   name: 'tokenExtension',
