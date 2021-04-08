@@ -61,7 +61,7 @@ const addHostToImageUrls = (image, context) => ({
 
 const addHostToUrls = (attachments, context) =>
   attachments.map((e) =>
-    e.type === 'image' ? addHostToImageUrls(context, e) : e
+    e.type === 'image' ? addHostToImageUrls(e, context) : e
   );
 
 const preprocessProductsData = (productsData, context) => ({
