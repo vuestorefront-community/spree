@@ -214,8 +214,8 @@ export default {
     // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
     // const breadcrumbs = computed(() => productGetters.getBreadcrumbs ? productGetters.getBreadcrumbs(product.value) : props.fallbackBreadcrumbs);
     const productGallery = computed(() => productGetters.getGallery(product.value).map(img => ({
-      mobile: { url: img.small },
-      desktop: { url: img.normal },
+      mobile: { url: img.big },
+      desktop: { url: img.big },
       big: { url: img.big },
       alt: product.value._name || product.value.name
     })));
