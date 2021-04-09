@@ -127,10 +127,7 @@ export const getProductTotalReviews = (product: ProductVariant): number => 0;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getProductAverageRating = (product: ProductVariant): number => 0;
 
-export const getProductProperties = (product: ProductVariant) =>
-  product.properties.map((property) => ({
-    ...property.attributes
-  }));
+export const getProductProperties = (product: ProductVariant) => product.properties;
 
 const productGetters: ProductGetters<ProductVariant, ProductVariantFilters> = {
   getName: getProductName,

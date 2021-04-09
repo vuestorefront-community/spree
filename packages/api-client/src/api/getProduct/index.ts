@@ -15,6 +15,14 @@ const extractImagesRelationships = (attachments, product, variant) => {
   return filterAttachments(attachments, 'image', imageIds);
 };
 
+const formatProperties = (attachments, product) => {
+  const properties = extractRelationships(attachments, 'product_property', 'product_properties', product);
+  return properties.map(property => ({
+    name: property.attributes.name,
+    value: property.attributes.value
+  }));
+};
+
 const formatProductVariant = (product, variant, attachments) => ({
   _id: product.id,
   _variantId: variant.id,
@@ -23,7 +31,7 @@ const formatProductVariant = (product, variant, attachments) => ({
   optionTypes: extractRelationships(attachments, 'option_type', 'option_types', product),
   optionValues: extractRelationships(attachments, 'option_value', 'option_values', variant),
   images: extractImagesRelationships(attachments, product, variant),
-  properties: extractRelationships(attachments, 'product_property', 'product_properties', product),
+  properties: formatProperties(attachments, product),
   ...product.attributes,
   ...variant.attributes
 });

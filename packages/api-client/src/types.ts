@@ -55,13 +55,8 @@ export type Image = {
 }
 
 export type Property = {
-  id: number,
-  type: string,
-  attributes: {
-    description: string,
-    name: string,
-    value: string,
-  }
+  name: string,
+  value: string,
 }
 
 export type LineItem = {
