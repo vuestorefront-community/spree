@@ -1,19 +1,26 @@
-const findProductOptionTypes = (product, attachments) => {
-  const productOptionTypesIds = product.relationships.option_types.data.map((e) => e.id);
-  return attachments.filter((e) => e.type === 'option_type' && productOptionTypesIds.includes(e.id));
+const filterAttachments = (attachments, type, ids) =>
+  attachments.filter((e) => e.type === type && ids.includes(e.id));
+
+const extractRelationships = (attachments, type, relationship, item) => {
+  const itemIds = item.relationships[relationship].data.map((e) => e.id);
+
+  return filterAttachments(attachments, type, itemIds);
 };
 
-const findVariantOptionValues = (variant, attachments) => {
-  const variantOptionValuesIds = variant.relationships.option_values.data.map((e) => e.id);
-  return attachments.filter((e) => e.type === 'option_value' && variantOptionValuesIds.includes(e.id));
+const extractImagesRelationships = (attachments, product, variant) => {
+  const productIds = product.relationships.images.data.map((e) => e.id);
+  const variantIds = variant.relationships.images.data.map((e) => e.id);
+  const imageIds = variantIds.concat(productIds);
+
+  return filterAttachments(attachments, 'image', imageIds);
 };
 
-const findProductVariantImages = (product, variant, attachments) => {
-  const productImageIds = product.relationships.images.data.map((image) => image.id);
-  const variantImageIds = variant.relationships.images.data.map((image) => image.id);
-  const imageIds = variantImageIds.concat(productImageIds);
-
-  return attachments.filter((e) => e.type === 'image' && imageIds.includes(e.id));
+const formatProperties = (attachments, product) => {
+  const properties = extractRelationships(attachments, 'product_property', 'product_properties', product);
+  return properties.map(property => ({
+    name: property.attributes.name,
+    value: property.attributes.value
+  }));
 };
 
 const formatProductVariant = (product, variant, attachments) => ({
@@ -21,9 +28,10 @@ const formatProductVariant = (product, variant, attachments) => ({
   _variantId: variant.id,
   _description: variant.attributes.description || product.attributes.description,
   _categoriesRef: product.relationships.taxons.data.map((t) => t.id),
-  optionTypes: findProductOptionTypes(product, attachments),
-  optionValues: findVariantOptionValues(variant, attachments),
-  images: findProductVariantImages(product, variant, attachments),
+  optionTypes: extractRelationships(attachments, 'option_type', 'option_types', product),
+  optionValues: extractRelationships(attachments, 'option_value', 'option_values', variant),
+  images: extractImagesRelationships(attachments, product, variant),
+  properties: formatProperties(attachments, product),
   ...product.attributes,
   ...variant.attributes
 });
@@ -75,7 +83,7 @@ export default async function getProduct(context, params) {
       ids: params.id,
       taxons: params.catId
     },
-    include: 'variants.option_values,option_types,images',
+    include: 'variants.option_values,option_types,product_properties,images',
     page: 1,
     // eslint-disable-next-line camelcase
     per_page: params.limit || 10

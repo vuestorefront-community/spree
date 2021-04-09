@@ -209,6 +209,7 @@ export default {
     const options = computed(() => productGetters.getAttributes(products.value, optionTypes.value));
     const configuration = computed(() => productGetters.getAttributes(product.value, optionTypes.value));
     const categories = computed(() => productGetters.getCategoryIds(product.value));
+    const properties = computed(() => productGetters.getProperties(product.value));
     const reviews = computed(() => reviewGetters.getItems(productReviews.value));
 
     // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
@@ -252,7 +253,8 @@ export default {
       loading,
       productGetters,
       productGallery,
-      optionTypes
+      optionTypes,
+      properties
     };
   },
   components: {
@@ -281,24 +283,6 @@ export default {
   data() {
     return {
       stock: 5,
-      properties: [
-        {
-          name: 'Product Code',
-          value: '578902-00'
-        },
-        {
-          name: 'Category',
-          value: 'Pants'
-        },
-        {
-          name: 'Material',
-          value: 'Cotton'
-        },
-        {
-          name: 'Country',
-          value: 'Germany'
-        }
-      ],
       description: 'Find stunning women cocktail and party dresses. Stand out in lace and metallic cocktail dresses and party dresses from all your favorite brands.',
       detailsIsActive: false,
       brand:
