@@ -16,6 +16,11 @@ const findProductVariantImages = (product, variant, attachments) => {
   return attachments.filter((e) => e.type === 'image' && imageIds.includes(e.id));
 };
 
+const findProductProperties = (product, attachments) => {
+  const productPropertiesIds = product.relationships.product_properties.data.map((e) => e.id);
+  return attachments.filter((e) => e.type === 'product_property' && productPropertiesIds.includes(e.id));
+};
+
 const formatProductVariant = (product, variant, attachments) => ({
   _id: product.id,
   _variantId: variant.id,
@@ -24,6 +29,7 @@ const formatProductVariant = (product, variant, attachments) => ({
   optionTypes: findProductOptionTypes(product, attachments),
   optionValues: findVariantOptionValues(variant, attachments),
   images: findProductVariantImages(product, variant, attachments),
+  properties: findProductProperties(product, attachments),
   ...product.attributes,
   ...variant.attributes
 });
@@ -75,7 +81,7 @@ export default async function getProduct(context, params) {
       ids: params.id,
       taxons: params.catId
     },
-    include: 'variants.option_values,option_types,images',
+    include: 'variants.option_values,option_types,product_properties,images',
     page: 1,
     // eslint-disable-next-line camelcase
     per_page: params.limit || 10
