@@ -54,6 +54,16 @@ export type Image = {
   }
 }
 
+export type Property = {
+  id: number,
+  type: string,
+  attributes: {
+    description: string,
+    name: string,
+    value: string,
+  }
+}
+
 export type LineItem = {
   _id: number;
   _variantId: number;
@@ -82,6 +92,7 @@ export type ProductVariant = {
   name: string;
   sku: string;
   images: Image[];
+  properties: Property[];
   price: {
     original: number;
     current: number;
