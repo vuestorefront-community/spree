@@ -59,6 +59,11 @@ export type Property = {
   value: string,
 }
 
+export type Breadcrumb = {
+  text: string,
+  link: string
+}
+
 export type LineItem = {
   _id: number;
   _variantId: number;
@@ -88,6 +93,7 @@ export type ProductVariant = {
   sku: string;
   images: Image[];
   properties: Property[];
+  breadcrumbs: Breadcrumb[];
   price: {
     original: number;
     current: number;

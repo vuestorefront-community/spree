@@ -129,6 +129,8 @@ export const getProductAverageRating = (product: ProductVariant): number => 0;
 
 export const getProductProperties = (product: ProductVariant) => product.properties;
 
+export const getProductBreadcrumbs = (product: ProductVariant) => product.breadcrumbs;
+
 const productGetters: ProductGetters<ProductVariant, ProductVariantFilters> = {
   getName: getProductName,
   getSlug: getProductSlug,
@@ -144,7 +146,8 @@ const productGetters: ProductGetters<ProductVariant, ProductVariantFilters> = {
   getTotalReviews: getProductTotalReviews,
   getAverageRating: getProductAverageRating,
   getOptionTypeNames: getProductOptionTypeNames,
-  getProperties: getProductProperties
+  getProperties: getProductProperties,
+  getBreadcrumbs: getProductBreadcrumbs
 };
 
 export default productGetters;

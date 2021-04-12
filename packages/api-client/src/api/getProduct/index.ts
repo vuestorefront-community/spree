@@ -23,6 +23,34 @@ const formatProperties = (attachments, product) => {
   }));
 };
 
+const formatBreadcrumbs = (attachments, product) => {
+  const taxons = extractRelationships(attachments, 'taxon', 'taxons', product);
+
+  const rootBreadcrumb = {
+    text: 'Home',
+    link: '/'
+  };
+
+  const breadcrumbs = [rootBreadcrumb];
+
+  taxons.forEach(taxon => {
+    if (taxon.attributes.depth >= breadcrumbs.length)
+      breadcrumbs.push({
+        text: taxon.attributes.name,
+        link: `/c/${taxon.attributes.permalink}`
+      });
+  });
+
+  const productBreadcrumb = {
+    text: product.attributes.name,
+    link: product.attributes.slug
+  };
+
+  breadcrumbs.push(productBreadcrumb);
+
+  return breadcrumbs;
+};
+
 const formatProductVariant = (product, variant, attachments) => ({
   _id: product.id,
   _variantId: variant.id,
@@ -31,6 +59,7 @@ const formatProductVariant = (product, variant, attachments) => ({
   optionTypes: extractRelationships(attachments, 'option_type', 'option_types', product),
   optionValues: extractRelationships(attachments, 'option_value', 'option_values', variant),
   images: extractImagesRelationships(attachments, product, variant),
+  breadcrumbs: formatBreadcrumbs(attachments, product),
   properties: formatProperties(attachments, product),
   ...product.attributes,
   ...variant.attributes
@@ -83,7 +112,7 @@ export default async function getProduct(context, params) {
       ids: params.id,
       taxons: params.catId
     },
-    include: 'variants.option_values,option_types,product_properties,images',
+    include: 'variants.option_values,option_types,product_properties,taxons,images',
     page: 1,
     // eslint-disable-next-line camelcase
     per_page: params.limit || 10

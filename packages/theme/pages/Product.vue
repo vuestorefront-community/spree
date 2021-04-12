@@ -210,6 +210,7 @@ export default {
     const configuration = computed(() => productGetters.getAttributes(product.value, optionTypes.value));
     const categories = computed(() => productGetters.getCategoryIds(product.value));
     const properties = computed(() => productGetters.getProperties(product.value));
+    const breadcrumbs = computed(() => productGetters.getBreadcrumbs(product.value));
     const reviews = computed(() => reviewGetters.getItems(productReviews.value));
 
     // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
@@ -254,7 +255,8 @@ export default {
       productGetters,
       productGallery,
       optionTypes,
-      properties
+      properties,
+      breadcrumbs
     };
   },
   components: {
@@ -287,27 +289,7 @@ export default {
       detailsIsActive: false,
       brand:
           'Brand name is the perfect pairing of quality and design. This label creates major everyday vibes with its collection of modern brooches, silver and gold jewellery, or clips it back with hair accessories in geo styles.',
-      careInstructions: 'Do not wash!',
-      breadcrumbs: [
-        {
-          text: 'Home',
-          route: {
-            link: '#'
-          }
-        },
-        {
-          text: 'Category',
-          route: {
-            link: '#'
-          }
-        },
-        {
-          text: 'Pants',
-          route: {
-            link: '#'
-          }
-        }
-      ]
+      careInstructions: 'Do not wash!'
     };
   }
 };
