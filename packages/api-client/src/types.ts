@@ -1,5 +1,6 @@
 import { Client } from '@spree/storefront-api-v2-sdk';
 import { IOAuthToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
+import { AgnosticBreadcrumb } from '@vue-storefront/core';
 
 export type OptionValue = {
   id: number;
@@ -59,11 +60,6 @@ export type Property = {
   value: string,
 }
 
-export type Breadcrumb = {
-  text: string,
-  link: string
-}
-
 export type LineItem = {
   _id: number;
   _variantId: number;
@@ -93,7 +89,7 @@ export type ProductVariant = {
   sku: string;
   images: Image[];
   properties: Property[];
-  breadcrumbs: Breadcrumb[];
+  breadcrumbs: AgnosticBreadcrumb[];
   price: {
     original: number;
     current: number;

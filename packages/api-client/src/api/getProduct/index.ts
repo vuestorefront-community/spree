@@ -18,7 +18,7 @@ const extractImagesRelationships = (attachments, product, variant) => {
 const formatProperties = (attachments, product) => {
   const properties = extractRelationships(attachments, 'product_property', 'product_properties', product);
   return properties.map(property => ({
-    name: property.attributes.name,
+    name: property.attributes.description,
     value: property.attributes.value
   }));
 };
