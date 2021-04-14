@@ -110,7 +110,7 @@ export default async function getProduct(context, params) {
   const result = await context.client.products.list({
     filter: {
       ids: params.id,
-      taxons: params.catId
+      taxons: params.categoryId
     },
     include: 'variants.option_values,option_types,product_properties,taxons,images',
     page: 1,

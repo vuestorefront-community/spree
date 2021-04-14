@@ -224,7 +224,7 @@ export default {
 
     onSSR(async () => {
       await search({ id });
-      await searchRelatedProducts({ catId: [categories.value[0]], limit: 8 });
+      await searchRelatedProducts({ categoryId: [categories.value[0]], limit: 8 });
       await searchReviews({ productId: id });
     });
 

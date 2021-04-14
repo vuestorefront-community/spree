@@ -395,7 +395,6 @@ export default {
     });
 
     onSSR(async () => {
-      console.log(th.getFacetsFromURL());
       await search(th.getFacetsFromURL());
     });
 
