@@ -1,78 +1,40 @@
 import { CustomQuery } from '@vue-storefront/core';
 
+const findItems = (taxon, taxons) => {
+  const taxonIds = taxon.relationships.children.data.map(child => child.id);
+  const items = taxons.data.filter(taxon => taxonIds.includes(taxon.id));
+
+  return items.map(item => ({
+    id: item.id,
+    name: item.attributes.name,
+    slug: item.attributes.permalink,
+    items: []
+  }));
+};
+
+const findCategory = (categories, slug) => {
+  return categories.find(e => e.name.toLowerCase() === slug);
+};
+
+const formatCategories = (taxons) =>
+  taxons.data.map(taxon => ({
+    id: taxon.id,
+    name: taxon.attributes.name,
+    slug: taxon.attributes.permalink,
+    items: taxon.attributes.is_leaf ? [] : findItems(taxon, taxons)
+  }));
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default async function getCategory(context, params, customQuery?: CustomQuery) {
-  return Promise.resolve([
-    {
-      id: 1,
-      name: 'Women',
-      slug: 'women',
-      items: [
-        {
-          id: 4,
-          name: 'Women jackets',
-          slug: 'women-jackets',
-          items: [
-            {
-              id: 9,
-              name: 'Winter jackets',
-              slug: 'winter-jackets',
-              items: []
-            },
-            {
-              id: 10,
-              name: 'Autumn jackets',
-              slug: 'autmun-jackets',
-              items: []
-            }
-          ]
-        },
-        {
-          id: 5,
-          name: 'Skirts',
-          slug: 'skirts',
-          items: []
-        }
-      ]
-    },
-    {
-      id: 2,
-      name: 'Men',
-      slug: 'men',
-      items: [
-        {
-          id: 6,
-          name: 'Men T-shirts',
-          slug: 'men-tshirts',
-          items: []
-        }
-      ]
-    },
-    {
-      id: 3,
-      name: 'Kids',
-      slug: 'kids',
-      items: [
-        {
-          id: 7,
-          name: 'Toys',
-          slug: 'toys',
-          items: [
-            {
-              id: 8,
-              name: 'Toy Cars',
-              slug: 'toy-cars',
-              items: []
-            },
-            {
-              id: 8,
-              name: 'Dolls',
-              slug: 'dolls',
-              items: []
-            }
-          ]
-        }
-      ]
-    }
-  ]);
+  const result = await context.client.taxons.list();
+
+  if (result.isSuccess()) {
+    const taxons = result.success();
+    const categories = formatCategories(taxons);
+
+    return {
+      tree: findCategory(categories, params.rootCatSlug),
+      current: findCategory(categories, params.categorySlug)
+    };
+  }
 }
