@@ -1,6 +1,8 @@
 import { CustomQuery } from '@vue-storefront/core';
 
 const findItems = (taxon, taxons) => {
+  if (taxon.attributes.is_leaf) return [];
+
   const taxonIds = taxon.relationships.children.data.map(child => child.id);
   const items = taxons.data.filter(taxon => taxonIds.includes(taxon.id));
 
@@ -8,20 +10,18 @@ const findItems = (taxon, taxons) => {
     id: item.id,
     name: item.attributes.name,
     slug: item.attributes.permalink,
-    items: []
+    items: findItems(item, taxons)
   }));
 };
 
-const findCategory = (categories, slug) => {
-  return categories.find(e => e.name.toLowerCase() === slug);
-};
+const findCategory = (categories, slug) => categories.find(e => e.slug === slug);
 
 const formatCategories = (taxons) =>
   taxons.data.map(taxon => ({
     id: taxon.id,
     name: taxon.attributes.name,
     slug: taxon.attributes.permalink,
-    items: taxon.attributes.is_leaf ? [] : findItems(taxon, taxons)
+    items: findItems(taxon, taxons)
   }));
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -31,10 +31,12 @@ export default async function getCategory(context, params, customQuery?: CustomQ
   if (result.isSuccess()) {
     const taxons = result.success();
     const categories = formatCategories(taxons);
+    const { rootCatSlug, categorySlug } = params;
+    const slug = rootCatSlug === categorySlug ? rootCatSlug : `${params.rootCatSlug}/${params.categorySlug}`;
 
     return {
-      tree: findCategory(categories, params.rootCatSlug),
-      current: findCategory(categories, params.categorySlug)
+      root: findCategory(categories, 'categories'),
+      current: findCategory(categories, slug)
     };
   }
 }
