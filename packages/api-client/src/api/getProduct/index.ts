@@ -114,6 +114,7 @@ export default async function getProduct(context, params) {
     },
     include: 'variants.option_values,option_types,product_properties,taxons,images',
     page: params.page,
+    sort: params.sort,
     // eslint-disable-next-line camelcase
     per_page: params.limit || 10
   });

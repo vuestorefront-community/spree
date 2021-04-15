@@ -15,10 +15,7 @@ const useUiHelpers = () => {
     return {
       categorySlug,
       page: query.page || 1,
-      // sort: query.sort || 'latest',
-      // filters: getFiltersDataFromUrl(instance, true),
-      // itemsPerPage: parseInt(query.itemsPerPage, 10) || 20,
-      phrase: query.phrase
+      sort: query.sort || 'updated_at'
     };
   };
 
@@ -29,9 +26,8 @@ const getCatLink = (category): string => {
 
   // eslint-disable-next-line
 const changeSorting = (sort) => {
-    console.warn('[VSF] please implement useUiHelpers.changeSorting.');
-
-    return 'latest';
+    const { query } = instance.$router.history.current;
+    instance.$router.push({ query: { ...query, sort } });
   };
 
   // eslint-disable-next-line
