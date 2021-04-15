@@ -20,7 +20,7 @@ const getSortOptions = (searchData): AgnosticSort => ({ options: [], selected: '
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getCategoryTree = (searchData): AgnosticCategoryTree =>
-  searchData.data ? buildCategoryTree(searchData.data.categories.tree) : {} as any;
+  searchData.data ? buildCategoryTree(searchData.data.categories) : {} as any;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getProducts = (searchData): any => searchData.data ? searchData.data.products : [];

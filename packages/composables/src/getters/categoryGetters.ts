@@ -1,20 +1,18 @@
 import { CategoryGetters, AgnosticCategoryTree } from '@vue-storefront/core';
 import { Category } from '@upsidelab/vue-storefront-spree-api/src/types';
 
-const itemToTree = (category: Category): AgnosticCategoryTree => {
-  return {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const getCategoryTree = (categories: any): AgnosticCategoryTree => {
+  const { root, current } = categories;
+
+  const itemToTree = (category: Category) => ({
     label: category.name,
     slug: category.slug,
     items: category.items.map(itemToTree),
-    isCurrent: false
-  };
-};
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getCategoryTree = (category: Category): AgnosticCategoryTree => {
-  if (category) {
-    return itemToTree(category);
-  }
-  return {} as AgnosticCategoryTree;
+    isCurrent: category.id === current.id
+  });
+
+  return itemToTree(root);
 };
 
 const categoryGetters: CategoryGetters<Category> = {
