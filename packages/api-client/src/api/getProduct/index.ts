@@ -113,14 +113,22 @@ export default async function getProduct(context, params) {
       taxons: params.categoryId
     },
     include: 'variants.option_values,option_types,product_properties,taxons,images',
-    page: 1,
+    page: params.page,
     // eslint-disable-next-line camelcase
     per_page: params.limit || 10
   });
 
   if (result.isSuccess()) {
     const productsData = preprocessProductsData(result.success(), context);
-    return params.limit ? getLimitedVariants(productsData) : getVariants(productsData);
+    return params.limit
+      ? {
+        data: getLimitedVariants(productsData),
+        meta: result.success().meta
+      }
+      : {
+        data: getVariants(productsData),
+        meta: result.success().meta
+      };
   } else {
     throw result.fail();
   }

@@ -14,10 +14,10 @@ const useUiHelpers = () => {
 
     return {
       categorySlug,
-      page: parseInt(query.page, 10) || 1,
-      sort: query.sort || 'latest',
+      page: query.page || 1,
+      // sort: query.sort || 'latest',
       // filters: getFiltersDataFromUrl(instance, true),
-      itemsPerPage: parseInt(query.itemsPerPage, 10) || 20,
+      // itemsPerPage: parseInt(query.itemsPerPage, 10) || 20,
       phrase: query.phrase
     };
   };

@@ -4,11 +4,14 @@ const factoryParams = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   search: async (context: Context, params: FacetSearchResult<any>) => {
     const categories = await context.$spree.api.getCategory({ categorySlug: params.input.categorySlug, rootCatSlug: params.input.rootCatSlug });
-    const products = await context.$spree.api.getProduct({ categoryId: categories.current.id });
+    const productsResponse = await context.$spree.api.getProduct({ categoryId: categories.current.id, page: params.input.page });
+    const products = productsResponse.data;
+    const productsMeta = productsResponse.meta;
 
     return {
       categories,
-      products
+      products,
+      productsMeta
     };
   }
 };
