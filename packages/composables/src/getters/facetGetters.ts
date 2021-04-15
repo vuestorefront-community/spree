@@ -7,7 +7,10 @@ import {
   AgnosticBreadcrumb,
   AgnosticFacet
 } from '@vue-storefront/core';
-import { getCategoryTree as buildCategoryTree } from './categoryGetters';
+import {
+  getCategoryTree as buildCategoryTree,
+  getCategoryBreadcrumbs as buildBreadcrumbs
+} from './categoryGetters';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getAll = (searchData, criteria?: string[]): AgnosticFacet[] => [];
@@ -35,7 +38,8 @@ const getPagination = (searchData): AgnosticPagination => ({
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const getBreadcrumbs = (searchData): AgnosticBreadcrumb[] => [];
+const getBreadcrumbs = (searchData): AgnosticBreadcrumb[] =>
+  searchData.data ? buildBreadcrumbs(searchData.data.categories.current) : [];
 
 const facetGetters: FacetsGetters<any, any> = {
   getSortOptions,

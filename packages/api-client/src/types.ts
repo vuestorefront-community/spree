@@ -101,7 +101,8 @@ export type Category = {
   id: number;
   name: string;
   slug: string;
-  items: Category[];
+  items?: Category[];
+  parent?: Category;
 };
 export type CategoryFilter = Record<string, unknown>;
 export type ShippingMethod = Record<string, unknown>;

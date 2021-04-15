@@ -9,11 +9,10 @@ const useUiHelpers = () => {
   const instance = getInstance();
 
   const getFacetsFromURL = () => {
-    const { query, params } = instance.$router.history.current;
-    const categorySlug = Object.keys(params).reduce((prev, curr) => params[curr] || prev, params.slug_1);
+    const { query, path } = instance.$router.history.current;
+    const categorySlug = path.substring(3);
 
     return {
-      rootCatSlug: params.slug_1,
       categorySlug,
       page: parseInt(query.page, 10) || 1,
       sort: query.sort || 'latest',
@@ -25,9 +24,7 @@ const useUiHelpers = () => {
 
   // eslint-disable-next-line
 const getCatLink = (category): string => {
-    console.warn('[VSF] please implement useUiHelpers.getCatLink.');
-
-    return '/';
+    return `/c/${category.slug}`;
   };
 
   // eslint-disable-next-line
