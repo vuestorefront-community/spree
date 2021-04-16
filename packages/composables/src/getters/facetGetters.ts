@@ -7,7 +7,10 @@ import {
   AgnosticBreadcrumb,
   AgnosticFacet
 } from '@vue-storefront/core';
-import { getCategoryTree as buildCategoryTree } from './categoryGetters';
+import {
+  getCategoryTree as buildCategoryTree,
+  getCategoryBreadcrumbs as buildBreadcrumbs
+} from './categoryGetters';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getAll = (searchData, criteria?: string[]): AgnosticFacet[] => [];
@@ -16,7 +19,19 @@ const getAll = (searchData, criteria?: string[]): AgnosticFacet[] => [];
 const getGrouped = (searchData, criteria?: string[]): AgnosticGroupedFacet[] =>[];
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const getSortOptions = (searchData): AgnosticSort => ({ options: [], selected: '' });
+const getSortOptions = (searchData): AgnosticSort => {
+  const { sort } = searchData.input;
+  const options = [
+    {type: 'sort', id: 'price', value: 'Price ascending'},
+    {type: 'sort', id: '-price', value: 'Price descending'},
+    {type: 'sort', id: 'updated_at', value: 'Updated at ascending'},
+    {type: 'sort', id: '-updated_at', value: 'Updated at descending'}
+  ];
+
+  const selectedOption = options.find(option => option.id === sort);
+
+  return { options, selected: selectedOption.id };
+};
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getCategoryTree = (searchData): AgnosticCategoryTree =>
@@ -26,16 +41,17 @@ const getCategoryTree = (searchData): AgnosticCategoryTree =>
 const getProducts = (searchData): any => searchData.data ? searchData.data.products : [];
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const getPagination = (searchData): AgnosticPagination => ({
-  currentPage: 1,
-  totalPages: 1,
-  totalItems: 0,
+const getPagination = (searchData): AgnosticPagination => searchData.data ? ({
+  currentPage: searchData.input.page,
+  totalPages: searchData.data.productsMeta.total_pages,
+  totalItems: searchData.data.productsMeta.total_count,
   itemsPerPage: 10,
   pageOptions: []
-});
+}) : {} as AgnosticPagination;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const getBreadcrumbs = (searchData): AgnosticBreadcrumb[] => [];
+const getBreadcrumbs = (searchData): AgnosticBreadcrumb[] =>
+  searchData.data ? buildBreadcrumbs(searchData.data.categories.current) : [];
 
 const facetGetters: FacetsGetters<any, any> = {
   getSortOptions,

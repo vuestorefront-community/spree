@@ -29,6 +29,7 @@ export const getProductPrice = (product: ProductVariant): AgnosticPrice => {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getProductGallery = (product: ProductVariant): AgnosticMediaGalleryItem[] => {
+  if (!product) return [];
   const findImageStyleByDimensions = (image: Image, width: number, height: number) => {
     if (!image.attributes?.styles) return undefined;
 
@@ -109,9 +110,9 @@ export const getProductAttributes = (products: ProductVariant[] | ProductVariant
   }), {});
 };
 
-export const getProductOptionTypeNames = (product: ProductVariant): string[] => {
-  return product.optionTypes.map((optionType) => optionType.attributes.name);
-};
+export const getProductOptionTypeNames = (product: ProductVariant): string[] => product
+  ? product.optionTypes.map((optionType) => optionType.attributes.name)
+  : [];
 
 export const getProductDescription = (product: ProductVariant): any => (product as any)?._description || '';
 
@@ -127,9 +128,9 @@ export const getProductTotalReviews = (product: ProductVariant): number => 0;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getProductAverageRating = (product: ProductVariant): number => 0;
 
-export const getProductProperties = (product: ProductVariant) => product.properties;
+export const getProductProperties = (product: ProductVariant) => product ? product.properties : [];
 
-export const getProductBreadcrumbs = (product: ProductVariant) => product.breadcrumbs;
+export const getProductBreadcrumbs = (product: ProductVariant) => product ? product.breadcrumbs : [];
 
 const productGetters: ProductGetters<ProductVariant, ProductVariantFilters> = {
   getName: getProductName,

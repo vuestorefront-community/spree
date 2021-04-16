@@ -9,32 +9,25 @@ const useUiHelpers = () => {
   const instance = getInstance();
 
   const getFacetsFromURL = () => {
-    const { query, params } = instance.$router.history.current;
-    const categorySlug = Object.keys(params).reduce((prev, curr) => params[curr] || prev, params.slug_1);
+    const { query, path } = instance.$router.history.current;
+    const categorySlug = path.substring(3);
 
     return {
-      rootCatSlug: params.slug_1,
       categorySlug,
-      page: parseInt(query.page, 10) || 1,
-      sort: query.sort || 'latest',
-      // filters: getFiltersDataFromUrl(instance, true),
-      itemsPerPage: parseInt(query.itemsPerPage, 10) || 20,
-      phrase: query.phrase
+      page: query.page || 1,
+      sort: query.sort || 'updated_at'
     };
   };
 
   // eslint-disable-next-line
 const getCatLink = (category): string => {
-    console.warn('[VSF] please implement useUiHelpers.getCatLink.');
-
-    return '/';
+    return `/c/${category.slug}`;
   };
 
   // eslint-disable-next-line
 const changeSorting = (sort) => {
-    console.warn('[VSF] please implement useUiHelpers.changeSorting.');
-
-    return 'latest';
+    const { query } = instance.$router.history.current;
+    instance.$router.push({ query: { ...query, sort } });
   };
 
   // eslint-disable-next-line
