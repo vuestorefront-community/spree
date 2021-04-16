@@ -25,7 +25,7 @@ export const findFacets = (products) => {
     );
 
     facets.push({
-      id: type.id,
+      id: type.attributes.name,
       label: type.attributes.presentation,
       options: values.map(value => ({
         type: 'attribute',

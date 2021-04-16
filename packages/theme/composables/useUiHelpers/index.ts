@@ -5,19 +5,15 @@ const getInstance = () => {
   return vm.$root as any;
 };
 
-const formatKeyName = (key: string) => key.replace('filter[', '').replace(']', '');
-
 const getFiltersFromURL = (context) => {
   const { query } = context.$router.history.current;
 
-  const filters = Object.keys(query)
-    .filter(o => o.includes('filter'))
+  return Object.keys(query)
+    .filter(o => ['color', 'size', 'length'].includes(o))
     .reduce((filters, key) => ({
       ...filters,
-      [formatKeyName(key)]: query[key]
+      [key]: query[key]
     }), {});
-
-  return filters;
 };
 
 const useUiHelpers = () => {
@@ -48,7 +44,9 @@ const changeSorting = (sort) => {
 
   // eslint-disable-next-line
 const changeFilters = (filters) => {
-    console.warn('[VSF] please implement useUiHelpers.changeFilters.');
+    const { query } = instance.$router.history.current;
+
+    instance.$router.push({ query: { ...query, ...filters } });
   };
 
   // eslint-disable-next-line
