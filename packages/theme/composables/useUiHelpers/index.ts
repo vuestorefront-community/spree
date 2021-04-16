@@ -5,6 +5,21 @@ const getInstance = () => {
   return vm.$root as any;
 };
 
+const formatKeyName = (key: string) => key.replace('filter[', '').replace(']', '');
+
+const getFiltersFromURL = (context) => {
+  const { query } = context.$router.history.current;
+
+  const filters = Object.keys(query)
+    .filter(o => o.includes('filter'))
+    .reduce((filters, key) => ({
+      ...filters,
+      [formatKeyName(key)]: query[key]
+    }), {});
+
+  return filters;
+};
+
 const useUiHelpers = () => {
   const instance = getInstance();
 
@@ -15,7 +30,8 @@ const useUiHelpers = () => {
     return {
       categorySlug,
       page: query.page || 1,
-      sort: query.sort || 'updated_at'
+      sort: query.sort || 'updated_at',
+      filters: getFiltersFromURL(instance)
     };
   };
 
@@ -46,11 +62,7 @@ const setTermForUrl = (term: string) => {
   };
 
   // eslint-disable-next-line
-const isFacetColor = (facet): boolean => {
-    console.warn('[VSF] please implement useUiHelpers.isFacetColor.');
-
-    return false;
-  };
+const isFacetColor = (facet): boolean => facet.label === 'Color';
 
   // eslint-disable-next-line
 const isFacetCheckbox = (facet): boolean => {

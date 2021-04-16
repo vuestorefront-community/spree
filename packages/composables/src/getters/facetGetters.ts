@@ -16,10 +16,13 @@ import {
 const getAll = (searchData, criteria?: string[]): AgnosticFacet[] => [];
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const getGrouped = (searchData, criteria?: string[]): AgnosticGroupedFacet[] =>[];
+const getGrouped = (searchData, criteria?: string[]): AgnosticGroupedFacet[] =>
+  searchData.data ? searchData.data.facets : [];
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getSortOptions = (searchData): AgnosticSort => {
+  if (!searchData.input) return {} as AgnosticSort;
+
   const { sort } = searchData.input;
   const options = [
     {type: 'sort', id: 'price', value: 'Price ascending'},

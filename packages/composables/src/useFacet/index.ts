@@ -1,17 +1,27 @@
 import { Context, useFacetFactory, FacetSearchResult } from '@vue-storefront/core';
+import { findFacets } from './_utils';
 
 const factoryParams = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   search: async (context: Context, params: FacetSearchResult<any>) => {
-    const categories = await context.$spree.api.getCategory({ categorySlug: params.input.categorySlug, rootCatSlug: params.input.rootCatSlug });
-    const productsResponse = await context.$spree.api.getProduct({ categoryId: categories.current.id, page: params.input.page, sort: params.input.sort });
-    const products = productsResponse.data;
-    const productsMeta = productsResponse.meta;
+    const { categorySlug, rootCatSlug, page, sort, filters } = params.input;
+
+    const categories = await context.$spree.api.getCategory({ categorySlug, rootCatSlug });
+
+    const productsResponse = await context.$spree.api.getProduct({
+      categoryId: categories.current.id,
+      page,
+      sort,
+      filters
+    });
+
+    const { data: products, meta: productsMeta } = productsResponse;
 
     return {
       categories,
       products,
-      productsMeta
+      productsMeta,
+      facets: findFacets(products)
     };
   }
 };
