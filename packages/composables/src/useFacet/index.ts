@@ -2,7 +2,6 @@ import { Context, useFacetFactory, FacetSearchResult } from '@vue-storefront/cor
 import { findFacets } from './_utils';
 
 const factoryParams = {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   search: async (context: Context, params: FacetSearchResult<any>) => {
     const { categorySlug, rootCatSlug, page, sort, filters } = params.input;
 

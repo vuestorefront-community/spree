@@ -31,19 +31,16 @@ const useUiHelpers = () => {
     };
   };
 
-  // eslint-disable-next-line
-const getCatLink = (category): string => {
+  const getCatLink = (category): string => {
     return `/c/${category.slug}`;
   };
 
-  // eslint-disable-next-line
-const changeSorting = (sort) => {
+  const changeSorting = (sort) => {
     const { query } = instance.$router.history.current;
     instance.$router.push({ query: { ...query, sort } });
   };
 
-  // eslint-disable-next-line
-const changeFilters = (filters) => {
+  const changeFilters = (filters) => {
     const { query } = instance.$router.history.current;
 
     instance.$router.push({ query: { ...query, ...filters } });

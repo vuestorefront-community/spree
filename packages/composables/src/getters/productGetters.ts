@@ -13,13 +13,10 @@ type ProductVariantFilters = any
 // TODO: Add interfaces for some of the methods in core
 // Product
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getProductName = (product: ProductVariant): string => product?.name || 'Product\'s name';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getProductSlug = (product: ProductVariant): string => product.sku;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getProductPrice = (product: ProductVariant): AgnosticPrice => {
   return {
     regular: product?.price?.original || 0,
