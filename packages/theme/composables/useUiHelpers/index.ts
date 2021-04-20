@@ -48,7 +48,15 @@ const useUiHelpers = () => {
   const changeFilters = (filters) => {
     const { query } = instance.$router.history.current;
 
-    instance.$router.push({ query: { ...query, ...filters } });
+    const emptyFilters = {
+      color: [],
+      size: [],
+      length: []
+    };
+
+    Object.keys(filters).filter(o => ['color', 'size', 'length'].includes(o)).length
+      ? instance.$router.push({ query: { ...query, ...filters } })
+      : instance.$router.push({ query: { ...query, ...emptyFilters } });
   };
 
   // eslint-disable-next-line
