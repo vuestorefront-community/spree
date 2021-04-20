@@ -32,7 +32,8 @@ const useUiHelpers = () => {
       categorySlug,
       page: query.page || 1,
       sort: query.sort || 'updated_at',
-      filters: getFiltersFromURL(instance)
+      filters: getFiltersFromURL(instance),
+      itemsPerPage: query.itemsPerPage || 10
     };
   };
 
@@ -59,9 +60,9 @@ const useUiHelpers = () => {
       : instance.$router.push({ query: { ...query, ...emptyFilters } });
   };
 
-  // eslint-disable-next-line
-const changeItemsPerPage = (itemsPerPage) => {
-    console.warn('[VSF] please implement useUiHelpers.changeItemsPerPage.');
+  const changeItemsPerPage = (itemsPerPage) => {
+    const { query } = instance.$router.history.current;
+    instance.$router.push({ query: { ...query, itemsPerPage }});
   };
 
   // eslint-disable-next-line

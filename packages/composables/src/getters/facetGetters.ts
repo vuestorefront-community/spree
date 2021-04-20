@@ -44,8 +44,8 @@ const getPagination = (searchData): AgnosticPagination => searchData.data ? ({
   currentPage: searchData.input.page,
   totalPages: searchData.data.productsMeta.total_pages,
   totalItems: searchData.data.productsMeta.total_count,
-  itemsPerPage: 10,
-  pageOptions: []
+  itemsPerPage: searchData.data.itemsPerPage,
+  pageOptions: [10, 20, 40]
 }) : {} as AgnosticPagination;
 
 const getBreadcrumbs = (searchData): AgnosticBreadcrumb[] =>

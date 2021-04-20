@@ -118,7 +118,7 @@ export default async function getProduct(context, params) {
     page: params.page,
     sort: params.sort,
     // eslint-disable-next-line camelcase
-    per_page: params.limit || 10
+    per_page: params.itemsPerPage
   });
 
   if (result.isSuccess()) {
