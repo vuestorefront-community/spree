@@ -29,7 +29,7 @@ export const findFacets = (products) => {
       label: type.attributes.presentation,
       options: values.map(value => ({
         type: 'attribute',
-        id: value.attributes.name,
+        id: value.id,
         value: value.attributes.presentation,
         attrName: type.attributes.name
       }))

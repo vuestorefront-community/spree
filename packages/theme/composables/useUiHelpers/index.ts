@@ -7,13 +7,18 @@ const getInstance = () => {
 
 const getFiltersFromURL = (context) => {
   const { query } = context.$router.history.current;
+  const filters = [];
 
-  return Object.keys(query)
-    .filter(o => ['color', 'size', 'length'].includes(o))
-    .reduce((filters, key) => ({
-      ...filters,
-      [key]: query[key]
-    }), {});
+  const keys = Object.keys(query)
+    .filter(o => ['color', 'size', 'length'].includes(o));
+
+  keys.forEach(key => {
+    Array.isArray(query[key])
+      ? filters.push(...query[key])
+      : filters.push(query[key]);
+  });
+
+  return filters;
 };
 
 const useUiHelpers = () => {
