@@ -1,8 +1,28 @@
 import { getCurrentInstance } from '@vue/composition-api';
 
+const types = ['color', 'size', 'length'];
+
 const getInstance = () => {
   const vm = getCurrentInstance();
   return vm.$root as any;
+};
+
+const getKeys = (filters, types) => Object.keys(filters)
+  .filter(o => types.includes(o));
+
+const getFiltersFromURL = (context) => {
+  const { query } = context.$router.history.current;
+  const filters = [];
+
+  const keys = getKeys(query, types);
+
+  keys.forEach(key => {
+    Array.isArray(query[key])
+      ? filters.push(...query[key])
+      : filters.push(query[key]);
+  });
+
+  return filters;
 };
 
 const useUiHelpers = () => {
@@ -15,29 +35,38 @@ const useUiHelpers = () => {
     return {
       categorySlug,
       page: query.page || 1,
-      sort: query.sort || 'updated_at'
+      sort: query.sort || 'updated_at',
+      filters: getFiltersFromURL(instance),
+      itemsPerPage: query.itemsPerPage || 10
     };
   };
 
-  // eslint-disable-next-line
-const getCatLink = (category): string => {
+  const getCatLink = (category): string => {
     return `/c/${category.slug}`;
   };
 
-  // eslint-disable-next-line
-const changeSorting = (sort) => {
+  const changeSorting = (sort) => {
     const { query } = instance.$router.history.current;
     instance.$router.push({ query: { ...query, sort } });
   };
 
-  // eslint-disable-next-line
-const changeFilters = (filters) => {
-    console.warn('[VSF] please implement useUiHelpers.changeFilters.');
+  const changeFilters = (filters) => {
+    const { query } = instance.$router.history.current;
+
+    const emptyFilters = {
+      color: [],
+      size: [],
+      length: []
+    };
+
+    getKeys(filters, types).length
+      ? instance.$router.push({ query: { ...query, ...filters } })
+      : instance.$router.push({ query: { ...query, ...emptyFilters } });
   };
 
-  // eslint-disable-next-line
-const changeItemsPerPage = (itemsPerPage) => {
-    console.warn('[VSF] please implement useUiHelpers.changeItemsPerPage.');
+  const changeItemsPerPage = (itemsPerPage) => {
+    const { query } = instance.$router.history.current;
+    instance.$router.push({ query: { ...query, itemsPerPage }});
   };
 
   // eslint-disable-next-line
@@ -46,11 +75,7 @@ const setTermForUrl = (term: string) => {
   };
 
   // eslint-disable-next-line
-const isFacetColor = (facet): boolean => {
-    console.warn('[VSF] please implement useUiHelpers.isFacetColor.');
-
-    return false;
-  };
+const isFacetColor = (facet): boolean => facet.label === 'Color';
 
   // eslint-disable-next-line
 const isFacetCheckbox = (facet): boolean => {

@@ -110,13 +110,15 @@ export default async function getProduct(context, params) {
   const result = await context.client.products.list({
     filter: {
       ids: params.id,
-      taxons: params.categoryId
+      taxons: params.categoryId,
+      // eslint-disable-next-line camelcase
+      option_value_ids: params.filters
     },
     include: 'variants.option_values,option_types,product_properties,taxons,images',
     page: params.page,
     sort: params.sort,
     // eslint-disable-next-line camelcase
-    per_page: params.limit || 10
+    per_page: params.itemsPerPage
   });
 
   if (result.isSuccess()) {

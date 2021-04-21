@@ -1,7 +1,6 @@
 import { CategoryGetters, AgnosticCategoryTree, AgnosticBreadcrumb } from '@vue-storefront/core';
 import { Category } from '@upsidelab/vue-storefront-spree-api/src/types';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getCategoryTree = (categories: any): AgnosticCategoryTree => {
   const { root, current } = categories;
 

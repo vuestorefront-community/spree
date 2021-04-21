@@ -16,10 +16,12 @@ import {
 const getAll = (searchData, criteria?: string[]): AgnosticFacet[] => [];
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const getGrouped = (searchData, criteria?: string[]): AgnosticGroupedFacet[] =>[];
+const getGrouped = (searchData, criteria?: string[]): AgnosticGroupedFacet[] =>
+  searchData.data ? searchData.data.facets : [];
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getSortOptions = (searchData): AgnosticSort => {
+  if (!searchData.input) return {} as AgnosticSort;
+
   const { sort } = searchData.input;
   const options = [
     {type: 'sort', id: 'price', value: 'Price ascending'},
@@ -33,23 +35,19 @@ const getSortOptions = (searchData): AgnosticSort => {
   return { options, selected: selectedOption.id };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getCategoryTree = (searchData): AgnosticCategoryTree =>
   searchData.data ? buildCategoryTree(searchData.data.categories) : {} as any;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getProducts = (searchData): any => searchData.data ? searchData.data.products : [];
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getPagination = (searchData): AgnosticPagination => searchData.data ? ({
   currentPage: searchData.input.page,
   totalPages: searchData.data.productsMeta.total_pages,
   totalItems: searchData.data.productsMeta.total_count,
-  itemsPerPage: 10,
-  pageOptions: []
+  itemsPerPage: searchData.data.itemsPerPage,
+  pageOptions: [10, 20, 40]
 }) : {} as AgnosticPagination;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getBreadcrumbs = (searchData): AgnosticBreadcrumb[] =>
   searchData.data ? buildBreadcrumbs(searchData.data.categories.current) : [];
 
