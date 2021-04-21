@@ -1,16 +1,20 @@
 import { getCurrentInstance } from '@vue/composition-api';
 
+const types = ['color', 'size', 'length'];
+
 const getInstance = () => {
   const vm = getCurrentInstance();
   return vm.$root as any;
 };
 
+const getKeys = (filters, types) => Object.keys(filters)
+  .filter(o => types.includes(o));
+
 const getFiltersFromURL = (context) => {
   const { query } = context.$router.history.current;
   const filters = [];
 
-  const keys = Object.keys(query)
-    .filter(o => ['color', 'size', 'length'].includes(o));
+  const keys = getKeys(query, types);
 
   keys.forEach(key => {
     Array.isArray(query[key])
@@ -55,7 +59,7 @@ const useUiHelpers = () => {
       length: []
     };
 
-    Object.keys(filters).filter(o => ['color', 'size', 'length'].includes(o)).length
+    getKeys(filters, types).length
       ? instance.$router.push({ query: { ...query, ...filters } })
       : instance.$router.push({ query: { ...query, ...emptyFilters } });
   };
