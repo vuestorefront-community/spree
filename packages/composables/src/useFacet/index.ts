@@ -3,14 +3,15 @@ import { findFacets } from './_utils';
 
 const factoryParams = {
   search: async (context: Context, params: FacetSearchResult<any>) => {
-    const { categorySlug, rootCatSlug, page, sort, filters, itemsPerPage } = params.input;
-    const categories = await context.$spree.api.getCategory({ categorySlug, rootCatSlug });
+    const { categorySlug, page, sort, filters, itemsPerPage, term } = params.input;
+    const categories = await context.$spree.api.getCategory({ categorySlug });
     const productsResponse = await context.$spree.api.getProduct({
       categoryId: categories.current.id,
       page,
       sort,
       filters,
-      itemsPerPage
+      itemsPerPage,
+      term
     });
 
     const { data: products, meta: productsMeta } = productsResponse;

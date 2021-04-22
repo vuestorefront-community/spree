@@ -27,9 +27,9 @@ const getFiltersFromURL = (context) => {
 
 const useUiHelpers = () => {
   const instance = getInstance();
+  const { query, path } = instance.$router.history.current;
 
   const getFacetsFromURL = () => {
-    const { query, path } = instance.$router.history.current;
     const categorySlug = path.substring(3);
 
     return {
@@ -37,7 +37,8 @@ const useUiHelpers = () => {
       page: query.page || 1,
       sort: query.sort || 'updated_at',
       filters: getFiltersFromURL(instance),
-      itemsPerPage: query.itemsPerPage || 10
+      itemsPerPage: query.itemsPerPage || 10,
+      term: ''
     };
   };
 
@@ -46,12 +47,10 @@ const useUiHelpers = () => {
   };
 
   const changeSorting = (sort) => {
-    const { query } = instance.$router.history.current;
     instance.$router.push({ query: { ...query, sort } });
   };
 
   const changeFilters = (filters) => {
-    const { query } = instance.$router.history.current;
 
     const emptyFilters = {
       color: [],
@@ -65,7 +64,6 @@ const useUiHelpers = () => {
   };
 
   const changeItemsPerPage = (itemsPerPage) => {
-    const { query } = instance.$router.history.current;
     instance.$router.push({ query: { ...query, itemsPerPage }});
   };
 
@@ -84,9 +82,11 @@ const isFacetCheckbox = (facet): boolean => {
     return false;
   };
 
-  const getSearchTermFromUrl = () => {
-    console.warn('[VSF] please implement useUiHelpers.isFacetCheckbox.');
-  };
+  const getSearchTermFromUrl = (term) => ({
+    ...getFacetsFromURL(),
+    categorySlug: 'categories',
+    term
+  });
 
   return {
     getFacetsFromURL,

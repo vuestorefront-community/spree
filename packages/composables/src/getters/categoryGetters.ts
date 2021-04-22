@@ -22,7 +22,7 @@ export const getCategoryBreadcrumbs = (category: Category): AgnosticBreadcrumb[]
   const breadcrumbs = [rootBreadcrumb];
 
   const buildBreadcrumbs = (category) => {
-    if (category.parent.parent)
+    if (category.parent && category.parent.parent)
       buildBreadcrumbs(category.parent);
 
     breadcrumbs.push({
