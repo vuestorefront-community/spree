@@ -1,3 +1,18 @@
+const priceIds = ['0,50', '51,100', '101,150', '151,200', '201,300'];
+
+const generatePriceOptions = (priceIds) =>
+  priceIds.map(item => ({
+    type: 'attribute',
+    id: item,
+    value: `$${item.split(',')[0]} - $${item.split(',')[1]}`
+  }));
+
+const getPriceFacet = (priceIds) => ({
+  id: 'price',
+  label: 'Price',
+  options: generatePriceOptions(priceIds)
+});
+
 const filterOptions = (options) =>
   options.reduce((options, item) =>
     options.find(o => o.id === item.id) ? options : options.concat(item)
@@ -35,6 +50,8 @@ export const findFacets = (products) => {
       }))
     });
   });
+
+  facets.push(getPriceFacet(priceIds));
 
   return facets;
 };

@@ -112,7 +112,8 @@ export default async function getProduct(context, params) {
       ids: params.id,
       taxons: params.categoryId,
       // eslint-disable-next-line camelcase
-      option_value_ids: params.filters
+      option_value_ids: params.optionValuesIds,
+      price: params.price
     },
     include: 'variants.option_values,option_types,product_properties,taxons,images',
     page: params.page,
