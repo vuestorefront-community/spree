@@ -10,7 +10,7 @@
           <SfMegaMenuColumn :title="$t('Categories')" class="sf-mega-menu-column--pined-content-on-mobile search__categories">
             <SfList>
               <SfListItem v-for="(category, key) in categories.items" :key="key">
-                <SfMenuItem :label="category.label" :link="`/c/women/${category.slug}`"/>
+                <SfMenuItem :label="category.label" :link="`/c/${category.slug}`"/>
               </SfListItem>
             </SfList>
           </SfMegaMenuColumn>
@@ -52,7 +52,7 @@
               </div>
             <SfButton
               v-if="categories.items && categories.items.length"
-              :link="`/c/${categories.slug}/${categories.items[0].slug}`"
+              :link="`/c/${categories.items[0].slug}`"
               class="sf-button--text see-all desktop-only"
             >
               {{ $t('See all results') }}
@@ -62,7 +62,7 @@
             <SfButton
               v-if="categories.items && categories.items.length"
               class="action-buttons__button color-secondary"
-              :link="`/c/${categories.slug}/${categories.items[0].slug}`"
+              :link="`/c/${categories.items[0].slug}`"
             >
               {{ $t('See all results') }}
             </SfButton>
