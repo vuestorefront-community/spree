@@ -13,5 +13,12 @@ export default async function getCurrentBearerOrCartToken({ client, config }: Ap
     return { orderToken: cartToken };
   }
 
+  const createCartResult = await client.cart.create();
+  if (createCartResult.isSuccess()) {
+    const newCartToken = createCartResult.success().data.attributes.token;
+    await config.auth.changeCartToken(newCartToken);
+    return { orderToken: newCartToken };
+  }
+
   return {};
 }

@@ -35,6 +35,9 @@ const params: UseUserFactoryParams<User, any, any> = {
   register: async (context: Context, { email, password, firstName, lastName }) => {
     await context.$spree.api.registerUser({ email, password, firstName, lastName });
 
+    const cart = await context.$spree.api.getCart();
+    context.setCart(cart);
+
     return {};
   },
 
