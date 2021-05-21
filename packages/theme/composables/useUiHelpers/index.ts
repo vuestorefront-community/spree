@@ -10,19 +10,19 @@ const getInstance = () => {
 const getKeys = (filters, types) => Object.keys(filters)
   .filter(o => types.includes(o));
 
-const getFiltersFromURL = (context) => {
+const getOptionValueIdsFromURL = (context) => {
   const { query } = context.$router.history.current;
-  const filters = [];
+  const ids = [];
 
   const keys = getKeys(query, types);
 
   keys.forEach(key => {
     Array.isArray(query[key])
-      ? filters.push(...query[key])
-      : filters.push(query[key]);
+      ? ids.push(...query[key])
+      : ids.push(query[key]);
   });
 
-  return filters;
+  return ids;
 };
 
 const useUiHelpers = () => {
@@ -36,7 +36,8 @@ const useUiHelpers = () => {
       categorySlug,
       page: query.page || 1,
       sort: query.sort || 'updated_at',
-      filters: getFiltersFromURL(instance),
+      optionValuesIds: getOptionValueIdsFromURL(instance),
+      price: Array.isArray(query.price) ? query.price[0] : query.price,
       itemsPerPage: query.itemsPerPage || 10,
       term: ''
     };
@@ -55,7 +56,8 @@ const useUiHelpers = () => {
     const emptyFilters = {
       color: [],
       size: [],
-      length: []
+      length: [],
+      price: []
     };
 
     getKeys(filters, types).length

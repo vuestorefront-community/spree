@@ -107,14 +107,15 @@ const preprocessProductsData = (productsData, context) => ({
 });
 
 export default async function getProduct(context, params) {
-  const { id, categoryId, filters, page, sort, itemsPerPage, term } = params;
+  const { id, categoryId, page, sort, optionValuesIds, price, itemsPerPage, term } = params;
 
   const result = await context.client.products.list({
     filter: {
       ids: id,
       taxons: categoryId,
       // eslint-disable-next-line camelcase
-      option_value_ids: filters,
+      option_value_ids: optionValuesIds,
+      price,
       name: term
     },
     include: 'variants.option_values,option_types,product_properties,taxons,images',
