@@ -39,7 +39,7 @@ const getSortOptions = (searchData): AgnosticSort => {
 const getCategoryTree = (searchData): AgnosticCategoryTree =>
   searchData.data ? buildCategoryTree(searchData.data.categories) : {} as any;
 
-const getProducts = (searchData): Product[] => searchData.data ? searchData.data.products : [];
+const getProducts = (searchData): Product[] => (searchData && searchData.data) ? searchData.data.products : [];
 
 const getPagination = (searchData): AgnosticPagination => searchData.data ? ({
   currentPage: searchData.input.page,
