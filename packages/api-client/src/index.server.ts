@@ -35,7 +35,7 @@ const onCreate = (settings) => {
       ...defaultSettings,
       ...settings
     },
-    client: makeClient({ host: defaultSettings.backendUrl })
+    client: makeClient({ host: settings.backendUrl || defaultSettings.backendUrl })
   };
 };
 
