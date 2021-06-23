@@ -15,7 +15,7 @@ type ProductVariantFilters = any
 
 export const getProductName = (product: ProductVariant): string => product?.name || 'Product\'s name';
 
-export const getProductSlug = (product: ProductVariant): string => product.sku;
+export const getProductSlug = (product: ProductVariant): string => product.slug;
 
 export const getProductPrice = (product: ProductVariant): AgnosticPrice => {
   return {
@@ -52,7 +52,18 @@ export const getProductGallery = (product: ProductVariant): AgnosticMediaGallery
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getProductCoverImage = (product: ProductVariant): string => 'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg';
+export const getProductCoverImage = (product: ProductVariant): string => {
+  if (!product.images[0]?.attributes?.styles) return undefined;
+  const images = product.images[0].attributes.styles;
+  let coverImage = images[0];
+
+  images.forEach(img => {
+    if (img.height > coverImage.height)
+      coverImage = img;
+  });
+
+  return coverImage.url;
+};
 
 export const getProductFiltered = (products: ProductVariant[], filters: ProductVariantFilters | any = {}): ProductVariant[] => {
   if (!products) return [];
@@ -111,13 +122,13 @@ export const getProductOptionTypeNames = (product: ProductVariant): string[] => 
   ? product.optionTypes.map((optionType) => optionType.attributes.name)
   : [];
 
-export const getProductDescription = (product: ProductVariant): any => (product as any)?._description || '';
+export const getProductDescription = (product: ProductVariant): any => (product as any)?.shortDescription || '';
 
 export const getProductCategoryIds = (product: ProductVariant): string[] => (product as any)?._categoriesRef || '';
 
 export const getProductId = (product: ProductVariant): string => (product as any)?._id || '';
 
-export const getFormattedPrice = (price: number) => String(price);
+export const getFormattedPrice = (product): string => product?.displayPrice || '';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getProductTotalReviews = (product: ProductVariant): number => 0;
@@ -128,6 +139,8 @@ export const getProductAverageRating = (product: ProductVariant): number => 0;
 export const getProductProperties = (product: ProductVariant) => product ? product.properties : [];
 
 export const getProductBreadcrumbs = (product: ProductVariant) => product ? product.breadcrumbs : [];
+
+export const getProductInStock = (product: ProductVariant): boolean => product?.inStock || false;
 
 const productGetters: ProductGetters<ProductVariant, ProductVariantFilters> = {
   getName: getProductName,
@@ -145,7 +158,8 @@ const productGetters: ProductGetters<ProductVariant, ProductVariantFilters> = {
   getAverageRating: getProductAverageRating,
   getOptionTypeNames: getProductOptionTypeNames,
   getProperties: getProductProperties,
-  getBreadcrumbs: getProductBreadcrumbs
+  getBreadcrumbs: getProductBreadcrumbs,
+  getInStock: getProductInStock
 };
 
 export default productGetters;

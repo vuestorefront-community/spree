@@ -87,6 +87,7 @@ export type ProductVariant = {
   _description: string;
   _categoriesRef: string[];
   name: string;
+  slug: string;
   sku: string;
   images: Image[];
   properties: Property[];
@@ -97,6 +98,7 @@ export type ProductVariant = {
   };
   optionTypes: OptionType[];
   optionValues: OptionValue[];
+  inStock: boolean;
 };
 export type Category = {
   id: number;
