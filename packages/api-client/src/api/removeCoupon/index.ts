@@ -1,9 +1,7 @@
-import { ApiContext, CouponCode } from '../../types';
-import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
+import { ApiContext } from '../../types';
 
-export default async function removeCoupon({ client, config }: ApiContext, { couponCode }: CouponCode): Promise<void> {
-  const token = await getCurrentBearerOrCartToken({ client, config });
-  const result = await client.cart.removeCouponCode(token, couponCode);
+export default async function removeCoupon({ client }: ApiContext, { token, couponCode }): Promise<void> {
+  const result = await client.cart.removeCouponCode({ orderToken: token }, couponCode);
 
   if (result.isFail()) {
     throw result.fail();

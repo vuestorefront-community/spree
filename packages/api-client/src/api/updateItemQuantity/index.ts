@@ -1,13 +1,28 @@
 /* eslint-disable camelcase */
 
-import { ApiContext } from '../../types';
-import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
+import { ApiContext, Cart } from '../../types';
+import { defaultCartIncludes } from '../common/cart';
+import { deserializeCart } from '../serializers/cart';
 
-export default async function updateItemQuantity({ client, config }: ApiContext, { lineItemId, quantity }): Promise<void> {
-  const token = await getCurrentBearerOrCartToken({ client, config });
-  const response = await client.cart.setQuantity(token, { line_item_id: lineItemId, quantity });
+export default async function updateItemQuantity({ client, config }: ApiContext, { lineItemId, quantity, token}): Promise<Cart> {
+  config.auth.changeCartToken(token);
 
-  if (response.isFail()) {
-    throw response.fail();
+  const result = await client.cart.setQuantity(
+    {
+      orderToken: token
+    },
+    {
+      line_item_id: lineItemId,
+      quantity,
+      ...defaultCartIncludes
+    }
+  );
+
+  if (result.isSuccess()) {
+    const payload = result.success();
+    const cart = deserializeCart(payload.data, payload.included, config);
+    return cart;
+  } else {
+    throw result.fail();
   }
 }

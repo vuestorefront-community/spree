@@ -78,6 +78,7 @@ export type LineItem = {
 export type Cart = {
   _id: number;
   lineItems: LineItem[];
+  token: string;
 };
 
 export type Wishlist = Record<string, unknown>;
@@ -127,11 +128,14 @@ export type AuthIntegrationContext = {
   removeCartToken: () => Promise<void>;
 }
 
+export type ApiConfig = {
+  auth: AuthIntegrationContext;
+  backendUrl: string;
+}
+
 export type ApiContext = {
   client: Client;
-  config: {
-    auth: AuthIntegrationContext;
-  };
+  config: ApiConfig;
 }
 
 export type Address = {
