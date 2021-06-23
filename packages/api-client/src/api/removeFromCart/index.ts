@@ -1,11 +1,16 @@
-import { ApiContext } from '../../types';
-import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
+import { ApiContext, Cart } from '../../types';
+import { defaultCartIncludes } from '../common/cart';
+import { deserializeCart } from '../serializers/cart';
 
-export default async function removeFromCart({ client, config }: ApiContext, { lineItemId }): Promise<void> {
-  const token = await getCurrentBearerOrCartToken({ client, config });
-  const response = await client.cart.removeItem(token, lineItemId);
+export default async function removeFromCart({ client, config }: ApiContext, { lineItemId, token }): Promise<Cart> {
+  config.auth.changeCartToken(token);
+  const result = await client.cart.removeItem({ orderToken: token }, lineItemId, defaultCartIncludes);
 
-  if (response.isFail()) {
-    throw response.fail();
+  if (result.isSuccess()) {
+    const payload = result.success();
+    const cart = deserializeCart(payload.data, payload.included, config);
+    return cart;
+  } else {
+    throw result.fail();
   }
 }

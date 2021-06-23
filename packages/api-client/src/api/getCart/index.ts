@@ -1,18 +1,16 @@
 import { SpreeError } from '@spree/storefront-api-v2-sdk/types/errors';
-import { IQuery } from '@spree/storefront-api-v2-sdk/types/interfaces/Query';
 import { IToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
 import { ApiContext, Cart } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializeCart } from '../serializers/cart';
-
-const cartParams: IQuery = { include: 'line_items' };
+import { defaultCartIncludes } from '../common/cart';
 
 async function createCart({ client, config }: ApiContext, token: IToken): Promise<Cart> {
-  const createCartResult = await client.cart.create(token, cartParams);
+  const createCartResult = await client.cart.create(token, defaultCartIncludes);
 
   if (createCartResult.isSuccess()) {
     const payload = createCartResult.success();
-    const cart = deserializeCart(payload.data, payload.included);
+    const cart = deserializeCart(payload.data, payload.included, config);
 
     const isGuestUser = !token.bearerToken;
     if (isGuestUser) {
@@ -28,11 +26,11 @@ async function createCart({ client, config }: ApiContext, token: IToken): Promis
 
 export default async function getCart({ client, config }: ApiContext): Promise<Cart> {
   const token = await getCurrentBearerOrCartToken({ client, config });
-  const result = await client.cart.show(token, cartParams);
+  const result = await client.cart.show(token, defaultCartIncludes);
 
   if (result.isSuccess()) {
     const payload = result.success();
-    const cart = deserializeCart(payload.data, payload.included);
+    const cart = deserializeCart(payload.data, payload.included, config);
 
     return cart;
   } else {
