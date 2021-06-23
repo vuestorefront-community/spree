@@ -6,7 +6,7 @@ const deserializeImages = (included, defaultVariant, variant) => {
   const defaultVariantImageIds = defaultVariant.images.data.map((e) => e.id);
   const variantImageIds = variant.relationships.images.data.map((e) => e.id);
 
-  const imageIds = new Set([...defaultVariantImageIds, ...variantImageIds])
+  const imageIds = new Set(defaultVariantImageIds.concat(variantImageIds))
 
   return filterAttachments(included, 'image', Array.from(imageIds));
 };
