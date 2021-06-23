@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 import { ApiContext } from '../../types';
 import { addHostToProductImages, deserializeLimitedVariants, deserializeVariants } from '../serializers/product';
 
@@ -8,7 +10,6 @@ export default async function getProduct({ client, config }: ApiContext, params)
     filter: {
       ids: id,
       taxons: categoryId,
-      // eslint-disable-next-line camelcase
       option_value_ids: optionValuesIds,
       price,
       name: term
@@ -16,7 +17,6 @@ export default async function getProduct({ client, config }: ApiContext, params)
     include: 'variants.option_values,option_types,product_properties,taxons,images',
     page,
     sort,
-    // eslint-disable-next-line camelcase
     per_page: itemsPerPage
   });
 

@@ -84,6 +84,7 @@ export type Cart = {
 export type Wishlist = Record<string, unknown>;
 export type ProductVariant = {
   _id: number;
+  _productId: number;
   _description: string;
   _categoriesRef: string[];
   name: string;
@@ -92,13 +93,14 @@ export type ProductVariant = {
   images: Image[];
   properties: Property[];
   breadcrumbs: AgnosticBreadcrumb[];
-  price: {
-    original: number;
-    current: number;
-  };
   optionTypes: OptionType[];
   optionValues: OptionValue[];
   inStock: boolean;
+  price: {
+    current: number;
+    original: number;
+  }
+  displayPrice: string;
 };
 export type Category = {
   id: number;
@@ -161,4 +163,15 @@ export type CouponCode = {
 export type Checkout = {
   shippingAddress: Address;
   billingAddress: Address;
+}
+
+export type GetProductParams = {
+  id: string;
+  categoryId: string;
+  term: string;
+  page: number;
+  sort: string;
+  optionValuesIds: number[];
+  price: number;
+  itemsPerPage: number;
 }
