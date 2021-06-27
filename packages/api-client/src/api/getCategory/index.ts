@@ -1,56 +1,28 @@
-import { CustomQuery } from '@vue-storefront/core';
+/* eslint-disable camelcase */
 
-const findParent = (taxon, taxons) => {
-  if (taxon.attributes.is_root) return null;
+import { ApiContext, Category } from '../../types';
+import { deserializeCategories } from '../serializers/category';
 
-  const parentId = taxon.relationships.parent.data.id;
-  const parent = taxons.data.find(taxon => taxon.id === parentId);
+const findCategory = (categories: Category[], slug: string) => categories.find(e => e.slug === slug);
 
-  return {
-    id: parent.id,
-    name: parent.attributes.name,
-    slug: parent.attributes.permalink,
-    parent: findParent(parent, taxons)
-  };
-};
-
-const findItems = (taxon, taxons) => {
-  if (taxon.attributes.is_leaf) return [];
-
-  const taxonIds = taxon.relationships.children.data.map(child => child.id);
-  const items = taxons.data.filter(taxon => taxonIds.includes(taxon.id));
-
-  return items.map(item => ({
-    id: item.id,
-    name: item.attributes.name,
-    slug: item.attributes.permalink,
-    items: findItems(item, taxons),
-    parent: findParent(item, taxons)
-  }));
-};
-
-const findCategory = (categories, slug) => categories.find(e => e.slug === slug);
-
-const formatCategories = (taxons) =>
-  taxons.data.map(taxon => ({
-    id: taxon.id,
-    name: taxon.attributes.name,
-    slug: taxon.attributes.permalink,
-    items: findItems(taxon, taxons),
-    parent: findParent(taxon, taxons)
-  }));
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default async function getCategory(context, params, customQuery?: CustomQuery) {
-  const result = await context.client.taxons.list();
+export default async function getCategory({ client }: ApiContext, { categorySlug }) {
+  const result = await client.taxons.list({ per_page: 200 });
 
   if (result.isSuccess()) {
-    const taxons = result.success();
-    const categories = formatCategories(taxons);
+    try {
+      const data = result.success().data;
+      const categories = deserializeCategories(data);
 
-    return {
-      root: findCategory(categories, 'categories'),
-      current: findCategory(categories, params.categorySlug)
-    };
+      return {
+        root: findCategory(categories, 'categories'),
+        current: findCategory(categories, categorySlug)
+      };
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+  } else {
+    console.log(result.fail());
+    throw result.fail();
   }
 }

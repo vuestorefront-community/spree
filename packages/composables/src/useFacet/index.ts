@@ -5,7 +5,7 @@ const factoryParams = {
   search: async (context: Context, params: FacetSearchResult<any>) => {
     const { categorySlug, page, sort, optionValuesIds, price, itemsPerPage, term } = params.input;
     const categories = await context.$spree.api.getCategory({ categorySlug });
-    const productsResponse = await context.$spree.api.getProduct({
+    const productsResponse = await context.$spree.api.getProducts({
       categoryId: categories.current.id,
       page,
       sort,

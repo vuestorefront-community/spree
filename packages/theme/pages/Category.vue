@@ -233,7 +233,7 @@
             <span class="products__show-on-page__label">{{ $t('Show on page') }}</span>
             <LazyHydrate on-interaction>
               <SfSelect
-                :value="pagination.itemsPerPage.toString()"
+                :value="`${pagination.itemsPerPage}` || '25'"
                 class="products__items-per-page"
                 @input="th.changeItemsPerPage"
               >
