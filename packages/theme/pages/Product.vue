@@ -198,7 +198,7 @@ export default {
   transition: 'fade',
   setup(props, context) {
     const qty = ref(1);
-    const { id } = context.root.$route.params;
+    const { id, slug } = context.root.$route.params;
     const { products, search } = useProduct('products');
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
@@ -223,7 +223,7 @@ export default {
     })));
 
     onSSR(async () => {
-      await search({ id });
+      await search({ slug });
       await searchRelatedProducts({ categoryId: [categories.value[0]], limit: 8 });
       await searchReviews({ productId: id });
     });

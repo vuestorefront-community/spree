@@ -114,6 +114,12 @@ const deserializeProductVariant = (product, variant, defaultVariant, attachments
 const findProductVariants = (product, included) =>
   included.filter((e) => e.type === 'variant' && e.relationships.product.data.id === product.id);
 
+export const deserializeSingleProductVariants = (apiProduct) => {
+  const variants = findProductVariants(apiProduct.data, apiProduct.included);
+  const defaultVariant = variants.find((e) => e.attributes.is_master) || variants[0];
+  return variants.map((variant) => deserializeProductVariant(apiProduct.data, variant, defaultVariant, apiProduct.included));
+};
+
 export const deserializeVariants = (apiProducts) =>
   apiProducts.data.flatMap((product) => {
     const variants = findProductVariants(product, apiProducts.included);

@@ -74,7 +74,7 @@ export const getProductCoverImage = (product: ProductVariant): string => {
 };
 
 export const getProductFiltered = (products: ProductVariant[], filters: ProductVariantFilters | any = {}): ProductVariant[] => {
-  if (!products) return [];
+  if (!products || products.length === 0) return [];
 
   const filterAttributes = filters.attributes;
 

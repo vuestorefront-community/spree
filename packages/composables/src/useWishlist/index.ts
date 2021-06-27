@@ -5,11 +5,11 @@ import {
   UseWishlistFactoryParams
 } from '@vue-storefront/core';
 import { ref, Ref } from '@vue/composition-api';
-import { Wishlist, WishlistProduct, Product } from '../types';
+import { Wishlist, WishlistProduct, ProductVariant } from '../types';
 
 export const wishlist: Ref<Wishlist> = ref(null);
 
-const params: UseWishlistFactoryParams<Wishlist, WishlistProduct, Product> = {
+const params: UseWishlistFactoryParams<Wishlist, WishlistProduct, ProductVariant> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context) => {
     console.log('Mocked: loadWishlist');
@@ -41,4 +41,4 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistProduct, Product> = {
   }
 };
 
-export default useWishlistFactory<Wishlist, WishlistProduct, Product>(params);
+export default useWishlistFactory<Wishlist, WishlistProduct, ProductVariant>(params);

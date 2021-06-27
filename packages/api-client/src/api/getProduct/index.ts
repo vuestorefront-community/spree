@@ -1,38 +1,22 @@
 /* eslint-disable camelcase */
 
 import { ApiContext } from '../../types';
-import { addHostToProductImages, deserializeLimitedVariants, deserializeVariants } from '../serializers/product';
+import { addHostToProductImages, deserializeSingleProductVariants } from '../serializers/product';
 
-export default async function getProduct({ client, config }: ApiContext, params) {
-  const { id, categoryId, page, sort, optionValuesIds, price, itemsPerPage, term } = params;
-
-  const result = await client.products.list({
-    filter: {
-      ids: id,
-      taxons: categoryId,
-      option_value_ids: optionValuesIds,
-      price,
-      name: term
-    },
-    include: 'variants.option_values,option_types,product_properties,taxons,images',
-    page,
-    sort,
-    per_page: itemsPerPage
-  });
+export default async function getProduct({ client, config }: ApiContext, { slug }) {
+  const result = await client.products.show(
+    slug,
+    {
+      include: 'variants.option_values,option_types,product_properties,taxons,images'
+    }
+  );
 
   if (result.isSuccess()) {
     try {
       const data = result.success();
       const productsData = addHostToProductImages(data, config);
-      return params.limit
-        ? {
-          data: deserializeLimitedVariants(productsData),
-          meta: result.success().meta
-        }
-        : {
-          data: deserializeVariants(productsData),
-          meta: result.success().meta
-        };
+      const deserializedVariants = deserializeSingleProductVariants(productsData);
+      return deserializedVariants;
     } catch (e) {
       console.log(e);
     }
