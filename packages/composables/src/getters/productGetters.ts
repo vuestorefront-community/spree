@@ -24,25 +24,32 @@ export const getProductPrice = (product: ProductVariant): AgnosticPrice => {
   };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const findImageStyleUrlByDimensions = (image: Image, width: number, height: number) => {
+  if (!image) {
+    return undefined;
+  }
+
+  const styles = image.styles;
+  if (styles.length === 0) {
+    return undefined;
+  }
+
+  const sortedStyles = _.sortBy(styles, (style) => {
+    const widthLoss = Math.abs(width - style.width);
+    const heightLoss = Math.abs(height - style.height);
+
+    return widthLoss + heightLoss;
+  });
+
+  return sortedStyles[0].url;
+};
+
 export const getProductGallery = (product: ProductVariant): AgnosticMediaGalleryItem[] => {
   if (!product) return [];
-  const findImageStyleByDimensions = (image: Image, width: number, height: number) => {
-    if (!image.attributes?.styles) return undefined;
 
-    const sortedStyles = _.sortBy(image.attributes.styles, (style) => {
-      const widthLoss = Math.abs(width - parseInt(style.width, 10));
-      const heightLoss = Math.abs(height - parseInt(style.height, 10));
-
-      return widthLoss + heightLoss;
-    });
-
-    return sortedStyles[0].url;
-  };
-
-  const findSmallImageStyle = (image: Image) => findImageStyleByDimensions(image, 240, 240);
-  const findNormalImageStyle = (image: Image) => findImageStyleByDimensions(image, 350, 468);
-  const findBigImageStyle = (image: Image) => findImageStyleByDimensions(image, 650, 870);
+  const findSmallImageStyle = (image: Image) => findImageStyleUrlByDimensions(image, 240, 240);
+  const findNormalImageStyle = (image: Image) => findImageStyleUrlByDimensions(image, 350, 468);
+  const findBigImageStyle = (image: Image) => findImageStyleUrlByDimensions(image, 650, 870);
 
   return product.images.map((image) => ({
     small: findSmallImageStyle(image),
@@ -51,18 +58,19 @@ export const getProductGallery = (product: ProductVariant): AgnosticMediaGallery
   }));
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getProductCoverImage = (product: ProductVariant): string => {
-  if (!product.images[0]?.attributes?.styles) return undefined;
-  const images = product.images[0].attributes.styles;
-  let coverImage = images[0];
+  const mainProductImage = product.images[0];
+  if (!mainProductImage) {
+    return undefined;
+  }
 
-  images.forEach(img => {
-    if (img.height > coverImage.height)
-      coverImage = img;
-  });
+  const styles = mainProductImage.styles;
+  if (styles.length === 0) {
+    return undefined;
+  }
 
-  return coverImage.url;
+  const largestStyle = styles.reduce((prev, curr) => curr.height > prev.height ? curr : prev);
+  return largestStyle.url;
 };
 
 export const getProductFiltered = (products: ProductVariant[], filters: ProductVariantFilters | any = {}): ProductVariant[] => {

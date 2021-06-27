@@ -25,14 +25,7 @@ export type ImageStyle = {
 
 export type Image = {
   id: number;
-  type: string;
-  attributes?: {
-    // eslint-disable-next-line camelcase
-    viewable_id: number;
-    // eslint-disable-next-line camelcase
-    viewable_type: string;
-    styles: ImageStyle[];
-  }
+  styles: ImageStyle[];
 };
 
 export type Property = {

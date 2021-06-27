@@ -14,7 +14,15 @@ const deserializeImages = (included, defaultVariant, variant) => {
 
   const imageIds = new Set(defaultVariantImageIds.concat(variantImageIds));
 
-  return filterAttachments(included, 'image', Array.from(imageIds));
+  const images = filterAttachments(included, 'image', Array.from(imageIds));
+  return images.map(image => ({
+    id: image.id,
+    styles: image.attributes.styles.map(style => ({
+      url: style.url,
+      width: parseInt(style.width, 10),
+      height: parseInt(style.height, 10)
+    }))
+  }));
 };
 
 const deserializeProperties = (included, product) => {
@@ -30,7 +38,6 @@ const deserializeOptionTypes = (included, product): OptionType[] => {
   const optionTypes = extractRelationships(included, 'option_type', 'option_types', product);
   return optionTypes.map(optionType => ({
     id: optionType.id,
-    type: optionType.attributes.type,
     name: optionType.attributes.name,
     position: optionType.attributes.position,
     presentation: optionType.attributes.presentation
@@ -41,7 +48,6 @@ const deserializeOptionValues = (included, variant): OptionValue[] => {
   const optionValues = extractRelationships(included, 'option_value', 'option_values', variant);
   return optionValues.map(optionValue => ({
     id: optionValue.id,
-    type: optionValue.attributes.type,
     name: optionValue.attributes.name,
     position: optionValue.attributes.position,
     presentation: optionValue.attributes.presentation,
