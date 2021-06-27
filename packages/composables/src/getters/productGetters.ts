@@ -15,7 +15,7 @@ type ProductVariantFilters = any
 
 export const getProductName = (product: ProductVariant): string => product?.name || 'Product\'s name';
 
-export const getProductSlug = (product: ProductVariant): string => product.sku;
+export const getProductSlug = (product: ProductVariant): string => product.slug;
 
 export const getProductPrice = (product: ProductVariant): AgnosticPrice => {
   return {
@@ -24,25 +24,32 @@ export const getProductPrice = (product: ProductVariant): AgnosticPrice => {
   };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const findImageStyleUrlByDimensions = (image: Image, width: number, height: number) => {
+  if (!image) {
+    return undefined;
+  }
+
+  const styles = image.styles;
+  if (styles.length === 0) {
+    return undefined;
+  }
+
+  const sortedStyles = _.sortBy(styles, (style) => {
+    const widthLoss = Math.abs(width - style.width);
+    const heightLoss = Math.abs(height - style.height);
+
+    return widthLoss + heightLoss;
+  });
+
+  return sortedStyles[0].url;
+};
+
 export const getProductGallery = (product: ProductVariant): AgnosticMediaGalleryItem[] => {
   if (!product) return [];
-  const findImageStyleByDimensions = (image: Image, width: number, height: number) => {
-    if (!image.attributes?.styles) return undefined;
 
-    const sortedStyles = _.sortBy(image.attributes.styles, (style) => {
-      const widthLoss = Math.abs(width - parseInt(style.width, 10));
-      const heightLoss = Math.abs(height - parseInt(style.height, 10));
-
-      return widthLoss + heightLoss;
-    });
-
-    return sortedStyles[0].url;
-  };
-
-  const findSmallImageStyle = (image: Image) => findImageStyleByDimensions(image, 240, 240);
-  const findNormalImageStyle = (image: Image) => findImageStyleByDimensions(image, 350, 468);
-  const findBigImageStyle = (image: Image) => findImageStyleByDimensions(image, 650, 870);
+  const findSmallImageStyle = (image: Image) => findImageStyleUrlByDimensions(image, 240, 240);
+  const findNormalImageStyle = (image: Image) => findImageStyleUrlByDimensions(image, 350, 468);
+  const findBigImageStyle = (image: Image) => findImageStyleUrlByDimensions(image, 650, 870);
 
   return product.images.map((image) => ({
     small: findSmallImageStyle(image),
@@ -51,8 +58,20 @@ export const getProductGallery = (product: ProductVariant): AgnosticMediaGallery
   }));
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getProductCoverImage = (product: ProductVariant): string => 'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg';
+export const getProductCoverImage = (product: ProductVariant): string => {
+  const mainProductImage = product.images[0];
+  if (!mainProductImage) {
+    return undefined;
+  }
+
+  const styles = mainProductImage.styles;
+  if (styles.length === 0) {
+    return undefined;
+  }
+
+  const largestStyle = styles.reduce((prev, curr) => curr.height > prev.height ? curr : prev);
+  return largestStyle.url;
+};
 
 export const getProductFiltered = (products: ProductVariant[], filters: ProductVariantFilters | any = {}): ProductVariant[] => {
   if (!products) return [];
@@ -62,10 +81,10 @@ export const getProductFiltered = (products: ProductVariant[], filters: ProductV
   const filterByAttributes = (product: ProductVariant) => {
     if (filterAttributes) {
       return Object.entries(filterAttributes).every(([attrName, attrVal]) => {
-        const optionType = product.optionTypes.find((ot) => ot.attributes.name === attrName);
+        const optionType = product.optionTypes.find((ot) => ot.name === attrName);
         if (!optionType) return false;
 
-        return product.optionValues.some((ov) => ov.relationships.option_type.data.id === optionType.id && ov.attributes.presentation === attrVal);
+        return product.optionValues.some((ov) => ov.optionTypeId === optionType.id && ov.presentation === attrVal);
       });
     }
 
@@ -86,9 +105,9 @@ export const getProductAttributes = (products: ProductVariant[] | ProductVariant
   const optionValues = _.uniqBy(productList.flatMap((product) => product.optionValues), (ov) => ov.id);
 
   const findOptionTypeName = (optionValue) => {
-    const optionType = optionTypes.find((optionType) => optionType.id === optionValue.relationships.option_type.data.id);
+    const optionType = optionTypes.find((optionType) => optionType.id === optionValue.optionTypeId);
 
-    return optionType ? optionType.attributes.name : undefined;
+    return optionType ? optionType.name : undefined;
   };
 
   const options = optionValues.map((currOptionValue) => {
@@ -96,8 +115,8 @@ export const getProductAttributes = (products: ProductVariant[] | ProductVariant
 
     return {
       name: currOptionTypeName,
-      value: currOptionValue.attributes.presentation,
-      label: currOptionValue.attributes.presentation
+      value: currOptionValue.presentation,
+      label: currOptionValue.presentation
     };
   }).filter((option) => filterByAttributeName ? filterByAttributeName.includes(option.name) : true);
 
@@ -108,16 +127,16 @@ export const getProductAttributes = (products: ProductVariant[] | ProductVariant
 };
 
 export const getProductOptionTypeNames = (product: ProductVariant): string[] => product
-  ? product.optionTypes.map((optionType) => optionType.attributes.name)
+  ? product.optionTypes.map((optionType) => optionType.name)
   : [];
 
-export const getProductDescription = (product: ProductVariant): any => (product as any)?._description || '';
+export const getProductDescription = (product: ProductVariant): any => (product as any)?.shortDescription || '';
 
 export const getProductCategoryIds = (product: ProductVariant): string[] => (product as any)?._categoriesRef || '';
 
 export const getProductId = (product: ProductVariant): string => (product as any)?._id || '';
 
-export const getFormattedPrice = (price: number) => String(price);
+export const getFormattedPrice = (product): string => product?.displayPrice || '';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getProductTotalReviews = (product: ProductVariant): number => 0;
@@ -128,6 +147,8 @@ export const getProductAverageRating = (product: ProductVariant): number => 0;
 export const getProductProperties = (product: ProductVariant) => product ? product.properties : [];
 
 export const getProductBreadcrumbs = (product: ProductVariant) => product ? product.breadcrumbs : [];
+
+export const getProductInStock = (product: ProductVariant): boolean => product?.inStock || false;
 
 const productGetters: ProductGetters<ProductVariant, ProductVariantFilters> = {
   getName: getProductName,
@@ -145,7 +166,8 @@ const productGetters: ProductGetters<ProductVariant, ProductVariantFilters> = {
   getAverageRating: getProductAverageRating,
   getOptionTypeNames: getProductOptionTypeNames,
   getProperties: getProductProperties,
-  getBreadcrumbs: getProductBreadcrumbs
+  getBreadcrumbs: getProductBreadcrumbs,
+  getInStock: getProductInStock
 };
 
 export default productGetters;
