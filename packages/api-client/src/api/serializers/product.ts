@@ -92,6 +92,7 @@ const buildBreadcrumbs = (included, product) => {
 const deserializeProductVariant = (product, variant, defaultVariant, attachments): ProductVariant => ({
   _id: variant.id,
   _productId: product.id,
+  _variantId: variant.id,
   _description: variant.attributes.description || product.attributes.description,
   _categoriesRef: product.relationships.taxons.data.map((t) => t.id),
   name: product.attributes.name,

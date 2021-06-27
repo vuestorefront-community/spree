@@ -5,7 +5,7 @@ import {
   useCartFactory,
   UseCartFactoryParams
 } from '@vue-storefront/core';
-import { Cart, CartItem, Coupon, Product } from '../types';
+import { Cart, LineItem, Coupon, ProductVariant } from '../types';
 
 const loadOrCreateCart = async (context: Context, currentCart: Cart): Promise<string> => {
   if (currentCart) {
@@ -16,7 +16,7 @@ const loadOrCreateCart = async (context: Context, currentCart: Cart): Promise<st
   return cart.token;
 };
 
-const params: UseCartFactoryParams<Cart, CartItem, Product, Coupon> = {
+const params: UseCartFactoryParams<Cart, LineItem, ProductVariant, Coupon> = {
   load: async (context: Context) => {
     const cart = await context.$spree.api.getCart();
     return cart;
@@ -66,4 +66,4 @@ const params: UseCartFactoryParams<Cart, CartItem, Product, Coupon> = {
   }
 };
 
-export default useCartFactory<Cart, CartItem, Product, Coupon>(params);
+export default useCartFactory<Cart, LineItem, ProductVariant, Coupon>(params);
