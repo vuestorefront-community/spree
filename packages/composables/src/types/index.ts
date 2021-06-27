@@ -8,19 +8,17 @@ export type User = {
   email?: string;
 };
 
-export { Cart } from '@upsidelab/vue-storefront-spree-api';
+import { ProductVariant } from '@upsidelab/vue-storefront-spree-api';
+
+export { Cart, LineItem, ProductVariant } from '@upsidelab/vue-storefront-spree-api';
 
 export type UserAddress = Record<string, unknown>;
-
-export type CartItem = Record<string, unknown>;
 
 export type Coupon = Record<string, unknown>;
 
 export type Order = Record<string, unknown>;
 
 export type OrderItem = Record<string, unknown>;
-
-export type Product = Record<string, unknown>;
 
 export type Review = Record<string, unknown>;
 
@@ -33,7 +31,7 @@ export type WishlistProduct = Record<string, unknown>;
 export type Wishlist = Record<string, unknown>;
 
 export type ProductsResponse = {
-  data: Product[];
+  data: ProductVariant[];
   total: number;
 };
 
