@@ -120,13 +120,6 @@ export const deserializeSingleProductVariants = (apiProduct) => {
   return variants.map((variant) => deserializeProductVariant(apiProduct.data, variant, defaultVariant, apiProduct.included));
 };
 
-export const deserializeVariants = (apiProducts) =>
-  apiProducts.data.flatMap((product) => {
-    const variants = findProductVariants(product, apiProducts.included);
-    const defaultVariant = variants.find((e) => e.attributes.is_master) || variants[0];
-    return variants.map((variant) => deserializeProductVariant(product, variant, defaultVariant, apiProducts.included));
-  });
-
 export const deserializeLimitedVariants = (apiProducts) =>
   apiProducts.data.map((product) => {
     const attachments = apiProducts.included;
@@ -135,6 +128,12 @@ export const deserializeLimitedVariants = (apiProducts) =>
 
     return deserializeProductVariant(product, defaultVariant, defaultVariant, attachments);
   });
+
+export const deserializeSearchMetadata = (searchMetadata) => ({
+  totalPages: parseInt(searchMetadata.total_pages, 10),
+  totalCount: parseInt(searchMetadata.total_count, 10),
+  count: parseInt(searchMetadata.count, 10)
+});
 
 const addHostToImage = (image, config: ApiConfig) => ({
   ...image,

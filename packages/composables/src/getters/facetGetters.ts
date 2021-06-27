@@ -42,10 +42,10 @@ const getCategoryTree = (searchData): AgnosticCategoryTree =>
 const getProducts = (searchData): ProductVariant[] => (searchData && searchData.data) ? searchData.data.products : [];
 
 const getPagination = (searchData): AgnosticPagination => searchData.data ? ({
-  currentPage: searchData.input.page,
-  totalPages: searchData.data.productsMeta.total_pages,
-  totalItems: searchData.data.productsMeta.total_count,
-  itemsPerPage: searchData.data.itemsPerPage,
+  currentPage: parseInt(searchData.input.page, 10),
+  totalPages: searchData.data.productsMeta.totalPages,
+  totalItems: searchData.data.productsMeta.totalCount,
+  itemsPerPage: parseInt(searchData.data.itemsPerPage, 10),
   pageOptions: [10, 20, 40]
 }) : {} as AgnosticPagination;
 

@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 
 import { ApiContext } from '../../types';
-import { addHostToProductImages, deserializeLimitedVariants, deserializeVariants } from '../serializers/product';
+import { addHostToProductImages, deserializeLimitedVariants, deserializeSearchMetadata } from '../serializers/product';
 
 export default async function getProducts({ client, config }: ApiContext, params) {
   const { id, categoryId, page, sort, optionValuesIds, price, itemsPerPage, term } = params;
@@ -24,15 +24,10 @@ export default async function getProducts({ client, config }: ApiContext, params
     try {
       const data = result.success();
       const productsData = addHostToProductImages(data, config);
-      return params.limit
-        ? {
-          data: deserializeLimitedVariants(productsData),
-          meta: result.success().meta
-        }
-        : {
-          data: deserializeVariants(productsData),
-          meta: result.success().meta
-        };
+      return {
+        data: deserializeLimitedVariants(productsData),
+        meta: deserializeSearchMetadata(data.meta)
+      };
     } catch (e) {
       console.log(e);
     }
