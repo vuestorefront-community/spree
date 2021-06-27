@@ -21,18 +21,23 @@ export default async function getProduct({ client, config }: ApiContext, params)
   });
 
   if (result.isSuccess()) {
-    const data = result.success();
-    const productsData = addHostToProductImages(data, config);
-    return params.limit
-      ? {
-        data: deserializeLimitedVariants(productsData),
-        meta: result.success().meta
-      }
-      : {
-        data: deserializeVariants(productsData),
-        meta: result.success().meta
-      };
+    try {
+      const data = result.success();
+      const productsData = addHostToProductImages(data, config);
+      return params.limit
+        ? {
+          data: deserializeLimitedVariants(productsData),
+          meta: result.success().meta
+        }
+        : {
+          data: deserializeVariants(productsData),
+          meta: result.success().meta
+        };
+    } catch (e) {
+      console.log(e);
+    }
   } else {
+    console.log(result.fail());
     throw result.fail();
   }
 }

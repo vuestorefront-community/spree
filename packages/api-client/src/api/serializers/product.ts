@@ -1,12 +1,18 @@
 import { JsonApiDocument, JsonApiResponse } from '@spree/storefront-api-v2-sdk/types/interfaces/JsonApi';
-import { ApiConfig, ProductVariant } from '../../types';
+import { ApiConfig, ProductVariant, OptionType, OptionValue } from '../../types';
 import { extractRelationships, filterAttachments } from './common';
 
 const deserializeImages = (included, defaultVariant, variant) => {
-  const defaultVariantImageIds = defaultVariant.images.data.map((e) => e.id);
-  const variantImageIds = variant.relationships.images.data.map((e) => e.id);
+  let defaultVariantImageIds = [];
+  if (defaultVariant.images && defaultVariant.images.data) {
+    defaultVariantImageIds = defaultVariant.images.data.map((e) => e.id);
+  }
+  let variantImageIds = [];
+  if (variant.relationships.images && variant.relationships.images.data) {
+    variantImageIds = variant.relationships.images.data.map((e) => e.id);
+  }
 
-  const imageIds = new Set(defaultVariantImageIds.concat(variantImageIds))
+  const imageIds = new Set(defaultVariantImageIds.concat(variantImageIds));
 
   return filterAttachments(included, 'image', Array.from(imageIds));
 };
@@ -17,6 +23,29 @@ const deserializeProperties = (included, product) => {
   return properties.map(property => ({
     name: property.attributes.description,
     value: property.attributes.value
+  }));
+};
+
+const deserializeOptionTypes = (included, product): OptionType[] => {
+  const optionTypes = extractRelationships(included, 'option_type', 'option_types', product);
+  return optionTypes.map(optionType => ({
+    id: optionType.id,
+    type: optionType.attributes.type,
+    name: optionType.attributes.name,
+    position: optionType.attributes.position,
+    presentation: optionType.attributes.presentation
+  }));
+};
+
+const deserializeOptionValues = (included, variant): OptionValue[] => {
+  const optionValues = extractRelationships(included, 'option_value', 'option_values', variant);
+  return optionValues.map(optionValue => ({
+    id: optionValue.id,
+    type: optionValue.attributes.type,
+    name: optionValue.attributes.name,
+    position: optionValue.attributes.position,
+    presentation: optionValue.attributes.presentation,
+    optionTypeId: optionValue.relationships.option_type.data.id
   }));
 };
 
@@ -62,8 +91,8 @@ const deserializeProductVariant = (product, variant, defaultVariant, attachments
   name: product.attributes.name,
   slug: product.attributes.slug,
   sku: product.attributes.sku,
-  optionTypes: extractRelationships(attachments, 'option_type', 'option_types', product),
-  optionValues: extractRelationships(attachments, 'option_value', 'option_values', variant),
+  optionTypes: deserializeOptionTypes(attachments, product),
+  optionValues: deserializeOptionValues(attachments, variant),
   images: deserializeImages(attachments, defaultVariant, variant),
   breadcrumbs: buildBreadcrumbs(attachments, product),
   properties: deserializeProperties(attachments, product),
@@ -72,7 +101,7 @@ const deserializeProductVariant = (product, variant, defaultVariant, attachments
     original: variant.attributes.price,
     current: variant.attributes.price
   },
-  inStock: variant.attributes.in_stock,
+  inStock: variant.attributes.in_stock
 });
 
 const findProductVariants = (product, included) =>

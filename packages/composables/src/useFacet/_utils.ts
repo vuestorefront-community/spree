@@ -36,17 +36,17 @@ export const findFacets = (products) => {
 
   optionTypes.forEach(type => {
     const values = optionValues.filter(value =>
-      value.relationships.option_type.data.id === type.id
+      value.optionTypeId === type.id
     );
 
     facets.push({
-      id: type.attributes.name,
-      label: type.attributes.presentation,
+      id: type.name,
+      label: type.presentation,
       options: values.map(value => ({
         type: 'attribute',
         id: value.id,
-        value: value.attributes.presentation,
-        attrName: type.attributes.name
+        value: value.presentation,
+        attrName: type.name
       }))
     });
   });

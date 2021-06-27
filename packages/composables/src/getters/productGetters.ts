@@ -73,10 +73,10 @@ export const getProductFiltered = (products: ProductVariant[], filters: ProductV
   const filterByAttributes = (product: ProductVariant) => {
     if (filterAttributes) {
       return Object.entries(filterAttributes).every(([attrName, attrVal]) => {
-        const optionType = product.optionTypes.find((ot) => ot.attributes.name === attrName);
+        const optionType = product.optionTypes.find((ot) => ot.name === attrName);
         if (!optionType) return false;
 
-        return product.optionValues.some((ov) => ov.relationships.option_type.data.id === optionType.id && ov.attributes.presentation === attrVal);
+        return product.optionValues.some((ov) => ov.optionTypeId === optionType.id && ov.presentation === attrVal);
       });
     }
 
@@ -97,9 +97,9 @@ export const getProductAttributes = (products: ProductVariant[] | ProductVariant
   const optionValues = _.uniqBy(productList.flatMap((product) => product.optionValues), (ov) => ov.id);
 
   const findOptionTypeName = (optionValue) => {
-    const optionType = optionTypes.find((optionType) => optionType.id === optionValue.relationships.option_type.data.id);
+    const optionType = optionTypes.find((optionType) => optionType.id === optionValue.optionTypeId);
 
-    return optionType ? optionType.attributes.name : undefined;
+    return optionType ? optionType.name : undefined;
   };
 
   const options = optionValues.map((currOptionValue) => {
@@ -107,8 +107,8 @@ export const getProductAttributes = (products: ProductVariant[] | ProductVariant
 
     return {
       name: currOptionTypeName,
-      value: currOptionValue.attributes.presentation,
-      label: currOptionValue.attributes.presentation
+      value: currOptionValue.presentation,
+      label: currOptionValue.presentation
     };
   }).filter((option) => filterByAttributeName ? filterByAttributeName.includes(option.name) : true);
 
@@ -119,7 +119,7 @@ export const getProductAttributes = (products: ProductVariant[] | ProductVariant
 };
 
 export const getProductOptionTypeNames = (product: ProductVariant): string[] => product
-  ? product.optionTypes.map((optionType) => optionType.attributes.name)
+  ? product.optionTypes.map((optionType) => optionType.name)
   : [];
 
 export const getProductDescription = (product: ProductVariant): any => (product as any)?.shortDescription || '';
