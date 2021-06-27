@@ -84,6 +84,7 @@ export default {
     defaultLocale: 'en',
     strategy: 'no_prefix',
     vueI18n: {
+      silentTranslationWarn: true,
       fallbackLocale: 'en',
       messages: {
         en: {
