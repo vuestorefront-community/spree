@@ -37,7 +37,7 @@ export const getCartShippingPrice = (cart: Cart): number => 0;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getCartTotalItems = (cart: Cart): number => cart?.lineItems.length || 0;
 
-export const getFormattedPrice = (lineItem): string => lineItem?.displayPrice || '';
+export const getFormattedPrice = (price: number): string => String(price);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getCoupons = (cart: Cart): AgnosticCoupon[] => [];
