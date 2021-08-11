@@ -187,16 +187,9 @@ import {
 } from '@storefront-ui/vue';
 import { ref } from '@vue/composition-api';
 import { onSSR } from '@vue-storefront/core';
-import { useBilling } from '@upsidelab/vue-storefront-spree';
+import { useBilling, useCountry } from '@upsidelab/vue-storefront-spree';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-
-const COUNTRIES = [
-  { key: 'US', label: 'United States' },
-  { key: 'UK', label: 'United Kingdom' },
-  { key: 'IT', label: 'Italy' },
-  { key: 'PL', label: 'Poland' }
-];
 
 extend('required', {
   ...required,
@@ -225,6 +218,7 @@ export default {
   },
   setup(props, context) {
     const { load, save } = useBilling();
+    const { countries, load: loadCountries } = useCountry();
 
     const form = ref({
       firstName: '',
@@ -245,11 +239,12 @@ export default {
 
     onSSR(async () => {
       await load();
+      await loadCountries();
     });
 
     return {
       form,
-      countries: COUNTRIES,
+      countries,
       handleFormSubmit
     };
   }
