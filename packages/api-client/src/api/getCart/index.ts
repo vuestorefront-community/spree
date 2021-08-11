@@ -1,46 +1,52 @@
-import { SpreeError } from '@spree/storefront-api-v2-sdk/types/errors';
-import { IToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
 import { ApiContext, Cart } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializeCart } from '../serializers/cart';
-import { defaultCartIncludes } from '../common/cart';
+import { cartParams } from '../common/cart';
 
-async function createCart({ client, config }: ApiContext, token: IToken): Promise<Cart> {
-  const createCartResult = await client.cart.create(token, defaultCartIncludes);
-
-  if (createCartResult.isSuccess()) {
-    const payload = createCartResult.success();
-    const cart = deserializeCart(payload.data, payload.included, config);
-
-    const isGuestUser = !token.bearerToken;
-    if (isGuestUser) {
-      const newCartToken = payload.data.attributes.token;
-      await config.auth.changeCartToken(newCartToken);
-    }
-
-    return cart;
-  } else {
-    throw createCartResult.fail();
-  }
-}
+const emptyCart: Cart = {
+  _id: 0,
+  email: '',
+  number: '',
+  state: 'cart',
+  total: '',
+  totalAmount: 0.0,
+  itemTotalAmount: 0.0,
+  itemTotal: '',
+  shipTotal: '',
+  shipTotalAmount: 0.0,
+  taxTotalAmount: 0.0,
+  adjustmentTotal: '',
+  lineItems: [],
+  address: {
+    shipping: undefined,
+    billing: undefined
+  },
+  token: undefined
+};
 
 export default async function getCart({ client, config }: ApiContext): Promise<Cart> {
-  const token = await getCurrentBearerOrCartToken({ client, config });
-  const result = await client.cart.show(token, defaultCartIncludes);
+  try {
+    const token = await getCurrentBearerOrCartToken({ client, config });
 
-  if (result.isSuccess()) {
-    const payload = result.success();
-    const cart = deserializeCart(payload.data, payload.included, config);
+    // User is not signed in nor has a cart
+    // We're returning dummy cart here not to create empty carts in the backend
+    // We'll create a proper cart when user adds to cart
+    if (!token) {
+      return emptyCart;
+    }
 
-    return cart;
-  } else {
-    const error = result.fail() as SpreeError;
-    const serverResponse = error.serverResponse;
+    const result = await client.cart.show(token, cartParams);
 
-    if (serverResponse && serverResponse.status === 404) {
-      return await createCart({ client, config }, token);
+    if (result.isSuccess()) {
+      const payload = result.success();
+      const cart = deserializeCart(payload.data, payload.included, config);
+
+      return cart;
     } else {
       throw result.fail();
     }
+  } catch (e) {
+    console.error(e);
+    return emptyCart;
   }
 }

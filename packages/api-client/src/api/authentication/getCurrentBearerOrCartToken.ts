@@ -13,5 +13,5 @@ export default async function getCurrentBearerOrCartToken({ client, config }: Ap
     return { orderToken: cartToken };
   }
 
-  return {};
+  return undefined;
 }

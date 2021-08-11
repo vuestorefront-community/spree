@@ -17,7 +17,11 @@ export default async function getCurrentBearerToken({ client, config }: ApiConte
 
   const result = await client.authentication.refreshToken({ refresh_token: token.refresh_token });
   if (result.isFail()) {
-    throw result.fail();
+    await config.auth.removeOAuthToken();
+    await config.auth.removeCartToken();
+    console.error(result.fail());
+
+    return;
   }
 
   const newToken = result.success();
