@@ -18,8 +18,12 @@ export const getCartItemTotalPrice = (lineItem: LineItem): string => lineItem?.d
 
 export const getCartItemQty = (lineItem: LineItem): number => lineItem.qty;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getCartItemAttributes = (lineItem: LineItem, filterByAttributeName?: Array<string>) => ({ color: 'red' });
+export const getCartItemAttributes = (lineItem: LineItem, filters?: Array<string>) => {
+  const { options } = lineItem;
+  return filters.length > 0
+    ? filters.reduce((filteredOptions, filter) => ({ ...filteredOptions, [filter]: options[filter] }), {})
+    : options;
+};
 
 export const getCartItemSku = (lineItem: LineItem): string => lineItem.sku;
 

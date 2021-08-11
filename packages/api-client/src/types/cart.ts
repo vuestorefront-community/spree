@@ -15,6 +15,9 @@ export type LineItem = {
   displayPrice: string;
   displayTotal: string;
   qty: number;
+  options: {
+    [key: string]: string
+  }
 };
 
 export type Cart = {
