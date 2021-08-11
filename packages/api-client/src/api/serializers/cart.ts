@@ -20,6 +20,15 @@ const formatImageUrl = (styles: any[], backendUrl: string): string => {
   return backendUrl.concat(coverImage.url);
 };
 
+const formatOptions = (optionsText: string) => {
+  const optionsArray = optionsText.split(', ');
+  return optionsArray.reduce((options, e) => {
+    const key = e.split(': ')[0].toLowerCase();
+    const value = e.split(': ')[1];
+    return {...options, [key]: value};
+  }, {});
+};
+
 const deserializeLineItem = (lineItem: any, attachments: any[], config: any): LineItem => {
   const variant = findAttachment(attachments, lineItem.relationships.variant.data.id, 'variant');
   const product = findAttachment(attachments, variant.relationships.product.data.id, 'product');
@@ -44,7 +53,8 @@ const deserializeLineItem = (lineItem: any, attachments: any[], config: any): Li
     },
     displayPrice: lineItem.attributes.display_price,
     displayTotal: lineItem.attributes.display_total,
-    qty: lineItem.attributes.quantity
+    qty: lineItem.attributes.quantity,
+    options: formatOptions(lineItem.attributes.options_text)
   };
 };
 

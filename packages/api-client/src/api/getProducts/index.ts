@@ -14,7 +14,11 @@ export default async function getProducts({ client, config }: ApiContext, params
       price,
       name: term
     },
-    include: 'variants.option_values,option_types,product_properties,taxons,images',
+    fields: {
+      product: 'name,slug,variants,option_types,taxons',
+      variant: 'name,slug,sku,price,display_price,product,images,option_values'
+    },
+    include: 'variants.option_values,option_types,taxons,images',
     page,
     sort,
     per_page: itemsPerPage
