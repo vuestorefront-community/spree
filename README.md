@@ -52,6 +52,22 @@ The monorepo contains three submodules:
 
 For more details, refer to the official [architecture diagram](https://docs.vuestorefront.io/v2/advanced/architecture.html).
 
+## Feature support
+
+| Feature | Status | Notes |
+| --- | --- | --- |
+| Sign in | Available | |
+| Sign up | Available | |
+| Product catalog | Available | Default implementation uses /v2/storefront/products endpoint for filtering, it's advisable to use ElasticSearch for best performance | Product details page | Available | |
+| Account | Partial | Requires Spree 4.2 |
+| Account - saved addresses | Available | Requires Spree 4.2 |
+| Account - order history | Coming soon | |
+| Cart | Partial | Fully functional, except associating guest order after registration/login. This will be added in the next version of Spree's API. |
+| Checkout | Available | |
+| Checkout - Shipping methods | Available | |
+| Checkout - Payment methods | Partial | Only "Cash" supported out of the box. Additional changes need to be made in backend to support OOB support for providers like Stripe. This will be available in the next version of Spree's API. |
+| Wishlists | Coming soon | This will be integrated with the API provided by the latest version of spree_wishlist |
+
 ## Resources
 
 - [Vue Storefront Documentation](https://docs.vuestorefront.io/v2/)
