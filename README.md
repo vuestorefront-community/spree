@@ -2,6 +2,10 @@
 
 # Vue Storefront 2 integration for Spree Commerce
 
+See it action: [Vue Storefront - Spree demo](https://vuestorefront-spree.upsidelab.io)
+
+## Overview
+
 This repository contains an Spree integration for [Vue Storefront 2](https://github.com/vuestorefront/vue-storefront/). 
 
 This integration is being developed and maintained by [Upside](https://upsidelab.io)
