@@ -72,6 +72,10 @@ For more details, refer to the official [architecture diagram](https://docs.vues
 | Checkout - Payment methods | Partial | Only "Cash" supported out of the box. Additional changes need to be made in backend to support OOB support for providers like Stripe. This will be available in the next version of Spree's API. |
 | Wishlists | Coming soon | This will be integrated with the API provided by the latest version of spree_wishlist |
 
+## Performance concerns
+
+Unlike Rails-generated views in Spree, API endpoints aren't cached out of the box. To ensure smooth operation of the frontend, you need to add caching to GET actions of the API. Putting e.g. AWS Cloudfront in front of the API is a fairly simple option and can do wonders in that regard.
+
 ## Resources
 
 - [Vue Storefront Documentation](https://docs.vuestorefront.io/v2/)
