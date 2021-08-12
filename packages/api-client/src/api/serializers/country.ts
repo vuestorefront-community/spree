@@ -6,8 +6,8 @@ export const deserializeState = (apiState) => ({
 });
 
 export const deserializeCountry = (apiCountry, includedStates) => ({
-  iso: apiCountry.attributes.iso,
-  name: apiCountry.attributes.name,
+  key: apiCountry.attributes.iso,
+  label: apiCountry.attributes.name,
   stateRequired: apiCountry.attributes.state_required,
   postalCodeRequired: apiCountry.attributes.zipcode_required,
   isDefault: apiCountry.attributes.default,
