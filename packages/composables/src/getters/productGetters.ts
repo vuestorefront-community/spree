@@ -19,8 +19,8 @@ export const getProductSlug = (product: ProductVariant): string => product.slug;
 
 export const getProductPrice = (product: ProductVariant): AgnosticPrice => {
   return {
-    regular: product?.price?.original || 0,
-    special: product?.price?.current || 0
+    regular: product?.price?.current,
+    special: undefined
   };
 };
 

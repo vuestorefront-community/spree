@@ -9,8 +9,8 @@ export const getCartItemImage = (lineItem: LineItem): string => lineItem.image;
 
 export const getCartItemPrice = (lineItem: LineItem): AgnosticPrice => {
   return {
-    regular: lineItem.price.original || 12,
-    special: lineItem.price.current || 10
+    regular: lineItem.price.current,
+    special: undefined
   };
 };
 
