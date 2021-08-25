@@ -6,7 +6,7 @@ See it action: [Vue Storefront - Spree demo](https://vuestorefront-spree.upsidel
 
 ## Overview
 
-This repository contains an Spree integration for [Vue Storefront 2](https://github.com/vuestorefront/vue-storefront/). 
+This repository contains an Spree integration for [Vue Storefront 2](https://github.com/vuestorefront/vue-storefront/).
 
 This integration is being developed and maintained by [Upside](https://upsidelab.io)
 
@@ -66,7 +66,7 @@ For more details, refer to the official [architecture diagram](https://docs.vues
 | Account | Partial | Requires Spree 4.2 |
 | Account - saved addresses | Available | Requires Spree 4.2 |
 | Account - reset password | Coming soon | VSF doesn't contain pages for resetting password, but we'll provide composables for handling this logic |
-| Account - order history | Coming soon | |
+| Account - order history | Available | |
 | Cart | Partial | Fully functional, except associating guest order after registration/login. This will be added in the next version of Spree's API. |
 | Checkout | Available | |
 | Checkout - Shipping methods | Available | |

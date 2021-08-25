@@ -1,3 +1,5 @@
+import { LineItem, Order, ProductVariant } from '@upsidelab/vue-storefront-spree-api';
+
 export { UseCategory, UseProduct } from '@vue-storefront/core';
 
 export type Category = Record<string, unknown>;
@@ -8,17 +10,13 @@ export type User = {
   email?: string;
 };
 
-import { ProductVariant } from '@upsidelab/vue-storefront-spree-api';
-
-export { Cart, LineItem, ProductVariant } from '@upsidelab/vue-storefront-spree-api';
+export { Cart, Order, LineItem, ProductVariant } from '@upsidelab/vue-storefront-spree-api';
 
 export type UserAddress = Record<string, unknown>;
 
 export type Coupon = Record<string, unknown>;
 
-export type Order = Record<string, unknown>;
-
-export type OrderItem = Record<string, unknown>;
+export type OrderItem = LineItem;
 
 export type Review = Record<string, unknown>;
 
@@ -37,7 +35,4 @@ export type ProductsResponse = {
 
 export type OrderSearchParams = Record<string, any>;
 
-export type OrdersResponse = {
-  data: any[];
-  total: number;
-};
+export type OrdersResponse = Order[];

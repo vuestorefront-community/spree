@@ -8,14 +8,10 @@ import {
 import { OrdersResponse, OrderSearchParams } from '../types';
 
 const params: UseUserOrderFactoryParams<OrdersResponse, OrderSearchParams> = {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  searchOrders: async (context: Context, params: OrderSearchParams): Promise<OrdersResponse> => {
-    console.log('Mocked: searchOrders');
+  searchOrders: async (context: Context): Promise<OrdersResponse> => {
+    const orders = await context.$spree.api.getOrders();
 
-    return {
-      data: [],
-      total: 0
-    };
+    return orders;
   }
 };
 

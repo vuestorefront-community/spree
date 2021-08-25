@@ -17,6 +17,7 @@ const emptyCart: Cart = {
   taxTotalAmount: 0.0,
   adjustmentTotal: '',
   lineItems: [],
+  completedAt: new Date(),
   address: {
     shipping: undefined,
     billing: undefined
