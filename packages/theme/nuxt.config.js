@@ -83,9 +83,21 @@ export default {
     locales: ['en'],
     defaultLocale: 'en',
     strategy: 'no_prefix',
+    currencies: [
+      { name: 'USD', label: 'Dollar' }
+    ],
     vueI18n: {
       silentTranslationWarn: true,
       fallbackLocale: 'en',
+      numberFormats: {
+        en: {
+          currency: {
+            style: 'currency',
+            currency: 'USD',
+            currencyDisplay: 'symbol'
+          }
+        }
+      },
       messages: {
         en: {
           welcome: 'Welcome 1'

@@ -26,6 +26,7 @@ import saveCheckoutShippingAddress from './api/saveCheckoutShippingAddress';
 import saveCheckoutBillingAddress from './api/saveCheckoutBillingAddress';
 import createAuthIntegration from './api/authentication/integration';
 import getOrCreateCart from './api/getOrCreateCart';
+import getOrders from './api/getOrders';
 
 const defaultSettings = {
   backendUrl: 'http://localhost:4000'
@@ -82,7 +83,8 @@ const { createApiClient } = apiClientFactory<any, any>({
     getCheckout,
     saveCheckoutShippingAddress,
     saveCheckoutBillingAddress,
-    getOrCreateCart
+    getOrCreateCart,
+    getOrders
   },
   extensions: [tokenExtension]
 });
