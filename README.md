@@ -65,6 +65,7 @@ For more details, refer to the official [architecture diagram](https://docs.vues
 | Product catalog | Available | Default implementation uses /v2/storefront/products endpoint for filtering, it's advisable to use ElasticSearch for best performance | Product details page | Available | |
 | Account | Partial | Requires Spree 4.2 |
 | Account - saved addresses | Available | Requires Spree 4.2 |
+| Account - reset password | Coming soon | VSF doesn't contain pages for resetting password, but we'll provide composables for handling this logic |
 | Account - order history | Coming soon | |
 | Cart | Partial | Fully functional, except associating guest order after registration/login. This will be added in the next version of Spree's API. |
 | Checkout | Available | |
@@ -73,9 +74,14 @@ For more details, refer to the official [architecture diagram](https://docs.vues
 | Wishlists | Coming soon | This will be integrated with the API provided by the latest version of spree_wishlist |
 | Multi-currency support | Coming soon | Requires Spree 4.2 |
 
-## Performance concerns
+## Caching and performance concerns
 
-Unlike Rails-generated views in Spree, API endpoints aren't cached out of the box. To ensure smooth operation of the frontend, you need to add caching to GET actions of the API. Putting e.g. AWS Cloudfront in front of the API is a fairly simple option and can do wonders in that regard.
+### Spree 4.3
+
+V2 API endpoints include built-in cache.
+
+### Spree 4.2
+In Spree < 4.3, API endpoints aren't cached out of the box. To ensure smooth operation of the frontend, you need to add caching to GET actions of the API. Putting e.g. AWS Cloudfront in front of the API is a fairly simple option and can do wonders in that regard. If your application uses custom logic (e.g. different price for each user), remember to make sure that your cache keys reflect that.
 
 ## Resources
 
