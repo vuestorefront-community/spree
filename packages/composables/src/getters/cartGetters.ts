@@ -9,8 +9,8 @@ export const getCartItemImage = (lineItem: LineItem): string => lineItem.image;
 
 export const getCartItemPrice = (lineItem: LineItem): AgnosticPrice => {
   return {
-    regular: lineItem.price.original || 12,
-    special: lineItem.price.current || 10
+    regular: lineItem.price.current,
+    special: undefined
   };
 };
 
@@ -27,18 +27,15 @@ export const getCartItemAttributes = (lineItem: LineItem, filters?: Array<string
 
 export const getCartItemSku = (lineItem: LineItem): string => lineItem.sku;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getCartTotals = (cart: Cart): AgnosticTotals => {
   return {
-    total: 10,
-    subtotal: 10
+    total: cart.totalAmount,
+    subtotal: cart.itemTotalAmount
   };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getCartShippingPrice = (cart: Cart): number => 0;
+export const getCartShippingPrice = (cart: Cart): number => cart.shipTotalAmount;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getCartTotalItems = (cart: Cart): number => cart?.lineItems.length || 0;
 
 export const getFormattedPrice = (price: number): string => String(price);
@@ -48,14 +45,6 @@ export const getCoupons = (cart: Cart): AgnosticCoupon[] => [];
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getDiscounts = (cart: Cart): AgnosticDiscount[] => [];
-
-export const getCartDisplayTotal = (cart: Cart): string => cart?.total || '';
-
-export const getCartSubtotal = (cart: Cart): string => cart?.itemTotal || '';
-
-export const getCartShipTotal = (cart: Cart): string => cart?.shipTotal || '';
-
-export const getCartAdjustmentTotal = (cart: Cart): string => cart?.adjustmentTotal || '';
 
 const cartGetters: CartGetters<Cart, LineItem> = {
   getTotals: getCartTotals,
@@ -71,11 +60,7 @@ const cartGetters: CartGetters<Cart, LineItem> = {
   getFormattedPrice: getFormattedPrice,
   getTotalItems: getCartTotalItems,
   getCoupons,
-  getDiscounts,
-  getDisplayTotal: getCartDisplayTotal,
-  getSubtotal: getCartSubtotal,
-  getShipTotal: getCartShipTotal,
-  getAdjustmentTotal: getCartAdjustmentTotal
+  getDiscounts
 };
 
 export default cartGetters;
