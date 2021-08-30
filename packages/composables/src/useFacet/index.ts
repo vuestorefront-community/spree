@@ -6,7 +6,7 @@ const factoryParams = {
     const { categorySlug, page, sort, optionValuesIds, price, itemsPerPage, term } = params.input;
     const categories = await context.$spree.api.getCategory({ categorySlug });
     const productsResponse = await context.$spree.api.getProducts({
-      categoryId: categories.current.id,
+      categoryId: categories.current?.id,
       page,
       sort,
       optionValuesIds,
