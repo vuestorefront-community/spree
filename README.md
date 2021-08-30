@@ -47,6 +47,28 @@ yarn build
 yarn dev
 ```
 
+## Enabling optional features
+
+Some features that are either provided by Spree's extensions or that are only available in newer versions, need to be manually enabled in the configuration file. To do that, open the `packages/theme/middleware.config.js` and update the configuration to desired state
+
+```
+module.exports = {
+  integrations: {
+    spree: {
+      location: '@upsidelab/vue-storefront-spree-api/server',
+      configuration: {
+        backendUrl: process.env.BACKEND_URL,
+        spreeFeatures: {
+          // Associate guest cart after the customer logs in. Requires Spree 4.3+
+          associateGuestCart: false,
+        }
+      }
+    }
+  }
+};
+
+```
+
 ## Repository structure
 
 The monorepo contains three submodules:
@@ -67,7 +89,7 @@ For more details, refer to the official [architecture diagram](https://docs.vues
 | Account - saved addresses | Available | Requires Spree 4.2 |
 | Account - reset password | Coming soon | VSF doesn't contain pages for resetting password, but we'll provide composables for handling this logic |
 | Account - order history | Available | |
-| Cart | Partial | Fully functional, except associating guest order after registration/login. This will be added in the next version of Spree's API. |
+| Cart | Available | Fully functional. Associating guest orders upon login requires Spree 4.3 and needs to be enable via configuration |
 | Checkout | Available | |
 | Checkout - Shipping methods | Available | |
 | Checkout - Payment methods | Partial | Only "Cash" supported out of the box. Additional changes need to be made in backend to support OOB support for providers like Stripe. This will be available in the next version of Spree's API. |
