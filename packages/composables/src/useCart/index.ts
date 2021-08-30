@@ -49,7 +49,11 @@ const params: UseCartFactoryParams<Cart, LineItem, ProductVariant, Coupon> = {
 
   applyCoupon: async (context: Context, { currentCart, couponCode }) => {
     const token = await loadOrCreateCartToken(context, currentCart);
-    await context.$spree.api.applyCoupon({ token, couponCode });
+    try {
+      await context.$spree.api.applyCoupon({ token, couponCode });
+    } catch (e) {
+      throw e.response?.data?.summary ? new Error(e.response.data.summary) : e;
+    }
     const cart = await context.$spree.api.getCart();
     return cart;
   },

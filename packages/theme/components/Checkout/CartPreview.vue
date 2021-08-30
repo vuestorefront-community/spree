@@ -52,6 +52,7 @@
       />
       <SfButton class="promo-code__button" @click="() => applyCoupon({ couponCode: promoCode })">{{ $t('Apply') }}</SfButton>
     </div>
+    <span class="highlighted coupon-error" v-if="cartError.applyCoupon">{{ cartError.applyCoupon.message }}</span>
     <div class="highlighted">
       <SfCharacteristic
         v-for="characteristic in characteristics"
@@ -93,7 +94,7 @@ export default {
     SfCircleIcon
   },
   setup () {
-    const { cart, removeItem, updateItemQty, applyCoupon } = useCart();
+    const { cart, removeItem, updateItemQty, applyCoupon, error: cartError } = useCart();
     const { state } = useShippingProvider();
 
     const listIsHidden = ref(false);
@@ -138,7 +139,8 @@ export default {
 
       selectedShippingMethod: computed(() => state.value && state.value.response && state.value.response.shippingMethod),
       hasSpecialPrice: computed(() => totals.value.special > 0 && totals.value.special < totals.value.subtotal),
-      getShippingMethodPrice
+      getShippingMethodPrice,
+      cartError
     };
   }
 };
@@ -188,6 +190,12 @@ export default {
     --input-background: var(--c-white);
     flex: 1;
   }
+}
+
+.coupon-error {
+  display: block;
+  color: var(--c-danger);
+  padding-top: 0;
 }
 
 .discounted {
