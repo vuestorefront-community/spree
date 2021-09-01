@@ -8,6 +8,22 @@
     <form @submit.prevent="handleSubmit(handleFormSubmit)">
       <div class="form">
         <ValidationProvider
+          v-if="!isAuthenticated"
+          name="email"
+          rules="required|email"
+          v-slot="{ errors }"
+          slim
+        >
+          <SfInput
+            v-model="form.email"
+            label="Email"
+            name="email"
+            class="form__element"
+            :valid="!errors[0]"
+            :errorMessage="errors[0]"
+          />
+        </ValidationProvider>
+        <ValidationProvider
           name="firstName"
           rules="required|min:2"
           v-slot="{ errors }"
@@ -183,8 +199,8 @@ import {
   SfSelect
 } from '@storefront-ui/vue';
 import { ref } from '@vue/composition-api';
-import { onSSR } from '@vue-storefront/core';
-import { useShipping, useCountry } from '@upsidelab/vue-storefront-spree';
+import { onSSR, useVSFContext } from '@vue-storefront/core';
+import { useShipping, useCountry, useUser } from '@upsidelab/vue-storefront-spree';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 
@@ -216,8 +232,11 @@ export default {
     const isFormSubmitted = ref(false);
     const { load, save, loading } = useShipping();
     const { countries, load: loadCountries } = useCountry();
+    const { isAuthenticated } = useUser();
+    const { $spree } = useVSFContext();
 
     const form = ref({
+      email: '',
       firstName: '',
       lastName: '',
       streetName: '',
@@ -230,6 +249,7 @@ export default {
     });
 
     const handleFormSubmit = async () => {
+      if (!isAuthenticated.value) await $spree.api.saveGuestCheckoutEmail(form.value.email);
       await save({ shippingDetails: form.value });
       isFormSubmitted.value = true;
     };
@@ -242,6 +262,7 @@ export default {
     return {
       loading,
       isFormSubmitted,
+      isAuthenticated,
       form,
       countries,
       handleFormSubmit
