@@ -57,34 +57,25 @@ const deserializeOptionValues = (included, variant): OptionValue[] => {
 
 const buildBreadcrumbs = (included, product) => {
   const taxons = extractRelationships(included, 'taxon', 'taxons', product);
+  const breadcrumbs = [{ text: 'Home', link: '/' }];
 
-  const rootBreadcrumb = {
-    text: 'Home',
-    link: '/'
+  const addTaxonToBreadcrumbs = (item) => {
+    const parentId = item.relationships.parent?.data?.id;
+    const parent = parentId ? filterAttachments(included, 'taxon', parentId)[0] : undefined;
+    if (parent) addTaxonToBreadcrumbs(parent);
+
+    breadcrumbs.push({
+      text: item.attributes.name,
+      link: `/c/${item.attributes.permalink}`
+    });
   };
 
-  const breadcrumbs = [rootBreadcrumb];
+  addTaxonToBreadcrumbs(taxons[0]);
 
-  const taxon = taxons[0].attributes;
-  const categoryBreadcrumbs = [];
-  const texts = taxon.pretty_name.split(' -> ').slice(1);
-  const links = taxon.permalink.split('/');
-
-  texts.forEach((text, index) => {
-    categoryBreadcrumbs.push({
-      text,
-      link: index === 0 ? `/c/${links[0]}` : `${categoryBreadcrumbs[index - 1].link}/${links[index]}`
-    });
-  });
-
-  breadcrumbs.push(...categoryBreadcrumbs);
-
-  const productBreadcrumb = {
+  breadcrumbs.push({
     text: product.attributes.name,
     link: product.attributes.slug
-  };
-
-  breadcrumbs.push(productBreadcrumb);
+  });
 
   return breadcrumbs;
 };
