@@ -40,6 +40,9 @@ export type AuthIntegrationContext = {
 export type ApiConfig = {
   auth: AuthIntegrationContext;
   backendUrl: string;
+  spreeFeatures: {
+    associateGuestCart: boolean;
+  }
 }
 
 export type ApiContext = {

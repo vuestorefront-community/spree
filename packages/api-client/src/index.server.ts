@@ -30,7 +30,10 @@ import getOrders from './api/getOrders';
 import saveGuestCheckoutEmail from './api/saveGuestCheckoutEmail';
 
 const defaultSettings = {
-  backendUrl: 'http://localhost:4000'
+  backendUrl: 'http://localhost:4000',
+  spreeFeatures: {
+    associateGuestCart: false
+  }
 };
 
 const onCreate = (settings) => {
