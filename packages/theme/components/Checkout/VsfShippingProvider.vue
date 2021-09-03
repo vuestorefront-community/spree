@@ -29,7 +29,7 @@
       v-e2e="'continue-to-billing'"
       :disabled="!selectedMethod"
       type="button"
-      @click="$emit('submit')"
+      @click="save"
     >
       {{ $t('Continue to billing') }}
     </SfButton>
@@ -49,23 +49,32 @@ export default {
     SfRadio
   },
 
-  setup() {
+  setup(props, { emit }) {
     const { $spree } = useVSFContext();
     const selectedMethod = ref(null);
     const shippingMethods = ref([]);
+    const ids = ref([]);
 
     const selectMethod = method => selectedMethod.value = method;
 
     onMounted(async () => {
-      const { shippingIds, methods } = await $spree.api.getShippingMethods();
-      console.log(shippingIds);
+      const { shipmentIds, methods } = await $spree.api.getShippingMethods();
+
       shippingMethods.value = methods;
+      ids.value = shipmentIds;
+
     });
+
+    const save = () => {
+      emit('submit', selectedMethod.value, ids.value);
+    };
 
     return {
       shippingMethods,
       selectedMethod,
-      selectMethod
+      selectMethod,
+      save,
+      ids
     };
   }
 };
