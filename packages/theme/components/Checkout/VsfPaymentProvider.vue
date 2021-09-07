@@ -48,7 +48,6 @@ export default {
 
     const selectMethod = (method) => {
       selectedMethod.value = method;
-      emit('status');
     };
 
     const paymentComponent = computed(() => {
@@ -63,7 +62,11 @@ export default {
     };
 
     onMounted(async () => {
-      paymentMethods.value = await $spree.api.getPaymentMethods();
+      try {
+        paymentMethods.value = await $spree.api.getPaymentMethods();
+      } catch (e) {
+        console.error(e);
+      }
     });
 
     return {

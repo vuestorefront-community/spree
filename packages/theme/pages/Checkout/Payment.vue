@@ -129,13 +129,12 @@ export default {
     SfLink,
     VsfPaymentProvider: () => import('~/components/Checkout/VsfPaymentProvider')
   },
-  setup(props, context) {
-    const { cart, load, setCart } = useCart();
-    const { order, make, loading } = useMakeOrder();
+  setup() {
+    const { cart, load } = useCart();
+    const { make, loading } = useMakeOrder();
 
     const isPaymentReady = ref(false);
     const savePayment = ref(null);
-    const savePaymentError = ref(null);
     const terms = ref(false);
 
     onSSR(async () => {
@@ -151,13 +150,12 @@ export default {
       try {
         await savePayment.value();
       } catch (e) {
-        savePaymentError.value = e.message;
+        console.error(e);
         return;
       }
 
       await make();
-      context.root.$router.push(`/checkout/thank-you?order=${order.value.id}`);
-      setCart(null);
+      // context.root.$router.push(`/checkout/thank-you?order=${order.value.id}`);
     };
 
     return {
