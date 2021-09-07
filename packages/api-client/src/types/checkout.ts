@@ -16,6 +16,19 @@ export type CouponCode = {
   couponCode: string;
 };
 
+export type ShippingRate = {
+  id: string;
+  methodId: string;
+  name: string;
+  selected: boolean;
+  cost: string;
+};
+
+export type Shipment = {
+  id: string;
+  availableShippingRates: ShippingRate[];
+}
+
 export type Checkout = {
   shippingAddress: Address;
   billingAddress: Address;

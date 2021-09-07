@@ -185,7 +185,7 @@
       </div>
       <VsfShippingProvider
         v-if="isFormSubmitted"
-        @submit="handleProviderSubmit"
+        @submit="$router.push('/checkout/billing')"
       />
     </form>
   </ValidationObserver>
@@ -200,7 +200,7 @@ import {
 } from '@storefront-ui/vue';
 import { ref } from '@vue/composition-api';
 import { onSSR, useVSFContext } from '@vue-storefront/core';
-import { useShipping, useCountry, useUser, useCart} from '@upsidelab/vue-storefront-spree';
+import { useShipping, useCountry, useUser } from '@upsidelab/vue-storefront-spree';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 
@@ -228,13 +228,12 @@ export default {
     ValidationObserver,
     VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
   },
-  setup (props, context) {
+  setup () {
     const isFormSubmitted = ref(false);
     const { load, save, loading } = useShipping();
     const { countries, load: loadCountries } = useCountry();
     const { isAuthenticated } = useUser();
     const { $spree } = useVSFContext();
-    const { cart, setCart } = useCart();
 
     const form = ref({
       email: '',
@@ -255,21 +254,6 @@ export default {
       isFormSubmitted.value = true;
     };
 
-    const handleProviderSubmit = async (method, shipmentIds) => {
-      try {
-        await $spree.api.saveShippingMethod({ token: cart.value.token, shipmentIds, method });
-
-        const updatedCart = await $spree.api.getCart();
-
-        setCart(updatedCart);
-
-        context.root.$router.push('/checkout/billing');
-      } catch (e) {
-        console.error(e);
-        throw e;
-      }
-    };
-
     onSSR(async () => {
       await load();
       await loadCountries();
@@ -281,8 +265,7 @@ export default {
       isAuthenticated,
       form,
       countries,
-      handleFormSubmit,
-      handleProviderSubmit
+      handleFormSubmit
     };
   }
 };

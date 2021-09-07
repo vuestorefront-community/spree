@@ -1,9 +1,9 @@
 import { ApiContext } from '../../types';
-import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
+import getCurrentCartToken from '../authentication/getCurrentCartToken';
 
 export default async function saveGuestCheckoutEmail({ client, config }: ApiContext, email: string) {
   try {
-    const token = await getCurrentBearerOrCartToken({ client, config });
+    const token = await getCurrentCartToken(config);
     const result = await client.checkout.orderUpdate(token, {
       order: {
         email
