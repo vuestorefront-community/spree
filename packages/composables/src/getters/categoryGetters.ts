@@ -15,15 +15,10 @@ export const getCategoryTree = (categories: any): AgnosticCategoryTree => {
 };
 
 export const getCategoryBreadcrumbs = (category: Category): AgnosticBreadcrumb[] => {
-  const rootBreadcrumb = {
-    text: 'Home',
-    link: '/'
-  };
-  const breadcrumbs = [rootBreadcrumb];
+  const breadcrumbs = [{ text: 'Home', link: '/' }];
 
   const buildBreadcrumbs = (category) => {
-    if (category.parent && category.parent.parent)
-      buildBreadcrumbs(category.parent);
+    if (category.parent) buildBreadcrumbs(category.parent);
 
     breadcrumbs.push({
       text: category.name,
