@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import { ApiContext } from '../../types';
 
 export default async function getCurrentBearerToken({ client, config }: ApiContext): Promise<string> {

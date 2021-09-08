@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import { OrderAttr } from '@spree/storefront-api-v2-sdk/types/interfaces/Order';
 import { CouponCode as CouponCodeAttr } from '@spree/storefront-api-v2-sdk/types/interfaces/endpoints/CartClass';
 import { Cart, CouponCode, LineItem } from '../../types';

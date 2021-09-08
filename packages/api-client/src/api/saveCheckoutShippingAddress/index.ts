@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import { Address, ApiContext } from '../../types';
 import getCurrentCartToken from '../authentication/getCurrentCartToken';
 import { serializeAddress } from '../serializers/address';

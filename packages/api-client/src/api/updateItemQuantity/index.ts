@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import { ApiContext, Cart } from '../../types';
 import { cartParams } from '../common/cart';
 import { deserializeCart } from '../serializers/cart';

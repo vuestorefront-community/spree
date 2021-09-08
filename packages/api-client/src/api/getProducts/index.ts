@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import { ApiContext } from '../../types';
 import { addHostToProductImages, deserializeLimitedVariants, deserializeSearchMetadata } from '../serializers/product';
 

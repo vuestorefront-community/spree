@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import { Logger } from '@vue-storefront/core';
 import { ApiContext, Order } from '../../types';
 import getCurrentBearerToken from '../authentication/getCurrentBearerToken';
