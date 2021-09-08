@@ -47,7 +47,8 @@ const useCountryFactory = (factoryParams) => {
 const params = {
   load: async (context) => {
     const countries = await context.$spree.api.getAvailableCountries();
-    return countries;
+    const sortedCountries = countries.sort((a, b) => a.label.localeCompare(b.label));
+    return sortedCountries;
   }
 };
 
