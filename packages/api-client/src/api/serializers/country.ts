@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 export const deserializeState = (apiState) => ({
   code: apiState.attributes.abbr,
   name: apiState.attributes.name

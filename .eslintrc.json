@@ -73,7 +73,7 @@
     "no-useless-return": 2,
     "no-console": 0,
     "global-require": 1,
-    "camelcase": 2,
+    "camelcase": [2, { "properties": "never" }],
     "computed-property-spacing": 2,
     "consistent-this": 2,
     "func-call-spacing": 2,

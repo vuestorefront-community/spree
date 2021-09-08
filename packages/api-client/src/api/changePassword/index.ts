@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import { ApiContext } from '../../types';
 import getCurrentBearerToken from '../authentication/getCurrentBearerToken';
 

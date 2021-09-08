@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import { ApiContext, Category } from '../../types';
 import { deserializeCategories } from '../serializers/category';
 

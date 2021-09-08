@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import { AccountAddressAttr } from '@spree/storefront-api-v2-sdk/types/interfaces/Account';
 import { IAddress } from '@spree/storefront-api-v2-sdk/types/interfaces/attributes/Address';
 import { Address } from '../../types';

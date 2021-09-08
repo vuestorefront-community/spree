@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import { ApiContext } from '../../types';
 import getCurrentCartToken from '../authentication/getCurrentCartToken';
 
