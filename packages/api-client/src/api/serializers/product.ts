@@ -2,17 +2,37 @@ import { JsonApiDocument, JsonApiResponse } from '@spree/storefront-api-v2-sdk/t
 import { ApiConfig, ProductVariant, OptionType, OptionValue } from '../../types';
 import { extractRelationships, filterAttachments } from './common';
 
-const deserializeImages = (included, mainVariant, fallbackVariant) => {
-  let mainVariantImageIds = [];
+const groupIncluded = (included, discriminators) => {
+  const discriminatorsKeys = Object.keys(discriminators);
 
-  if (mainVariant) {
-    mainVariantImageIds = mainVariant.relationships.images.data.map((e) => e.id);
-  }
+  const emptyGroups = discriminatorsKeys.reduce((accumulatedGroups, discriminatorKey) => {
+    accumulatedGroups[discriminatorKey] = [];
+
+    return accumulatedGroups;
+  }, {});
+
+  const filledGroups = included.reduce((accumulatedGroups, document) => {
+    discriminatorsKeys.forEach((discriminatorKey) => {
+      if (discriminators[discriminatorKey](document)) {
+        accumulatedGroups[discriminatorKey].push(document);
+      }
+    });
+
+    return accumulatedGroups;
+  }, emptyGroups);
+
+  return filledGroups;
+};
+
+const isVariantOfProduct = (document, productId) => document.type === 'variant' && document.relationships.product.data.id === productId;
+
+const deserializeImages = (included: JsonApiDocument[], mainVariant: JsonApiDocument, fallbackVariant?: JsonApiDocument) => {
+  const mainVariantImageIds = mainVariant.relationships.images.data.map((imageIdentifier) => imageIdentifier.id);
 
   let fallbackVariantImageIds = [];
 
   if (fallbackVariant) {
-    fallbackVariantImageIds = fallbackVariant.relationships.images.data.map((e) => e.id);
+    fallbackVariantImageIds = fallbackVariant.relationships.images.data.map((imageIdentifier) => imageIdentifier.id);
   }
 
   const imageIds = new Set(mainVariantImageIds.concat(fallbackVariantImageIds));
@@ -90,7 +110,7 @@ const buildBreadcrumbs = (included, product) => {
   return breadcrumbs;
 };
 
-const deserializeProductVariant = (product, mainVariant, fallbackVariant, attachments): ProductVariant => ({
+const deserializeProductVariant = (product, mainVariant, fallbackVariant, attachments: JsonApiDocument[]): ProductVariant => ({
   _id: mainVariant.id,
   _productId: product.id,
   _variantId: mainVariant.id,
@@ -112,44 +132,20 @@ const deserializeProductVariant = (product, mainVariant, fallbackVariant, attach
   inStock: mainVariant.attributes.in_stock
 });
 
-const groupIncluded = (included, discriminators) => {
-  const discriminatorsKeys = Object.keys(discriminators);
-
-  const emptyGroups = discriminatorsKeys.reduce((accumulatedGroups, discriminatorKey) => {
-    accumulatedGroups[discriminatorKey] = [];
-
-    return accumulatedGroups;
-  }, {});
-
-  const filledGroups = included.reduce((accumulatedGroups, document) => {
-    discriminatorsKeys.forEach((discriminatorKey) => {
-      if (discriminators[discriminatorKey](document)) {
-        accumulatedGroups[discriminatorKey].push(document);
-      }
-    });
-
-    return accumulatedGroups;
-  }, emptyGroups);
-
-  return filledGroups;
-};
-
-const isVariantOfParent = (document, parentId) => document.type === 'variant' && document.relationships.product.data.id === parentId;
-
 export const deserializeSingleProductVariants = (apiProduct) => {
   const attachments = apiProduct.included;
   const productId = apiProduct.data.id;
 
-  const variants = groupIncluded(
+  const groupedVariants = groupIncluded(
     attachments,
     {
-      primaryVariants: (document) => (isVariantOfParent(document, productId) && document.attributes.is_master),
-      optionVariants: (document) => (isVariantOfParent(document, productId) && !document.attributes.is_master)
+      primaryVariants: (document) => (isVariantOfProduct(document, productId) && document.attributes.is_master),
+      optionVariants: (document) => (isVariantOfProduct(document, productId) && !document.attributes.is_master)
     }
   );
-  const primaryVariant = variants.primaryVariants[0];
+  const primaryVariant = groupedVariants.primaryVariants[0];
 
-  return variants.optionVariants.map(
+  return groupedVariants.optionVariants.map(
     (variant) => deserializeProductVariant(apiProduct.data, variant, primaryVariant, attachments)
   );
 };
@@ -161,20 +157,20 @@ export const deserializeLimitedVariants = (apiProducts) => {
     const productId = product.id;
     const defaultVariantId = product.relationships.default_variant.data.id;
 
-    const variants = groupIncluded(
+    const groupedVariants = groupIncluded(
       attachments,
       {
-        primaryVariants: (document) => (isVariantOfParent(document, productId) && document.attributes.is_master),
+        primaryVariants: (document) => (isVariantOfProduct(document, productId) && document.attributes.is_master),
         defaultOptionVariants: (document) => (
-          isVariantOfParent(document, productId) &&
+          isVariantOfProduct(document, productId) &&
           !document.attributes.is_master &&
           defaultVariantId === document.id
         )
       }
     );
 
-    const primaryVariant = variants.primaryVariants[0];
-    const defaultOptionVariant = variants.defaultOptionVariants[0];
+    const primaryVariant = groupedVariants.primaryVariants[0];
+    const defaultOptionVariant = groupedVariants.defaultOptionVariants[0];
 
     return deserializeProductVariant(product, primaryVariant, defaultOptionVariant, attachments);
   });
