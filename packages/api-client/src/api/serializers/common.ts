@@ -1,11 +1,13 @@
 export const filterAttachments = (attachments, type, ids) =>
-  attachments.filter((e) => e.type === type && ids.includes(e.id));
+  attachments
+    .filter((attachment) => attachment.type === type && ids.includes(attachment.id));
 
 export const extractRelationships = (attachments, type, relationship, item) => {
-  if (!item.relationships[relationship]) return [];
-  const relationships = item.relationships[relationship].data;
+  const relationships = item.relationships[relationship]?.data;
+
+  if (!relationships) return [];
 
   return Array.isArray(relationships)
     ? filterAttachments(attachments, type, relationships.map((e) => e.id))
-    : filterAttachments(attachments, type, relationships.id);
+    : filterAttachments(attachments, type, [relationships.id]);
 };

@@ -3,6 +3,7 @@ import { addHostToProductImages, deserializeLimitedVariants, deserializeSearchMe
 
 export default async function getProducts({ client, config }: ApiContext, params) {
   const { id, categoryId, page, sort, optionValuesIds, price, itemsPerPage, term } = params;
+  const variantFields = 'name,slug,sku,price,display_price,product,images,option_values,is_master';
 
   const result = await client.products.list({
     filter: {
@@ -13,10 +14,12 @@ export default async function getProducts({ client, config }: ApiContext, params
       name: term
     },
     fields: {
-      product: 'name,slug,variants,option_types,taxons',
-      variant: 'name,slug,sku,price,display_price,product,images,option_values'
+      product: 'name,slug,primary_variant,default_variant,variants,option_types,taxons',
+      variant: variantFields,
+      primary_variant: variantFields,
+      default_variant: variantFields
     },
-    include: 'variants.option_values,option_types,taxons,images',
+    include: 'primary_variant,default_variant,variants.option_values,option_types,taxons,images',
     page,
     sort,
     per_page: itemsPerPage
