@@ -14,11 +14,13 @@ export default {
       default: () => {}
     }
   },
+
   setup(props, { emit }) {
     const { $spree } = useVSFContext();
     const stripe = ref(null);
     const card = ref(null);
     const cardRef = ref(null);
+    const areIntentsEnabled = computed(() => props.method.preferences?.intents);
     const publishableKey = computed(() => props.method.preferences?.publishable_key);
 
     const savePayment = async () => {
@@ -36,6 +38,10 @@ export default {
         };
 
         await $spree.api.savePaymentMethod(methodId, payload);
+
+        if (areIntentsEnabled.value) {
+          // TODO: 3D secure workflow
+        }
       } catch (e) {
         console.error(e);
       }

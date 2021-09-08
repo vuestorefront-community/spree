@@ -8,15 +8,12 @@
         :value="method.type"
         :description="method.description"
         :selected="selectedMethod"
-        name="shippingMethod"
-        class="form__radio shipping"
+        name="paymentMethod"
+        class="form__radio"
         @input="selectMethod(method.type)"
-      >
-        <div class="shipping__label">
-          {{ method.label }}
-        </div>
-      </SfRadio>
+      />
       <component
+        class="payment-method-details"
         v-if="method.type === selectedMethod"
         :is="paymentComponent"
         :method="method"
@@ -81,15 +78,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.shipping {
-  &__label {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  &__description {
-    --radio-description-margin: 0;
-    --radio-description-font-size: var(--font-xs);
-  }
+.payment-method-details {
+  padding: var(--spacer-base);
+  background: var(--c-light);
 }
 </style>

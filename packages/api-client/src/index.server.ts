@@ -32,6 +32,7 @@ import getShipments from './api/getShipments';
 import saveShippingMethod from './api/saveShippingMethod';
 import getPaymentMethods from './api/getPaymentMethods';
 import savePaymentMethod from './api/savePaymentMethod';
+import makeOrder from './api/makeOrder';
 
 const defaultSettings = {
   backendUrl: 'http://localhost:4000',
@@ -97,7 +98,8 @@ const { createApiClient } = apiClientFactory<any, any>({
     getShipments,
     saveShippingMethod,
     getPaymentMethods,
-    savePaymentMethod
+    savePaymentMethod,
+    makeOrder
   },
   extensions: [tokenExtension]
 });
