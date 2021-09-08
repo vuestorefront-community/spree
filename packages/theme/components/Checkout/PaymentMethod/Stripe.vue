@@ -40,7 +40,15 @@ export default {
         await $spree.api.savePaymentMethod(methodId, payload);
 
         if (areIntentsEnabled.value) {
-          // TODO: 3D secure workflow
+          const threeDSecureData = await $spree.api.getPaymentConfirmationData();
+          const confirmCardPaymentResponse = await stripe.value.confirmCardPayment(threeDSecureData.clientSecret, {});
+          const handlePaymentConfirmationResponse = await $spree.api.handlePaymentConfirmationResponse({
+            confirmationResponse: confirmCardPaymentResponse
+          });
+
+          if (!handlePaymentConfirmationResponse.success) {
+            throw new Error('Failed to confirm payment');
+          }
         }
       } catch (e) {
         console.error(e);
