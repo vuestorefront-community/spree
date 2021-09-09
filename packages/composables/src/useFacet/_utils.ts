@@ -13,45 +13,39 @@ const getPriceFacet = (priceIds) => ({
   options: generatePriceOptions(priceIds)
 });
 
-const filterOptions = (options) =>
-  options.reduce((options, item) =>
-    options.find(o => o.id === item.id) ? options : options.concat(item)
-  , []);
+export const findFacets = (productsMeta) => {
+  const filters = productsMeta.filters;
+  if (!filters) {
+    return [];
+  }
 
-const findOptions = (products, name) => {
-  const options = products
-    .map(product => product[name])
-    .reduce((options, item) => {
-      return options.concat(item);
-    }, []);
+  const optionTypeFacets = filters.optionTypes.map(optionType => ({
+    id: optionType.id,
+    label: optionType.presentation,
+    options: optionType.optionValues.map(optionValue => ({
+      type: 'attribute',
+      id: optionValue.id,
+      value: optionValue.presentation,
+      attrName: optionValue.name
+    }))
+  }));
 
-  return filterOptions(options);
-};
+  const propertyFacets = filters.productProperties.map(property => ({
+    id: property.id,
+    label: property.presentation,
+    options: property.values.map(value => ({
+      type: 'attribute',
+      id: value.value,
+      value: value.value,
+      attrName: value.filterParam
+    }))
+  }));
 
-export const findFacets = (products) => {
-  const optionTypes = findOptions(products, 'optionTypes');
-  const optionValues = findOptions(products, 'optionValues');
+  const priceFacet = getPriceFacet(priceIds);
 
-  const facets = [];
-
-  optionTypes.forEach(type => {
-    const values = optionValues.filter(value =>
-      value.optionTypeId === type.id
-    );
-
-    facets.push({
-      id: type.name,
-      label: type.presentation,
-      options: values.map(value => ({
-        type: 'attribute',
-        id: value.id,
-        value: value.presentation,
-        attrName: type.name
-      }))
-    });
-  });
-
-  facets.push(getPriceFacet(priceIds));
-
-  return facets;
+  return [
+    ...optionTypeFacets,
+    ...propertyFacets,
+    priceFacet
+  ];
 };

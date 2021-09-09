@@ -21,7 +21,7 @@ const factoryParams = {
       categories,
       products,
       productsMeta,
-      facets: findFacets(products),
+      facets: findFacets(productsMeta),
       itemsPerPage
     };
   }
