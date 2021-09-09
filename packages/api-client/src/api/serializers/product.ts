@@ -1,5 +1,5 @@
-import { JsonApiDocument, JsonApiResponse } from '@spree/storefront-api-v2-sdk/types/interfaces/JsonApi';
-import { ApiConfig, ProductVariant, OptionType, OptionValue } from '../../types';
+import type { JsonApiDocument, JsonApiResponse } from '@spree/storefront-api-v2-sdk/types/interfaces/JsonApi';
+import type { ApiConfig, ProductVariant, OptionType, OptionValue, Image } from '../../types';
 import { extractRelationships, filterAttachments } from './common';
 
 const groupIncluded = (included, discriminators) => {
@@ -26,7 +26,7 @@ const groupIncluded = (included, discriminators) => {
 
 const isVariantOfProduct = (document, productId) => document.type === 'variant' && document.relationships.product.data.id === productId;
 
-const deserializeImages = (included: JsonApiDocument[], mainVariant: JsonApiDocument, fallbackVariant?: JsonApiDocument) => {
+const deserializeImages = (included: JsonApiDocument[], mainVariant: JsonApiDocument, fallbackVariant?: JsonApiDocument): Image[] => {
   const mainVariantImageIds = mainVariant.relationships.images.data.map((imageIdentifier) => imageIdentifier.id);
 
   let fallbackVariantImageIds = [];
@@ -35,7 +35,7 @@ const deserializeImages = (included: JsonApiDocument[], mainVariant: JsonApiDocu
     fallbackVariantImageIds = fallbackVariant.relationships.images.data.map((imageIdentifier) => imageIdentifier.id);
   }
 
-  const imageIds = new Set(mainVariantImageIds.concat(fallbackVariantImageIds));
+  const imageIds = new Set<string>(mainVariantImageIds.concat(fallbackVariantImageIds));
 
   const images = filterAttachments(included, 'image', Array.from(imageIds));
 
@@ -44,7 +44,7 @@ const deserializeImages = (included: JsonApiDocument[], mainVariant: JsonApiDocu
 
   return sortedImages
     .map(image => ({
-      id: image.id,
+      id: parseInt(image.id, 10),
       styles: image.attributes.styles.map(style => ({
         url: style.url,
         width: parseInt(style.width, 10),
@@ -66,7 +66,8 @@ const deserializeOptionTypes = (included, product): OptionType[] => {
   const optionTypes = extractRelationships(included, 'option_type', 'option_types', product);
 
   return optionTypes.map(optionType => ({
-    id: optionType.id,
+    id: parseInt(optionType.id, 10),
+    type: optionType.type,
     name: optionType.attributes.name,
     position: optionType.attributes.position,
     presentation: optionType.attributes.presentation
@@ -77,7 +78,8 @@ const deserializeOptionValues = (included, variant): OptionValue[] => {
   const optionValues = extractRelationships(included, 'option_value', 'option_values', variant);
 
   return optionValues.map(optionValue => ({
-    id: optionValue.id,
+    id: parseInt(optionValue.id, 10),
+    type: optionValue.attributes.type,
     name: optionValue.attributes.name,
     position: optionValue.attributes.position,
     presentation: optionValue.attributes.presentation,
