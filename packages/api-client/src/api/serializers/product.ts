@@ -1,8 +1,10 @@
 import type { JsonApiDocument, JsonApiResponse } from '@spree/storefront-api-v2-sdk/types/interfaces/JsonApi';
+import type { IProduct, IProducts } from '@spree/storefront-api-v2-sdk/types/interfaces/Product';
+import type { RelationType } from '@spree/storefront-api-v2-sdk/types/interfaces/Relationships';
 import type { ApiConfig, ProductVariant, OptionType, OptionValue, Image } from '../../types';
 import { extractRelationships, filterAttachments } from './common';
 
-const groupIncluded = (included, discriminators) => {
+const groupIncluded = <Groups extends keyof any>(included, discriminators): { [key in Groups]: JsonApiDocument[] } => {
   const discriminatorsKeys = Object.keys(discriminators);
 
   const emptyGroups = discriminatorsKeys.reduce((accumulatedGroups, discriminatorKey) => {
@@ -12,13 +14,16 @@ const groupIncluded = (included, discriminators) => {
   }, {});
 
   const filledGroups = included.reduce((accumulatedGroups, document) => {
-    discriminatorsKeys.forEach((discriminatorKey) => {
+    return discriminatorsKeys.reduce((discriminatedGroups, discriminatorKey) => {
       if (discriminators[discriminatorKey](document)) {
-        accumulatedGroups[discriminatorKey].push(document);
+        return {
+          ...discriminatedGroups,
+          [discriminatorKey]: [...discriminatedGroups[discriminatorKey], document]
+        };
       }
-    });
 
-    return accumulatedGroups;
+      return discriminatedGroups;
+    }, accumulatedGroups);
   }, emptyGroups);
 
   return filledGroups;
@@ -26,23 +31,31 @@ const groupIncluded = (included, discriminators) => {
 
 const isVariantOfProduct = (document, productId) => document.type === 'variant' && document.relationships.product.data.id === productId;
 
-const deserializeImages = (included: JsonApiDocument[], mainVariant: JsonApiDocument, fallbackVariant?: JsonApiDocument): Image[] => {
-  const mainVariantImageIds = mainVariant.relationships.images.data.map((imageIdentifier) => imageIdentifier.id);
+const deserializeImages = (included: JsonApiDocument[], documents: JsonApiDocument[]): Image[] => {
+  const flattenedImageIdentifiers = documents
+    .reduce<RelationType[]>(
+      (collectedImageDocuments, imageDocument) => [...collectedImageDocuments, ...imageDocument.relationships.images.data],
+      []
+    );
 
-  let fallbackVariantImageIds = [];
+  const uniqueImageIdentifiers = flattenedImageIdentifiers.reduce<RelationType[]>(
+    (collectedImageDocuments, imageDocumentRelationship) => {
+      if (collectedImageDocuments.some((maybeSameImageDocument) => maybeSameImageDocument.id === imageDocumentRelationship.id)) {
+        return collectedImageDocuments;
+      }
 
-  if (fallbackVariant) {
-    fallbackVariantImageIds = fallbackVariant.relationships.images.data.map((imageIdentifier) => imageIdentifier.id);
-  }
+      return [...collectedImageDocuments, imageDocumentRelationship];
+    },
+    []
+  );
 
-  const imageIds = new Set<string>(mainVariantImageIds.concat(fallbackVariantImageIds));
+  const imageIdentifiersIds = uniqueImageIdentifiers.map((imageDocumentRelationship) => imageDocumentRelationship.id);
 
-  const images = filterAttachments(included, 'image', Array.from(imageIds));
+  const imageDocuments = filterAttachments(included, 'image', imageIdentifiersIds);
 
-  const sortedImages = images
-    .sort((image1, image2) => Math.sign(image1.attributes.position - image2.attributes.position));
+  const sortedImageDocuments = imageDocuments.sort((image1, image2) => Math.sign(image1.attributes.position - image2.attributes.position));
 
-  return sortedImages
+  return sortedImageDocuments
     .map(image => ({
       id: parseInt(image.id, 10),
       styles: image.attributes.styles.map(style => ({
@@ -112,69 +125,100 @@ const buildBreadcrumbs = (included, product) => {
   return breadcrumbs;
 };
 
-const deserializeProductVariant = (product, mainVariant, fallbackVariant, attachments: JsonApiDocument[]): ProductVariant => ({
-  _id: mainVariant.id,
+const partialDeserializeProductVariant = (
+  product, variant, attachments: JsonApiDocument[]
+): Omit<ProductVariant, 'images'> => ({
+  _id: variant.id,
   _productId: product.id,
-  _variantId: mainVariant.id,
-  _description: mainVariant.attributes.description || product.attributes.description,
+  _variantId: variant.id,
+  _description: variant.attributes.description || product.attributes.description,
   _categoriesRef: product.relationships.taxons.data.map((taxon) => taxon.id),
   name: product.attributes.name,
   slug: product.attributes.slug,
   sku: product.attributes.sku,
   optionTypes: deserializeOptionTypes(attachments, product),
-  optionValues: deserializeOptionValues(attachments, mainVariant),
-  images: deserializeImages(attachments, mainVariant, fallbackVariant),
+  optionValues: deserializeOptionValues(attachments, variant),
   breadcrumbs: buildBreadcrumbs(attachments, product),
   properties: deserializeProperties(attachments, product),
-  displayPrice: mainVariant.attributes.display_price,
+  displayPrice: variant.attributes.display_price,
   price: {
-    original: mainVariant.attributes.price,
-    current: mainVariant.attributes.price
+    original: variant.attributes.price,
+    current: variant.attributes.price
   },
-  inStock: mainVariant.attributes.in_stock
+  inStock: variant.attributes.in_stock
 });
 
-export const deserializeSingleProductVariants = (apiProduct) => {
+export const deserializeSingleProductVariants = (apiProduct: IProduct): ProductVariant[] => {
   const attachments = apiProduct.included;
   const productId = apiProduct.data.id;
+  // primary_variant may not exist if na older version of Spree is used. Only use primary_variant if available.
+  const primaryVariantId = (apiProduct.data.relationships.primary_variant?.data as RelationType).id || null;
 
-  const groupedVariants = groupIncluded(
+  const groupedVariants = groupIncluded<'primaryVariants' | 'optionVariants'>(
     attachments,
     {
-      primaryVariants: (document) => (isVariantOfProduct(document, productId) && document.attributes.is_master),
-      optionVariants: (document) => (isVariantOfProduct(document, productId) && !document.attributes.is_master)
+      primaryVariants: (document) => (isVariantOfProduct(document, productId) && document.id === primaryVariantId),
+      optionVariants: (document) => (isVariantOfProduct(document, productId) && document.id !== primaryVariantId)
     }
   );
-  const primaryVariant = groupedVariants.primaryVariants[0];
+
+  if (groupedVariants.optionVariants.length === 0) {
+    const images = deserializeImages(attachments, groupedVariants.primaryVariants);
+
+    return [{
+      ...partialDeserializeProductVariant(apiProduct.data, groupedVariants.primaryVariants[0], attachments),
+      images
+    }];
+  }
 
   return groupedVariants.optionVariants.map(
-    (variant) => deserializeProductVariant(apiProduct.data, variant, primaryVariant, attachments)
+    (variant) => {
+      const images = deserializeImages(attachments, [...groupedVariants.primaryVariants, variant]);
+
+      return {
+        ...partialDeserializeProductVariant(apiProduct.data, variant, attachments),
+        images
+      };
+    }
   );
 };
 
-export const deserializeLimitedVariants = (apiProducts) => {
+export const deserializeLimitedVariants = (apiProducts: IProducts): ProductVariant[] => {
   const attachments = apiProducts.included;
 
   return apiProducts.data.map((product) => {
     const productId = product.id;
-    const defaultVariantId = product.relationships.default_variant.data.id;
+    // primary_variant may not exist if na older version of Spree is used. Only use primary_variant if available.
+    const primaryVariantId = (product.relationships.primary_variant?.data as RelationType).id || null;
 
-    const groupedVariants = groupIncluded(
+    const groupedVariants = groupIncluded<'primaryVariants' | 'optionVariants' | 'masterVariants' | 'nonMasterVariants'>(
       attachments,
       {
-        primaryVariants: (document) => (isVariantOfProduct(document, productId) && document.attributes.is_master),
-        defaultOptionVariants: (document) => (
-          isVariantOfProduct(document, productId) &&
-          !document.attributes.is_master &&
-          defaultVariantId === document.id
-        )
+        primaryVariants: (document) => (isVariantOfProduct(document, productId) && document.id === primaryVariantId),
+        optionVariants: (document) => (isVariantOfProduct(document, productId) && document.id !== primaryVariantId),
+        masterVariants: (document) => (isVariantOfProduct(document, productId) && document.attributes.is_master),
+        nonMasterVariants: (document) => (isVariantOfProduct(document, productId) && !document.attributes.is_master)
       }
     );
 
-    const primaryVariant = groupedVariants.primaryVariants[0];
-    const defaultOptionVariant = groupedVariants.defaultOptionVariants[0];
+    const images = deserializeImages(attachments, [...groupedVariants.masterVariants, ...groupedVariants.nonMasterVariants]);
 
-    return deserializeProductVariant(product, primaryVariant, defaultOptionVariant, attachments);
+    let variant;
+
+    if (groupedVariants.primaryVariants.length === 0) {
+      variant = [...groupedVariants.masterVariants, ...groupedVariants.optionVariants][0];
+    } else {
+      variant = [...groupedVariants.optionVariants, ...groupedVariants.primaryVariants][0];
+    }
+
+    return {
+      ...partialDeserializeProductVariant(
+        product,
+        variant,
+        attachments
+      ),
+      images
+    };
   });
 };
 
@@ -201,7 +245,7 @@ const addHostToIncluded = (included: JsonApiDocument[], config: ApiConfig) =>
     e.type === 'image' ? addHostToImage(e, config) : e
   );
 
-export const addHostToProductImages = (apiProductsData: JsonApiResponse, config: ApiConfig) => ({
+export const addHostToProductImages = <DocumentType extends JsonApiResponse>(apiProductsData: DocumentType, config: ApiConfig): DocumentType => ({
   ...apiProductsData,
   included: addHostToIncluded(apiProductsData.included, config)
 });
