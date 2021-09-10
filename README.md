@@ -61,6 +61,8 @@ module.exports = {
         spreeFeatures: {
           // Associate guest cart after the customer logs in. Requires Spree 4.3+
           associateGuestCart: false,
+          // Fetch basic information about products from the `primary_variant` relationship. Requires Spree 4.3+
+          fetchPrimaryVariant: false
         }
       }
     }

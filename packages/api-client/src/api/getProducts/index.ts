@@ -3,6 +3,13 @@ import { addHostToProductImages, deserializeLimitedVariants, deserializeSearchMe
 
 export default async function getProducts({ client, config }: ApiContext, params) {
   const { id, categoryId, page, sort, optionValuesIds, price, itemsPerPage, term } = params;
+  let include;
+
+  if (config.spreeFeatures.fetchPrimaryVariant) {
+    include = 'primary_variant,default_variant,variants.option_values,option_types,taxons,images';
+  } else {
+    include = 'default_variant,variants.option_values,option_types,taxons,images';
+  }
 
   const result = await client.products.list({
     filter: {
@@ -16,7 +23,7 @@ export default async function getProducts({ client, config }: ApiContext, params
       product: 'name,slug,sku,description,primary_variant,default_variant,variants,option_types,taxons',
       variant: 'sku,price,display_price,in_stock,product,images,option_values,is_master'
     },
-    include: 'primary_variant,default_variant,variants.option_values,option_types,taxons,images',
+    include,
     page,
     sort,
     per_page: itemsPerPage

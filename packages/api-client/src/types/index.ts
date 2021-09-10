@@ -42,6 +42,7 @@ export type ApiConfig = {
   backendUrl: string;
   spreeFeatures: {
     associateGuestCart: boolean;
+    fetchPrimaryVariant: boolean;
   }
 }
 
