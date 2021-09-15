@@ -1,6 +1,7 @@
 import type { JsonApiDocument, JsonApiResponse } from '@spree/storefront-api-v2-sdk/types/interfaces/JsonApi';
 import type { IProduct, IProducts } from '@spree/storefront-api-v2-sdk/types/interfaces/Product';
 import type { RelationType } from '@spree/storefront-api-v2-sdk/types/interfaces/Relationships';
+import type { AgnosticGroupedFacet } from '@vue-storefront/core';
 import type { ApiConfig, ProductVariant, OptionType, OptionValue, Image } from '../../types';
 import { extractRelationships, filterAttachments } from './common';
 
@@ -98,6 +99,45 @@ const deserializeOptionValues = (included, variant): OptionValue[] => {
     presentation: optionValue.attributes.presentation,
     optionTypeId: optionValue.relationships.option_type.data.id
   }));
+};
+
+const deserializeFacet = (type, values): AgnosticGroupedFacet => ({
+  id: `o.${type.name}`,
+  label: type.presentation,
+  options: values.map(e => ({
+    type: 'attribute',
+    id: e.id,
+    value: e.presentation,
+    attrName: type.name
+  }))
+});
+
+const deserializePropertyFacet = (property, values): AgnosticGroupedFacet => ({
+  id: `p.${property.name}`,
+  label: property.presentation,
+  options: values.map(e => ({
+    type: 'attribute',
+    id: e.filter_param,
+    value: e.value,
+    attrName: property.name
+  }))
+});
+
+const deserializeFacets = (filters): AgnosticGroupedFacet[] => {
+  if (!filters) return [];
+  const { option_types: optionTypes, product_properties: productProperties } = filters;
+  const facets = [];
+
+  if (optionTypes) {
+    const optionTypeFacets = optionTypes.map(optionType => deserializeFacet(optionType, optionType.option_values));
+    facets.push(...optionTypeFacets);
+  }
+
+  if (productProperties) {
+    const propertyFacets = productProperties.map(property => deserializePropertyFacet(property, property.values));
+    facets.push(...propertyFacets);
+  }
+  return facets;
 };
 
 const buildBreadcrumbs = (included, product) => {
@@ -225,7 +265,8 @@ export const deserializeLimitedVariants = (apiProducts: IProducts): ProductVaria
 export const deserializeSearchMetadata = (searchMetadata) => ({
   totalPages: parseInt(searchMetadata.total_pages, 10),
   totalCount: parseInt(searchMetadata.total_count, 10),
-  count: parseInt(searchMetadata.count, 10)
+  count: parseInt(searchMetadata.count, 10),
+  facets: deserializeFacets(searchMetadata.filters)
 });
 
 const addHostToImage = (image, config: ApiConfig) => ({

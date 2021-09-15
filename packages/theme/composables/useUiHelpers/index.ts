@@ -1,26 +1,18 @@
 import { getCurrentInstance } from '@vue/composition-api';
 
-const types = ['color', 'size', 'length'];
-
 const getInstance = () => {
   const vm = getCurrentInstance();
   return vm.$root as any;
 };
 
-const getKeys = (filters, types) => Object.keys(filters)
-  .filter(o => types.includes(o));
+const getOptionValueIdsFromURL = () => {
+  const instance = getInstance();
+  const { query } = instance.$route;
 
-const getOptionValueIdsFromURL = (context) => {
-  const { query } = context.$router.history.current;
-  const ids = [];
-
-  const keys = getKeys(query, types);
-
-  keys.forEach(key => {
-    Array.isArray(query[key])
-      ? ids.push(...query[key])
-      : ids.push(query[key]);
-  });
+  const ids = Object.keys(query).reduce((ids, key) => {
+    if (key.startsWith('o.')) return ids.concat(query[key]);
+    return ids;
+  }, []);
 
   return ids;
 };
@@ -36,7 +28,7 @@ const useUiHelpers = () => {
       categorySlug,
       page: query.page || 1,
       sort: query.sort || 'updated_at',
-      optionValuesIds: getOptionValueIdsFromURL(instance),
+      optionValuesIds: getOptionValueIdsFromURL(),
       price: Array.isArray(query.price) ? query.price[0] : query.price,
       itemsPerPage: query.itemsPerPage || 10,
       term: ''
@@ -52,17 +44,8 @@ const useUiHelpers = () => {
   };
 
   const changeFilters = (filters) => {
-
-    const emptyFilters = {
-      color: [],
-      size: [],
-      length: [],
-      price: []
-    };
-
-    getKeys(filters, types).length
-      ? instance.$router.push({ query: { ...query, ...filters } })
-      : instance.$router.push({ query: { ...query, ...emptyFilters } });
+    // TODO: add clearing filters
+    instance.$router.push({ query: { ...query, ...filters }});
   };
 
   const changeItemsPerPage = (itemsPerPage) => {
