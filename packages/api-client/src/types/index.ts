@@ -4,16 +4,10 @@ import { IOAuthToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token
 export * from './cart';
 export * from './product';
 export * from './checkout';
+export * from './category';
 
 export type Wishlist = Record<string, unknown>;
 
-export type Category = {
-  id: number;
-  name: string;
-  slug: string;
-  items?: Category[];
-  parent?: Category;
-};
 export type CategoryFilter = Record<string, unknown>;
 export type ShippingMethod = Record<string, unknown>;
 

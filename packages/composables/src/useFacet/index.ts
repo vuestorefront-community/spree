@@ -1,8 +1,9 @@
 import { Context, useFacetFactory, FacetSearchResult } from '@vue-storefront/core';
+import { SearchData } from '../types';
 import { buildPriceFacet } from './price';
 
 const factoryParams = {
-  search: async (context: Context, params: FacetSearchResult<any>) => {
+  search: async (context: Context, params: FacetSearchResult<any>): Promise<SearchData> => {
     const { categorySlug, page, sort, optionValuesIds, price, itemsPerPage, term } = params.input;
     const categories = await context.$spree.api.getCategory({ categorySlug });
     const productsResponse = await context.$spree.api.getProducts({
@@ -30,4 +31,4 @@ const factoryParams = {
   }
 };
 
-export default useFacetFactory<any>(factoryParams);
+export default useFacetFactory<SearchData>(factoryParams);

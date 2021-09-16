@@ -1,26 +1,28 @@
-import {
+import type {
   FacetsGetters,
   AgnosticCategoryTree,
   AgnosticGroupedFacet,
   AgnosticPagination,
   AgnosticSort,
   AgnosticBreadcrumb,
-  AgnosticFacet
+  AgnosticFacet,
+  FacetSearchResult
 } from '@vue-storefront/core';
-import { ProductVariant } from '../types';
+import type { ProductVariant, SearchData } from '../types';
 import {
   getCategoryTree as buildCategoryTree,
   getCategoryBreadcrumbs as buildBreadcrumbs
 } from './categoryGetters';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const getAll = (searchData, criteria?: string[]): AgnosticFacet[] => [];
+const getAll = (searchData: FacetSearchResult<SearchData>): AgnosticFacet[] => {
+  return searchData.data.facets.flatMap(facet => facet.options);
+};
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const getGrouped = (searchData, criteria?: string[]): AgnosticGroupedFacet[] =>
-  searchData.data ? searchData.data.facets : [];
+const getGrouped = (searchData: FacetSearchResult<SearchData>): AgnosticGroupedFacet[] => {
+  return searchData.data ? searchData.data.facets : [];
+};
 
-const getSortOptions = (searchData): AgnosticSort => {
+const getSortOptions = (searchData: FacetSearchResult<SearchData>): AgnosticSort => {
   if (!searchData.input) return {} as AgnosticSort;
 
   const { sort } = searchData.input;
@@ -36,21 +38,25 @@ const getSortOptions = (searchData): AgnosticSort => {
   return { options, selected: selectedOption.id };
 };
 
-const getCategoryTree = (searchData): AgnosticCategoryTree =>
-  searchData.data ? buildCategoryTree(searchData.data.categories) : {} as any;
+const getCategoryTree = (searchData: FacetSearchResult<SearchData>): AgnosticCategoryTree => {
+  return searchData.data ? buildCategoryTree(searchData.data.categories) : {} as any;
+};
 
-const getProducts = (searchData): ProductVariant[] => (searchData && searchData.data) ? searchData.data.products : [];
+const getProducts = (searchData: FacetSearchResult<SearchData>): ProductVariant[] => {
+  return (searchData && searchData.data) ? searchData.data.products : [];
+};
 
-const getPagination = (searchData): AgnosticPagination => searchData.data ? ({
-  currentPage: parseInt(searchData.input.page, 10),
+const getPagination = (searchData: FacetSearchResult<SearchData>): AgnosticPagination => searchData.data ? ({
+  currentPage: searchData.input.page,
   totalPages: searchData.data.productsMeta.totalPages,
   totalItems: searchData.data.productsMeta.totalCount,
-  itemsPerPage: parseInt(searchData.data.itemsPerPage, 10),
+  itemsPerPage: searchData.data.itemsPerPage,
   pageOptions: [10, 20, 40]
 }) : {} as AgnosticPagination;
 
-const getBreadcrumbs = (searchData): AgnosticBreadcrumb[] =>
-  searchData.data ? buildBreadcrumbs(searchData.data.categories.current) : [];
+const getBreadcrumbs = (searchData: FacetSearchResult<SearchData>): AgnosticBreadcrumb[] => {
+  return searchData.data ? buildBreadcrumbs(searchData.data.categories.current) : [];
+};
 
 const facetGetters: FacetsGetters<any, any> = {
   getSortOptions,
