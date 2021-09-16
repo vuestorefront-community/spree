@@ -1,4 +1,6 @@
 import { getCurrentInstance } from '@vue/composition-api';
+import type { AgnosticGroupedFacet } from '@vue-storefront/core';
+import type { Category } from '@upsidelab/vue-storefront-spree-api';
 
 const getInstance = () => {
   const vm = getCurrentInstance();
@@ -35,11 +37,11 @@ const useUiHelpers = () => {
     };
   };
 
-  const getCatLink = (category): string => {
+  const getCatLink = (category: Category): string => {
     return `/c/${category.slug}`;
   };
 
-  const changeSorting = (sort) => {
+  const changeSorting = (sort: string) => {
     instance.$router.push({ query: { ...query, sort } });
   };
 
@@ -48,30 +50,19 @@ const useUiHelpers = () => {
     instance.$router.push({ query: { ...query, ...filters }});
   };
 
-  const changeItemsPerPage = (itemsPerPage) => {
+  const changeItemsPerPage = (itemsPerPage: number) => {
     instance.$router.push({ query: { ...query, itemsPerPage }});
   };
 
-  // eslint-disable-next-line
-const setTermForUrl = (term: string) => {
-    console.warn('[VSF] please implement useUiHelpers.changeSearchTerm.');
+  const setTermForUrl = (term: string) => {
+    instance.$router.push(path, { query, term });
   };
 
-  // eslint-disable-next-line
-const isFacetColor = (facet): boolean => facet.label === 'Color';
+  const isFacetColor = (facet: AgnosticGroupedFacet): boolean => facet.label === 'Color';
 
-  // eslint-disable-next-line
-const isFacetCheckbox = (facet): boolean => {
-    console.warn('[VSF] please implement useUiHelpers.isFacetCheckbox.');
+  const isFacetCheckbox = (facet: AgnosticGroupedFacet): boolean => !isFacetColor(facet);
 
-    return false;
-  };
-
-  const getSearchTermFromUrl = (term) => ({
-    ...getFacetsFromURL(),
-    categorySlug: 'categories',
-    term
-  });
+  const getSearchTermFromUrl = () => getFacetsFromURL().term;
 
   return {
     getFacetsFromURL,
