@@ -28,6 +28,7 @@ import { SfButton, SfRadio } from '@storefront-ui/vue';
 import { ref, onMounted, computed } from '@vue/composition-api';
 import { useVSFContext } from '@vue-storefront/core';
 import Stripe from '~/components/Checkout/PaymentMethod/Stripe';
+import Check from '~/components/Checkout/PaymentMethod/Check';
 
 export default {
   name: 'VsfPaymentProvider',
@@ -35,7 +36,8 @@ export default {
   components: {
     SfButton,
     SfRadio,
-    Stripe
+    Stripe,
+    Check
   },
 
   setup(props, { emit }) {
@@ -44,6 +46,7 @@ export default {
     const selectedMethod = ref(null);
 
     const selectMethod = (method) => {
+      emit('change:payment', { isPaymentReady: false, savePayment: () => {} });
       selectedMethod.value = method;
     };
 
@@ -51,6 +54,8 @@ export default {
       switch (selectedMethod.value) {
         case 'Spree::Gateway::StripeElementsGateway':
           return 'Stripe';
+        case 'Spree::PaymentMethod::Check':
+          return 'Check';
       }
     });
 
