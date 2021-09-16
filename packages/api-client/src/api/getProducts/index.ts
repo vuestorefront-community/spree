@@ -1,5 +1,6 @@
 import { ApiContext } from '../../types';
-import { addHostToProductImages, deserializeLimitedVariants, deserializeSearchMetadata } from '../serializers/product';
+import { addHostToProductImages, deserializeLimitedVariants } from '../serializers/product';
+import { deserializeSearchMetadata } from '../serializers/search';
 
 export default async function getProducts({ client, config }: ApiContext, params) {
   const { id, categoryId, page, sort, optionValuesIds, price, itemsPerPage, term } = params;
