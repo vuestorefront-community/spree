@@ -36,3 +36,8 @@ export type ProductsResponse = {
 export type OrderSearchParams = Record<string, any>;
 
 export type OrdersResponse = Order[];
+
+export type PriceRange = {
+  min: number;
+  max: number;
+};

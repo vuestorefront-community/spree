@@ -1,5 +1,5 @@
 import { Context, useFacetFactory, FacetSearchResult } from '@vue-storefront/core';
-import { getPriceFacet } from './_utils';
+import { buildPriceFacet } from './price';
 
 const factoryParams = {
   search: async (context: Context, params: FacetSearchResult<any>) => {
@@ -17,8 +17,8 @@ const factoryParams = {
 
     const { data: products, meta: productsMeta } = productsResponse;
 
-    const priceFacet = getPriceFacet();
-    const facets = productsMeta.facets.concat(priceFacet);
+    const priceFacet = buildPriceFacet();
+    const facets = [...productsMeta.facets, priceFacet];
 
     return {
       categories,
