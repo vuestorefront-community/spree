@@ -2,7 +2,7 @@ import type { AgnosticGroupedFacet } from '@vue-storefront/core';
 import type { GetProductsOptionTypeFilter, GetProductsPropertyFilter } from '../../types';
 
 const deserializeOptionTypeFacet = (optionTypeFilter, selectedOptionTypeFilters: GetProductsOptionTypeFilter[]): AgnosticGroupedFacet => {
-  const selectedOptionValueIds = selectedOptionTypeFilters.map(selectedOptionTypeFilter => selectedOptionTypeFilter.optionValueId);
+  const selectedOptionValueIds = selectedOptionTypeFilters?.map(selectedOptionTypeFilter => selectedOptionTypeFilter.optionValueId) || [];
 
   return {
     id: `o.${optionTypeFilter.name}`,
@@ -25,7 +25,7 @@ const deserializePropertyFacet = (productPropertyFilter, selectedProductProperty
     id: productPropertyValue.filter_param,
     value: productPropertyValue.value,
     attrName: productPropertyFilter.name,
-    selected: selectedProductPropertyFilters.some(e => e.productPropertyName === productPropertyFilter.name && e.productPropertyValue === productPropertyValue.filter_param)
+    selected: selectedProductPropertyFilters?.some(e => e.productPropertyName === productPropertyFilter.name && e.productPropertyValue === productPropertyValue.filter_param)
   }))
 });
 
