@@ -36,7 +36,7 @@ export default async function getProducts({ client, config }: ApiContext, params
       const productsData = addHostToProductImages(data, config);
       return {
         data: deserializeLimitedVariants(productsData),
-        meta: deserializeSearchMetadata(data.meta)
+        meta: deserializeSearchMetadata(data.meta, optionValuesIds.map(e => parseInt(e, 10)))
       };
     } catch (e) {
       console.log(e);

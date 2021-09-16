@@ -1,13 +1,14 @@
 import type { AgnosticGroupedFacet } from '@vue-storefront/core';
 
-const deserializeOptionTypeFacet = (optionTypeFilter): AgnosticGroupedFacet => ({
+const deserializeOptionTypeFacet = (optionTypeFilter, selectedOptionValueIds: number[]): AgnosticGroupedFacet => ({
   id: `o.${optionTypeFilter.name}`,
   label: optionTypeFilter.presentation,
   options: optionTypeFilter.option_values.map(optionValue => ({
     type: 'attribute',
     id: optionValue.id,
     value: optionValue.presentation,
-    attrName: optionTypeFilter.name
+    attrName: optionTypeFilter.name,
+    selected: selectedOptionValueIds.includes(optionValue.id)
   }))
 });
 
@@ -22,14 +23,14 @@ const deserializePropertyFacet = (productPropertyFilter): AgnosticGroupedFacet =
   }))
 });
 
-const deserializeFacets = (filters): AgnosticGroupedFacet[] => {
+const deserializeFacets = (filters, selectedOptionValueIds: number[]): AgnosticGroupedFacet[] => {
   if (!filters) return [];
 
   const { option_types: optionTypes, product_properties: productProperties } = filters;
   const facets = [];
 
   if (optionTypes) {
-    const optionTypeFacets = optionTypes.map(optionType => deserializeOptionTypeFacet(optionType));
+    const optionTypeFacets = optionTypes.map(optionType => deserializeOptionTypeFacet(optionType, selectedOptionValueIds));
     facets.push(...optionTypeFacets);
   }
 
@@ -41,9 +42,9 @@ const deserializeFacets = (filters): AgnosticGroupedFacet[] => {
   return facets;
 };
 
-export const deserializeSearchMetadata = (searchMetadata) => ({
+export const deserializeSearchMetadata = (searchMetadata, selectedOptionValueIds: number[]) => ({
   totalPages: parseInt(searchMetadata.total_pages, 10),
   totalCount: parseInt(searchMetadata.total_count, 10),
   count: parseInt(searchMetadata.count, 10),
-  facets: deserializeFacets(searchMetadata.filters)
+  facets: deserializeFacets(searchMetadata.filters, selectedOptionValueIds)
 });

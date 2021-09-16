@@ -24,16 +24,20 @@ const priceRanges: PriceRange[] = [
   }
 ];
 
-const buildPriceOptions = (priceRanges: PriceRange[]): AgnosticFacet[] => {
-  return priceRanges.map(priceRange => ({
-    type: 'attribute',
-    id: `${priceRange.min},${priceRange.max}`,
-    value: `$${priceRange.min} - $${priceRange.max}`
-  }));
+const buildPriceOptions = (priceRanges: PriceRange[], currentPriceRangeString: string): AgnosticFacet[] => {
+  return priceRanges.map(priceRange => {
+    const priceRangeString = `${priceRange.min},${priceRange.max}`;
+    return {
+      type: 'attribute',
+      id: priceRangeString,
+      value: `$${priceRange.min} - $${priceRange.max}`,
+      selected: currentPriceRangeString === priceRangeString
+    };
+  });
 };
 
-export const buildPriceFacet = (): AgnosticGroupedFacet => ({
+export const buildPriceFacet = (currentPriceRangeString: string): AgnosticGroupedFacet => ({
   id: 'price',
   label: 'Price',
-  options: buildPriceOptions(priceRanges)
+  options: buildPriceOptions(priceRanges, currentPriceRangeString)
 });

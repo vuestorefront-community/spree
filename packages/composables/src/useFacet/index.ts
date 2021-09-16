@@ -18,7 +18,7 @@ const factoryParams = {
 
     const { data: products, meta: productsMeta } = productsResponse;
 
-    const priceFacet = buildPriceFacet();
+    const priceFacet = buildPriceFacet(price);
     const facets = [...productsMeta.facets, priceFacet];
 
     return {
