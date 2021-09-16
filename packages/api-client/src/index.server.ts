@@ -37,7 +37,8 @@ import makeOrder from './api/makeOrder';
 const defaultSettings = {
   backendUrl: 'http://localhost:4000',
   spreeFeatures: {
-    associateGuestCart: false
+    associateGuestCart: false,
+    fetchPrimaryVariant: false
   }
 };
 
