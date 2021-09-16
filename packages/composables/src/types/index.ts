@@ -41,10 +41,35 @@ export type PriceRange = {
   max: number;
 };
 
+export type SearchParamsOptionTypeFilter = {
+  optionTypeName: string;
+  optionValueId: number;
+};
+
+export type SearchParamsProductPropertyFilter = {
+  productPropertyName: string;
+  productPropertyValue: string;
+}
+
+export type SearchParams = {
+  categorySlug?: string;
+  term?: string;
+  selectedOptionTypeFilters: SearchParamsOptionTypeFilter[];
+  selectedProductPropertyFilters: SearchParamsProductPropertyFilter[];
+  priceFilter: string;
+
+  page?: number;
+  itemsPerPage?: number;
+  sort?: string;
+};
+
 export type SearchData = {
   categories: CategorySearchResult;
   products: ProductVariant[],
-  productsMeta: Record<string, number>;
+  productsMeta: {
+    totalPages: number;
+    totalCount: number;
+  };
   facets: AgnosticGroupedFacet[];
   itemsPerPage: number;
 };

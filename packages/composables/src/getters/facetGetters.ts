@@ -15,7 +15,7 @@ import {
 } from './categoryGetters';
 
 const getAll = (searchData: FacetSearchResult<SearchData>): AgnosticFacet[] => {
-  return searchData.data.facets.flatMap(facet => facet.options);
+  return searchData.data ? searchData.data.facets.flatMap(facet => facet.options) : [];
 };
 
 const getGrouped = (searchData: FacetSearchResult<SearchData>): AgnosticGroupedFacet[] => {

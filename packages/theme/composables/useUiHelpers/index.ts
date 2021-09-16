@@ -1,39 +1,65 @@
 import { getCurrentInstance } from '@vue/composition-api';
 import type { AgnosticGroupedFacet } from '@vue-storefront/core';
 import type { Category } from '@upsidelab/vue-storefront-spree-api';
+import type { SearchParams, SearchParamsOptionTypeFilter, SearchParamsProductPropertyFilter } from '@upsidelab/vue-storefront-spree';
 
 const getInstance = () => {
   const vm = getCurrentInstance();
   return vm.$root as any;
 };
 
-const getOptionValueIdsFromURL = () => {
+const getOptionTypeFiltersFromURL = (): SearchParamsOptionTypeFilter[] => {
   const instance = getInstance();
   const { query } = instance.$route;
 
-  const ids = Object.keys(query).reduce((ids, key) => {
-    if (key.startsWith('o.')) return ids.concat(query[key]);
-    return ids;
-  }, []);
+  return Object
+    .entries(query)
+    .filter(([key]) => key.startsWith('o.'))
+    .reduce((filters, [key, value]: [string, string]) => {
+      const optionTypeName = key.substring(2);
 
-  return ids;
+      if (Array.isArray(value)) {
+        return [...filters, ...value.map(e => ({ optionTypeName, optionValueId: parseInt(e, 10) }))];
+      } else {
+        return [...filters, { optionTypeName, optionValueId: parseInt(value, 10) }];
+      }
+    }, []);
+};
+
+const getProductPropertyFiltersFromURL = (): SearchParamsProductPropertyFilter[] => {
+  const instance = getInstance();
+  const { query } = instance.$route;
+
+  return Object
+    .entries(query)
+    .filter(([key]) => key.startsWith('p.'))
+    .reduce((filters, [key, value]: [string, string]) => {
+      const productPropertyName = key.substring(2);
+
+      if (Array.isArray(value)) {
+        return [...filters, ...value.map(e => ({ productPropertyName, productPropertyValue: e }))];
+      } else {
+        return [...filters, { productPropertyName, productPropertyValue: value }];
+      }
+    }, []);
 };
 
 const useUiHelpers = () => {
   const instance = getInstance();
   const { query, path } = instance.$router.history.current;
 
-  const getFacetsFromURL = () => {
+  const getFacetsFromURL = (): SearchParams => {
     const categorySlug = path.substring(3);
 
     return {
       categorySlug,
-      page: query.page || 1,
-      sort: query.sort || 'updated_at',
-      optionValuesIds: getOptionValueIdsFromURL(),
-      price: Array.isArray(query.price) ? query.price[0] : query.price,
-      itemsPerPage: query.itemsPerPage || 10,
-      term: ''
+      selectedOptionTypeFilters: getOptionTypeFiltersFromURL(),
+      selectedProductPropertyFilters: getProductPropertyFiltersFromURL(),
+      priceFilter: Array.isArray(query.price) ? query.price[0] : query.price,
+      term: query.term || '',
+      page: parseInt(query.page, 10) || 1,
+      itemsPerPage: parseInt(query.itemsPerPage, 10) || 10,
+      sort: query.sort || 'updated_at'
     };
   };
 
