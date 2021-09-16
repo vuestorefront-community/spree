@@ -222,12 +222,6 @@ export const deserializeLimitedVariants = (apiProducts: IProducts): ProductVaria
   });
 };
 
-export const deserializeSearchMetadata = (searchMetadata) => ({
-  totalPages: parseInt(searchMetadata.total_pages, 10),
-  totalCount: parseInt(searchMetadata.total_count, 10),
-  count: parseInt(searchMetadata.count, 10)
-});
-
 const addHostToImage = (image, config: ApiConfig) => ({
   ...image,
   attributes: {

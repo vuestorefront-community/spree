@@ -349,7 +349,7 @@ import {
   SfColor,
   SfProperty
 } from '@storefront-ui/vue';
-import { ref, computed, onMounted } from '@vue/composition-api';
+import { ref, computed, onMounted, watch } from '@vue/composition-api';
 import { useCart, useWishlist, productGetters, useFacet, facetGetters } from '@upsidelab/vue-storefront-spree';
 import { useUiHelpers, useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
@@ -370,7 +370,7 @@ export default {
     const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
     const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(result.value));
     const sortBy = computed(() => facetGetters.getSortOptions(result.value));
-    const facets = computed(() => facetGetters.getGrouped(result.value, ['color', 'size']));
+    const facets = computed(() => facetGetters.getGrouped(result.value));
     const pagination = computed(() => facetGetters.getPagination(result.value));
     const activeCategory = computed(() => {
       const items = categoryTree.value.items;
@@ -427,6 +427,16 @@ export default {
       toggleFilterSidebar();
       changeFilters(selectedFilters.value);
     };
+
+    watch(() => facets.value, () => {
+      if (!facets.value.length) return;
+      selectedFilters.value = facets.value.reduce((prev, curr) => ({
+        ...prev,
+        [curr.id]: curr.options
+          .filter(o => o.selected)
+          .map(o => o.id)
+      }), {});
+    });
 
     return {
       ...uiState,

@@ -1,8 +1,7 @@
-import { LineItem, Order, ProductVariant } from '@upsidelab/vue-storefront-spree-api';
+import type { CategorySearchResult, LineItem, ProductVariant, Order } from '@upsidelab/vue-storefront-spree-api';
+import type { AgnosticGroupedFacet } from '@vue-storefront/core';
 
 export { UseCategory, UseProduct } from '@vue-storefront/core';
-
-export type Category = Record<string, unknown>;
 
 export type User = {
   firstName?: string;
@@ -10,7 +9,7 @@ export type User = {
   email?: string;
 };
 
-export { Cart, Order, LineItem, ProductVariant } from '@upsidelab/vue-storefront-spree-api';
+export { Cart, Order, LineItem, ProductVariant, Category } from '@upsidelab/vue-storefront-spree-api';
 
 export type UserAddress = Record<string, unknown>;
 
@@ -36,3 +35,41 @@ export type ProductsResponse = {
 export type OrderSearchParams = Record<string, any>;
 
 export type OrdersResponse = Order[];
+
+export type PriceRange = {
+  min: number;
+  max: number;
+};
+
+export type SearchParamsOptionTypeFilter = {
+  optionTypeName: string;
+  optionValueId: number;
+};
+
+export type SearchParamsProductPropertyFilter = {
+  productPropertyName: string;
+  productPropertyValue: string;
+}
+
+export type SearchParams = {
+  categorySlug?: string;
+  term?: string;
+  selectedOptionTypeFilters: SearchParamsOptionTypeFilter[];
+  selectedProductPropertyFilters: SearchParamsProductPropertyFilter[];
+  priceFilter: string;
+
+  page?: number;
+  itemsPerPage?: number;
+  sort?: string;
+};
+
+export type SearchData = {
+  categories: CategorySearchResult;
+  products: ProductVariant[],
+  productsMeta: {
+    totalPages: number;
+    totalCount: number;
+  };
+  facets: AgnosticGroupedFacet[];
+  itemsPerPage: number;
+};

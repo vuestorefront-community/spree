@@ -4,16 +4,10 @@ import { IOAuthToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token
 export * from './cart';
 export * from './product';
 export * from './checkout';
+export * from './category';
 
 export type Wishlist = Record<string, unknown>;
 
-export type Category = {
-  id: number;
-  name: string;
-  slug: string;
-  items?: Category[];
-  parent?: Category;
-};
 export type CategoryFilter = Record<string, unknown>;
 export type ShippingMethod = Record<string, unknown>;
 
@@ -51,13 +45,25 @@ export type ApiContext = {
   config: ApiConfig;
 }
 
-export type GetProductParams = {
-  id: string;
+export type GetProductsOptionTypeFilter = {
+  optionTypeName: string;
+  optionValueId: number;
+};
+
+export type GetProductsPropertyFilter = {
+  productPropertyName: string;
+  productPropertyValue: string;
+};
+
+export type GetProductsParams = {
   categoryId: string;
   term: string;
+
+  optionTypeFilters:GetProductsOptionTypeFilter[],
+  productPropertyFilters: GetProductsPropertyFilter[],
+  priceFilter: string;
+
   page: number;
-  sort: string;
-  optionValuesIds: number[];
-  price: number;
   itemsPerPage: number;
+  sort: string;
 }

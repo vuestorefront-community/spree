@@ -1,30 +1,38 @@
+import { GetProductsParams } from '@upsidelab/vue-storefront-spree-api';
 import { Context, useFacetFactory, FacetSearchResult } from '@vue-storefront/core';
-import { findFacets } from './_utils';
+import { SearchData, SearchParams } from '../types';
+import { buildPriceFacet } from './price';
 
 const factoryParams = {
-  search: async (context: Context, params: FacetSearchResult<any>) => {
-    const { categorySlug, page, sort, optionValuesIds, price, itemsPerPage, term } = params.input;
-    const categories = await context.$spree.api.getCategory({ categorySlug });
-    const productsResponse = await context.$spree.api.getProducts({
+  search: async (context: Context, params: FacetSearchResult<SearchData>): Promise<SearchData> => {
+    const searchParams = params.input as SearchParams;
+    const categories = await context.$spree.api.getCategory({ categorySlug: searchParams.categorySlug });
+
+    const getProductsParams: GetProductsParams = {
       categoryId: categories.current?.id,
-      page,
-      sort,
-      optionValuesIds,
-      price,
-      itemsPerPage,
-      term
-    });
+      term: searchParams.term,
+      optionTypeFilters: searchParams.selectedOptionTypeFilters,
+      productPropertyFilters: searchParams.selectedProductPropertyFilters,
+      priceFilter: searchParams.priceFilter,
+      page: searchParams.page,
+      itemsPerPage: searchParams.itemsPerPage,
+      sort: searchParams.sort
+    };
+    const productsResponse = await context.$spree.api.getProducts(getProductsParams);
 
     const { data: products, meta: productsMeta } = productsResponse;
+
+    const priceFacet = buildPriceFacet(searchParams.priceFilter);
+    const facets = [...productsMeta.facets, priceFacet];
 
     return {
       categories,
       products,
       productsMeta,
-      facets: findFacets(products),
-      itemsPerPage
+      facets,
+      itemsPerPage: searchParams.itemsPerPage
     };
   }
 };
 
-export default useFacetFactory<any>(factoryParams);
+export default useFacetFactory<SearchData>(factoryParams);

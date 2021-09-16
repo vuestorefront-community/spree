@@ -1,94 +1,96 @@
 import { getCurrentInstance } from '@vue/composition-api';
-
-const types = ['color', 'size', 'length'];
+import type { AgnosticGroupedFacet } from '@vue-storefront/core';
+import type { Category } from '@upsidelab/vue-storefront-spree-api';
+import type { SearchParams, SearchParamsOptionTypeFilter, SearchParamsProductPropertyFilter } from '@upsidelab/vue-storefront-spree';
 
 const getInstance = () => {
   const vm = getCurrentInstance();
   return vm.$root as any;
 };
 
-const getKeys = (filters, types) => Object.keys(filters)
-  .filter(o => types.includes(o));
+const getOptionTypeFiltersFromURL = (): SearchParamsOptionTypeFilter[] => {
+  const instance = getInstance();
+  const { query } = instance.$route;
 
-const getOptionValueIdsFromURL = (context) => {
-  const { query } = context.$router.history.current;
-  const ids = [];
+  return Object
+    .entries(query)
+    .filter(([key]) => key.startsWith('o.'))
+    .reduce((filters, [key, value]: [string, string]) => {
+      const optionTypeName = key.substring(2);
 
-  const keys = getKeys(query, types);
+      if (Array.isArray(value)) {
+        return [...filters, ...value.map(e => ({ optionTypeName, optionValueId: parseInt(e, 10) }))];
+      } else {
+        return [...filters, { optionTypeName, optionValueId: parseInt(value, 10) }];
+      }
+    }, []);
+};
 
-  keys.forEach(key => {
-    Array.isArray(query[key])
-      ? ids.push(...query[key])
-      : ids.push(query[key]);
-  });
+const getProductPropertyFiltersFromURL = (): SearchParamsProductPropertyFilter[] => {
+  const instance = getInstance();
+  const { query } = instance.$route;
 
-  return ids;
+  return Object
+    .entries(query)
+    .filter(([key]) => key.startsWith('p.'))
+    .reduce((filters, [key, value]: [string, string]) => {
+      const productPropertyName = key.substring(2);
+
+      if (Array.isArray(value)) {
+        return [...filters, ...value.map(e => ({ productPropertyName, productPropertyValue: e }))];
+      } else {
+        return [...filters, { productPropertyName, productPropertyValue: value }];
+      }
+    }, []);
 };
 
 const useUiHelpers = () => {
   const instance = getInstance();
   const { query, path } = instance.$router.history.current;
 
-  const getFacetsFromURL = () => {
+  const getFacetsFromURL = (): SearchParams => {
     const categorySlug = path.substring(3);
 
     return {
       categorySlug,
-      page: query.page || 1,
-      sort: query.sort || 'updated_at',
-      optionValuesIds: getOptionValueIdsFromURL(instance),
-      price: Array.isArray(query.price) ? query.price[0] : query.price,
-      itemsPerPage: query.itemsPerPage || 10,
-      term: ''
+      selectedOptionTypeFilters: getOptionTypeFiltersFromURL(),
+      selectedProductPropertyFilters: getProductPropertyFiltersFromURL(),
+      priceFilter: Array.isArray(query.price) ? query.price[0] : query.price,
+      term: query.term || '',
+      page: parseInt(query.page, 10) || 1,
+      itemsPerPage: parseInt(query.itemsPerPage, 10) || 10,
+      sort: query.sort || 'updated_at'
     };
   };
 
-  const getCatLink = (category): string => {
+  const getCatLink = (category: Category): string => {
     return `/c/${category.slug}`;
   };
 
-  const changeSorting = (sort) => {
+  const changeSorting = (sort: string) => {
     instance.$router.push({ query: { ...query, sort } });
   };
 
   const changeFilters = (filters) => {
-
-    const emptyFilters = {
-      color: [],
-      size: [],
-      length: [],
-      price: []
-    };
-
-    getKeys(filters, types).length
-      ? instance.$router.push({ query: { ...query, ...filters } })
-      : instance.$router.push({ query: { ...query, ...emptyFilters } });
+    const queryWithoutFilters = Object.fromEntries(
+      Object.entries(query).filter(([key]) => !key.startsWith('o.') && !key.startsWith('p.') && key !== 'price')
+    );
+    instance.$router.push({ query: { ...queryWithoutFilters, ...filters }});
   };
 
-  const changeItemsPerPage = (itemsPerPage) => {
+  const changeItemsPerPage = (itemsPerPage: number) => {
     instance.$router.push({ query: { ...query, itemsPerPage }});
   };
 
-  // eslint-disable-next-line
-const setTermForUrl = (term: string) => {
-    console.warn('[VSF] please implement useUiHelpers.changeSearchTerm.');
+  const setTermForUrl = (term: string) => {
+    instance.$router.push(path, { query, term });
   };
 
-  // eslint-disable-next-line
-const isFacetColor = (facet): boolean => facet.label === 'Color';
+  const isFacetColor = (facet: AgnosticGroupedFacet): boolean => facet.label === 'Color';
 
-  // eslint-disable-next-line
-const isFacetCheckbox = (facet): boolean => {
-    console.warn('[VSF] please implement useUiHelpers.isFacetCheckbox.');
+  const isFacetCheckbox = (facet: AgnosticGroupedFacet): boolean => !isFacetColor(facet);
 
-    return false;
-  };
-
-  const getSearchTermFromUrl = (term) => ({
-    ...getFacetsFromURL(),
-    categorySlug: 'categories',
-    term
-  });
+  const getSearchTermFromUrl = () => getFacetsFromURL().term;
 
   return {
     getFacetsFromURL,
