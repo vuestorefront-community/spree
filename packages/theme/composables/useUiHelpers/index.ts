@@ -46,8 +46,10 @@ const useUiHelpers = () => {
   };
 
   const changeFilters = (filters) => {
-    // TODO: add clearing filters
-    instance.$router.push({ query: { ...query, ...filters }});
+    const queryWithoutFilters = Object.fromEntries(
+      Object.entries(query).filter(([key]) => !key.startsWith('o.') && !key.startsWith('p.') && key !== 'price')
+    );
+    instance.$router.push({ query: { ...queryWithoutFilters, ...filters }});
   };
 
   const changeItemsPerPage = (itemsPerPage: number) => {
