@@ -35,10 +35,10 @@ import savePaymentMethod from './api/savePaymentMethod';
 import makeOrder from './api/makeOrder';
 
 const defaultSettings = {
-  backendUrl: 'http://localhost:4000',
+  backendUrl: 'https://demo.spreecommerce.org',
   spreeFeatures: {
-    associateGuestCart: false,
-    fetchPrimaryVariant: false
+    associateGuestCart: true,
+    fetchPrimaryVariant: true
   }
 };
 
