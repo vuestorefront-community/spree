@@ -96,7 +96,7 @@ const deserializeOptionValues = (included, variant): OptionValue[] => {
     name: optionValue.attributes.name,
     position: optionValue.attributes.position,
     presentation: optionValue.attributes.presentation,
-    optionTypeId: optionValue.relationships.option_type.data.id
+    optionTypeId: parseInt(optionValue.relationships.option_type.data.id, 10)
   }));
 };
 
