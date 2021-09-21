@@ -87,6 +87,7 @@ export const deserializeCart = (apiCart: OrderAttr, included: any[], config: any
   taxTotalAmount: parseFloat(apiCart.attributes.tax_total),
   adjustmentTotal: apiCart.attributes.display_adjustment_total,
   lineItems: filterIncludedLineItems(included).map(item => deserializeLineItem(item, included, config)),
+  itemCount: apiCart.attributes.item_count,
   address: findAddress(apiCart, included),
   completedAt: apiCart.attributes.completed_at,
   token: apiCart.attributes.token

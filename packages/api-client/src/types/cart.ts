@@ -34,6 +34,7 @@ export type Cart = {
   taxTotalAmount: number;
   adjustmentTotal: string;
   lineItems: LineItem[];
+  itemCount: number;
   completedAt: Date;
   token: string;
   address: {
