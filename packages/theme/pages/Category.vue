@@ -162,6 +162,7 @@
               :max-rating="5"
               :score-rating="productGetters.getAverageRating(product)"
               :show-add-to-cart-button="true"
+              :add-to-cart-disabled="!productGetters.getInStock(product)"
               :isOnWishlist="false"
               :isAddedToCart="isInCart({ product })"
               :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
