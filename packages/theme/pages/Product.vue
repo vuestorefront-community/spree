@@ -79,10 +79,8 @@
           </div>
           <SfAddToCart
             data-cy="product-cart_add"
-            :stock="stock"
             v-model="qty"
-            :disabled="loading"
-            :canAddToCart="stock > 0"
+            :disabled="loading || !isInStock"
             class="product__add-to-cart"
             @click="addItem({ product, quantity: parseInt(qty) })"
           />
@@ -211,6 +209,7 @@ export default {
     const categories = computed(() => productGetters.getCategoryIds(product.value));
     const properties = computed(() => productGetters.getProperties(product.value));
     const breadcrumbs = computed(() => productGetters.getBreadcrumbs(product.value));
+    const isInStock = computed(() => productGetters.getInStock(product.value));
     const reviews = computed(() => reviewGetters.getItems(productReviews.value));
 
     // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
@@ -244,6 +243,7 @@ export default {
       product,
       reviews,
       reviewGetters,
+      isInStock,
       averageRating: computed(() => productGetters.getAverageRating(product.value)),
       totalReviews: computed(() => productGetters.getTotalReviews(product.value)),
       relatedProducts: computed(() => productGetters.getFiltered(relatedProducts.value, { master: true })),
@@ -284,7 +284,6 @@ export default {
   },
   data() {
     return {
-      stock: 5,
       description: 'Find stunning women cocktail and party dresses. Stand out in lace and metallic cocktail dresses and party dresses from all your favorite brands.',
       detailsIsActive: false,
       brand:
