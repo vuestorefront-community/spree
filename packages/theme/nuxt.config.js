@@ -8,7 +8,7 @@ export default {
     host: process.env.HOST || '0.0.0.0'
   },
   head: {
-    title: 'Vue Storefront',
+    title: 'Spree & Vue Storefront Demo - Upside',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
