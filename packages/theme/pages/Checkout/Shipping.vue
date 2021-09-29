@@ -5,8 +5,30 @@
       :title="$t('Shipping')"
       class="sf-heading--left sf-heading--no-underline title"
     />
+    <SfAddressPicker
+      v-if="isAuthenticated && shipping.addresses && shipping.addresses.length > 0"
+      class="address-picker"
+      v-model="selectedAddressId"
+    >
+      <SfAddress
+        v-for="address in shipping.addresses"
+        :key="address._id"
+        :name="address._id"
+      >
+        <span>{{ address.firstName }} {{ address.lastName }}</span>
+        <span>{{ address.addressLine1 }}</span>
+        <span>{{ address.addressLine2 }}</span>
+        <span>{{ address.postalCode }}</span>
+        <span>{{ address.city }}, {{ address.state }}</span>
+        <span>{{ address.country }}</span>
+        <span>{{ address.phone }}</span>
+      </SfAddress>
+      <SfAddress>
+        <span>Other address</span>
+      </SfAddress>
+    </SfAddressPicker>
     <form @submit.prevent="handleSubmit(handleFormSubmit)">
-      <div class="form">
+      <div v-if="!selectedAddressId" class="form">
         <ValidationProvider
           v-if="!isAuthenticated"
           name="email"
@@ -210,11 +232,12 @@ import {
   SfHeading,
   SfInput,
   SfButton,
-  SfSelect
+  SfSelect,
+  SfAddressPicker
 } from '@storefront-ui/vue';
 import { ref, watch, computed, onMounted } from '@vue/composition-api';
 import { onSSR, useVSFContext } from '@vue-storefront/core';
-import { useShipping, useCountry, useUser } from '@vue-storefront/spree';
+import { useShipping, useCountry, useUser, useUserShipping } from '@vue-storefront/spree';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 
@@ -238,6 +261,7 @@ export default {
     SfInput,
     SfButton,
     SfSelect,
+    SfAddressPicker,
     ValidationProvider,
     ValidationObserver,
     VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
@@ -246,9 +270,11 @@ export default {
     const isFormSubmitted = ref(false);
     const { load, save, loading } = useShipping();
     const { countries, states, load: loadCountries, loadStates } = useCountry();
+    const { shipping, load: loadUserShipping } = useUserShipping();
     const { isAuthenticated } = useUser();
     const { $spree } = useVSFContext();
 
+    const selectedAddressId = ref(undefined);
     const form = ref({
       email: '',
       firstName: '',
@@ -265,7 +291,14 @@ export default {
 
     const handleFormSubmit = async () => {
       if (!isAuthenticated.value) await $spree.api.saveGuestCheckoutEmail(form.value.email);
-      await save({ shippingDetails: form.value });
+
+      if (isAuthenticated.value && selectedAddressId.value) {
+        const selectedAddress = shipping.value.addresses.find(e => e._id === selectedAddressId.value);
+        await save({ shippingDetails: selectedAddress });
+      } else {
+        await save({ shippingDetails: form.value });
+      }
+
       isFormSubmitted.value = true;
     };
 
@@ -280,6 +313,7 @@ export default {
 
     onSSR(async () => {
       await load();
+      await loadUserShipping();
       await loadCountries();
 
       if (form.value.country) {
@@ -302,6 +336,8 @@ export default {
       form,
       countries,
       states,
+      shipping,
+      selectedAddressId,
       handleFormSubmit
     };
   }
@@ -391,5 +427,12 @@ export default {
 
 .title {
   margin: var(--spacer-xl) 0 var(--spacer-base) 0;
+}
+
+.address-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacer-xs);
+  margin-bottom: var(--spacer-xs);
 }
 </style>
