@@ -5,28 +5,11 @@
       :title="$t('Billing')"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <SfAddressPicker
-      v-if="isAuthenticated && billing.addresses && billing.addresses.length > 0"
-      class="address-picker"
+    <AddressPicker
+      v-if="isAuthenticated && billing"
       v-model="selectedAddressId"
-    >
-      <SfAddress
-        v-for="address in billing.addresses"
-        :key="address._id"
-        :name="address._id"
-      >
-        <span>{{ address.firstName }} {{ address.lastName }}</span>
-        <span>{{ address.addressLine1 }}</span>
-        <span>{{ address.addressLine2 }}</span>
-        <span>{{ address.postalCode }}</span>
-        <span>{{ address.city }}, {{ address.state }}</span>
-        <span>{{ address.country }}</span>
-        <span>{{ address.phone }}</span>
-      </SfAddress>
-      <SfAddress>
-        <span>Other address</span>
-      </SfAddress>
-    </SfAddressPicker>
+      :addresses="billing.addresses"
+    />
     <form @submit.prevent="handleSubmit(handleFormSubmit)">
       <div v-if="!selectedAddressId" class="form">
         <ValidationProvider
@@ -219,14 +202,14 @@ import {
   SfButton,
   SfSelect,
   SfRadio,
-  SfCheckbox,
-  SfAddressPicker
+  SfCheckbox
 } from '@storefront-ui/vue';
 import { ref, watch, computed, onMounted } from '@vue/composition-api';
 import { onSSR } from '@vue-storefront/core';
 import { useBilling, useCountry, useUser, useUserBilling } from '@vue-storefront/spree';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import AddressPicker from '~/components/Checkout/AddressPicker';
 
 extend('required', {
   ...required,
@@ -250,7 +233,7 @@ export default {
     SfSelect,
     SfRadio,
     SfCheckbox,
-    SfAddressPicker,
+    AddressPicker,
     ValidationProvider,
     ValidationObserver
   },
@@ -434,11 +417,5 @@ export default {
     border: 0;
     --radio-border-radius: 4px;
   }
-}
-.address-picker {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacer-xs);
-  margin-bottom: var(--spacer-xs);
 }
 </style>

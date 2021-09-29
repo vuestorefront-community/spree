@@ -5,28 +5,11 @@
       :title="$t('Shipping')"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <SfAddressPicker
-      v-if="isAuthenticated && shipping.addresses && shipping.addresses.length > 0"
-      class="address-picker"
+    <AddressPicker
+      v-if="isAuthenticated && shipping"
       v-model="selectedAddressId"
-    >
-      <SfAddress
-        v-for="address in shipping.addresses"
-        :key="address._id"
-        :name="address._id"
-      >
-        <span>{{ address.firstName }} {{ address.lastName }}</span>
-        <span>{{ address.addressLine1 }}</span>
-        <span>{{ address.addressLine2 }}</span>
-        <span>{{ address.postalCode }}</span>
-        <span>{{ address.city }}, {{ address.state }}</span>
-        <span>{{ address.country }}</span>
-        <span>{{ address.phone }}</span>
-      </SfAddress>
-      <SfAddress>
-        <span>Other address</span>
-      </SfAddress>
-    </SfAddressPicker>
+      :addresses="shipping.addresses"
+    />
     <form @submit.prevent="handleSubmit(handleFormSubmit)">
       <div v-if="!selectedAddressId" class="form">
         <ValidationProvider
@@ -232,14 +215,14 @@ import {
   SfHeading,
   SfInput,
   SfButton,
-  SfSelect,
-  SfAddressPicker
+  SfSelect
 } from '@storefront-ui/vue';
 import { ref, watch, computed, onMounted } from '@vue/composition-api';
 import { onSSR, useVSFContext } from '@vue-storefront/core';
 import { useShipping, useCountry, useUser, useUserShipping } from '@vue-storefront/spree';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import AddressPicker from '~/components/Checkout/AddressPicker';
 
 extend('required', {
   ...required,
@@ -261,7 +244,7 @@ export default {
     SfInput,
     SfButton,
     SfSelect,
-    SfAddressPicker,
+    AddressPicker,
     ValidationProvider,
     ValidationObserver,
     VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
@@ -427,12 +410,5 @@ export default {
 
 .title {
   margin: var(--spacer-xl) 0 var(--spacer-base) 0;
-}
-
-.address-picker {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacer-xs);
-  margin-bottom: var(--spacer-xs);
 }
 </style>
