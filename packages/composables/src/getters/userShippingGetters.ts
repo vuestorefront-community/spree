@@ -25,7 +25,7 @@ const userGetters: UserShippingGetters<any, any> = {
   getProvince: address => address ? address.state : '',
   getCompanyName: address => address ? address.company : '',
   getTaxNumber: address => address ? address.taxId : '',
-  getId: address => address ? address.id : '',
+  getId: address => address ? address._id : '',
   getApartmentNumber: address => address ? address.apartment : '',
   isDefault: address => address ? address.isDefault : false
 };

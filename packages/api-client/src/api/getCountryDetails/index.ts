@@ -1,7 +1,8 @@
 import { ApiContext } from '../../types';
+import { Country } from '../../types/country';
 import { deserializeCountry } from '../serializers/country';
 
-export default async function getAvailableCountries({ client }: ApiContext, { iso }) {
+export default async function getCountryDetails({ client }: ApiContext, { iso }): Promise<Country> {
   const result = await client.countries.show(iso, { include: 'states' });
   if (result.isSuccess()) {
     const includedStates = result.success().included;

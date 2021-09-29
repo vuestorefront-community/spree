@@ -97,22 +97,36 @@
             v-model="form.city"
             label="City"
             name="city"
-            class="form__element form__element--half"
+            class="form__element"
             required
             :valid="!errors[0]"
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
         <ValidationProvider
-          name="state"
+          v-if="states && states.length > 0"
+          v-slot="{ errors }"
+          rules="required"
           slim
         >
-          <SfInput
+          <SfSelect
+            data-cy="shipping-details-input_state"
+            class="form__element form form__select sf-select--underlined"
             v-model="form.state"
-            label="State/Province"
             name="state"
-            class="form__element form__element--half form__element--half-even"
-          />
+            label="State/Province"
+            :required="isStateRequired"
+            :valid="!errors[0]"
+            :errorMessage="errors[0]"
+          >
+            <SfSelectOption
+              v-for="{ code, name } in states"
+              :key="code"
+              :value="name"
+            >
+              {{ name }}
+            </SfSelectOption>
+          </SfSelect>
         </ValidationProvider>
         <ValidationProvider
           name="country"
@@ -198,7 +212,7 @@ import {
   SfButton,
   SfSelect
 } from '@storefront-ui/vue';
-import { ref } from '@vue/composition-api';
+import { ref, watch, computed, onMounted } from '@vue/composition-api';
 import { onSSR, useVSFContext } from '@vue-storefront/core';
 import { useShipping, useCountry, useUser } from '@vue-storefront/spree';
 import { required, min, digits } from 'vee-validate/dist/rules';
@@ -231,7 +245,7 @@ export default {
   setup () {
     const isFormSubmitted = ref(false);
     const { load, save, loading } = useShipping();
-    const { countries, load: loadCountries } = useCountry();
+    const { countries, states, load: loadCountries, loadStates } = useCountry();
     const { isAuthenticated } = useUser();
     const { $spree } = useVSFContext();
 
@@ -239,14 +253,15 @@ export default {
       email: '',
       firstName: '',
       lastName: '',
-      streetName: '',
-      apartment: '',
+      addressLine1: '',
+      addressLine2: '',
       city: '',
       state: '',
       country: '',
       postalCode: '',
       phone: null
     });
+    const isStateRequired = computed(() => form.value.country && countries.value.find(e => e.key === form.value.country).stateRequired);
 
     const handleFormSubmit = async () => {
       if (!isAuthenticated.value) await $spree.api.saveGuestCheckoutEmail(form.value.email);
@@ -254,17 +269,39 @@ export default {
       isFormSubmitted.value = true;
     };
 
+    onMounted(async () => {
+      await load();
+      await loadCountries();
+
+      if (form.value.country) {
+        await loadStates(form.value.country);
+      }
+    });
+
     onSSR(async () => {
       await load();
       await loadCountries();
+
+      if (form.value.country) {
+        await loadStates(form.value.country);
+      }
+    });
+
+    watch(() => form.value.country, async (newValue, oldValue) => {
+      if (newValue !== oldValue) {
+        form.value.state = null;
+        await loadStates(newValue);
+      }
     });
 
     return {
       loading,
       isFormSubmitted,
       isAuthenticated,
+      isStateRequired,
       form,
       countries,
+      states,
       handleFormSubmit
     };
   }

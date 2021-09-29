@@ -78,7 +78,7 @@
         </ValidationProvider>
         <ValidationProvider
           :rules="`required|oneOf:${states.map(s => s.name).join(',')}`"
-          v-if="states.length > 0"
+          v-if="states && states.length > 0"
           v-slot="{ errors }"
           class="form__element"
         >
@@ -119,7 +119,8 @@
           />
         </ValidationProvider>
         <ValidationProvider
-          :rules="`required|oneOf:${countries.map(c => c.iso).join(',')}`"
+          v-if="countries"
+          :rules="`required|oneOf:${countries.map(c => c.key).join(',')}`"
           v-slot="{ errors }"
           class="form__element"
         >
@@ -134,11 +135,11 @@
             :errorMessage="errors[0]"
           >
             <SfSelectOption
-              v-for="{ iso, name } in countries"
-              :key="iso"
-              :value="iso"
+              v-for="{ key, label } in countries"
+              :key="key"
+              :value="key"
             >
-              {{ name }}
+              {{ label }}
             </SfSelectOption>
           </SfSelect>
         </ValidationProvider>
@@ -180,8 +181,9 @@ import {
 } from '@storefront-ui/vue';
 import { required, min, oneOf } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { reactive, ref, watch, computed, onMounted } from '@vue/composition-api';
-import { useVSFContext, onSSR } from '@vue-storefront/core';
+import { reactive, watch, computed, onMounted } from '@vue/composition-api';
+import { onSSR } from '@vue-storefront/core';
+import { useCountry } from '@vue-storefront/spree';
 
 extend('required', {
   ...required,
@@ -234,7 +236,7 @@ export default {
   },
 
   setup(props, { emit }) {
-    const { $spree } = useVSFContext();
+    const { countries, states, load: loadCountries, loadStates } = useCountry();
     const form = reactive({
       _id: props.address._id,
       firstName: props.address.firstName,
@@ -248,9 +250,7 @@ export default {
       phone: props.address.phone,
       isDefault: props.address.isDefault
     });
-    const countries = ref([]);
-    const states = ref([]);
-    const isStateRequired = computed(() => form.country && countries.value.find(e => e.iso === form.country).isStateRequired);
+    const isStateRequired = computed(() => form.country && countries.value.find(e => e.key === form.country).stateRequired);
 
     const submitForm = () => {
       emit('submit', {
@@ -262,29 +262,25 @@ export default {
     };
 
     onSSR(async () => {
-      countries.value = await $spree.api.getAvailableCountries();
+      await loadCountries();
 
       if (form.country) {
-        const countryDetails = await $spree.api.getCountryDetails({ iso: form.country });
-        states.value = countryDetails.states || [];
+        await loadStates(form.country);
       }
     });
 
     onMounted(async () => {
-      countries.value = await $spree.api.getAvailableCountries();
+      await loadCountries();
 
       if (form.country) {
-        const countryDetails = await $spree.api.getCountryDetails({ iso: form.country });
-        states.value = countryDetails.states || [];
+        await loadStates(form.country);
       }
     });
 
     watch(() => form.country, async (newValue, oldValue) => {
       if (newValue !== oldValue) {
         form.state = null;
-
-        const countryDetails = await $spree.api.getCountryDetails({ iso: newValue });
-        states.value = countryDetails.states || [];
+        await loadStates(newValue);
       }
     });
 

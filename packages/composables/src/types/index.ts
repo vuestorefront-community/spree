@@ -1,7 +1,21 @@
-import type { CategorySearchResult, LineItem, ProductVariant, Order } from '@vue-storefront/spree-api';
-import type { AgnosticGroupedFacet } from '@vue-storefront/core';
+import type { CategorySearchResult, LineItem, ProductVariant, Order, Country, State } from '@vue-storefront/spree-api';
+import type { AgnosticGroupedFacet, ComputedProperty } from '@vue-storefront/core';
 
 export { UseCategory, UseProduct } from '@vue-storefront/core';
+
+export type UseCountryErrors = {
+  load: Error;
+  loadStates: Error;
+};
+
+export type UseCountry = {
+  countries: ComputedProperty<Country[]>;
+  states: ComputedProperty<State[]>;
+  loading: ComputedProperty<boolean>
+  error: ComputedProperty<UseCountryErrors>
+  load(): Promise<void>;
+  loadStates(key: string): Promise<void>;
+};
 
 export type User = {
   firstName?: string;
