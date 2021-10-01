@@ -9,6 +9,7 @@
       v-if="isAuthenticated && billing"
       v-model="selectedAddressId"
       :addresses="billing.addresses"
+      :saved-address="checkoutBillingAddress"
     />
     <form @submit.prevent="handleSubmit(handleFormSubmit)">
       <div v-if="!selectedAddressId" class="form">
@@ -210,6 +211,7 @@ import { useBilling, useCountry, useUser, useUserBilling } from '@vue-storefront
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import AddressPicker from '~/components/Checkout/AddressPicker';
+import _ from 'lodash';
 
 extend('required', {
   ...required,
@@ -238,7 +240,7 @@ export default {
     ValidationObserver
   },
   setup(props, context) {
-    const { load, save } = useBilling();
+    const { billing: checkoutBillingAddress, load, save } = useBilling();
     const { countries, states, load: loadCountries, loadStates } = useCountry();
     const { isAuthenticated } = useUser();
     const { billing, load: loadUserBilling } = useUserBilling();
@@ -284,12 +286,26 @@ export default {
       if (form.value.country) {
         await loadStates(form.value.country);
       }
+
+      if (checkoutBillingAddress.value) {
+        form.value = _.omit(checkoutBillingAddress.value, ['_id']);
+      }
     });
 
     watch(() => form.value.country, async (newValue, oldValue) => {
       if (newValue !== oldValue) {
         form.value.state = null;
         await loadStates(newValue);
+      }
+    });
+
+    onMounted(async () => {
+      await load();
+      await loadUserBilling();
+      await loadCountries();
+
+      if (checkoutBillingAddress.value) {
+        form.value = _.omit(checkoutBillingAddress.value, ['_id']);
       }
     });
 
@@ -301,6 +317,7 @@ export default {
       isStateRequired,
       billing,
       selectedAddressId,
+      checkoutBillingAddress,
       handleFormSubmit
     };
   }
