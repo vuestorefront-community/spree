@@ -14,6 +14,7 @@
     "dev:api-client": "cd packages/api-client && yarn dev",
     "dev:composables": "cd packages/composables && yarn dev",
     "dev:theme": "cd packages/theme && yarn dev",
+    "prepare": "[ -d '.husky' ] && (husky install && shx rm -rf .git/hooks && shx ln -s ../.husky .git/hooks) || true",
     "test": "yarn test:api-client && yarn test:composables && yarn test:theme",
     "test:api-client": "cd packages/api-client && yarn test --passWithNoTests",
     "test:composables": "cd packages/composables && yarn test --passWithNoTests",
@@ -23,6 +24,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",
+    "@commitlint/cli": "^13.1.0",
+    "@commitlint/config-conventional": "^13.1.0",
+    "@commitlint/config-lerna-scopes": "^13.1.0",
     "@types/jest": "^24.0.23",
     "@types/node": "^12.12.14",
     "@typescript-eslint/eslint-plugin": "^4.4.0",
@@ -36,7 +40,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^7.0.1",
-    "husky": "^4.2.3",
+    "husky": "^7.0.1",
     "jest": "^24.9.0",
     "lerna": "^3.15.0",
     "lint-staged": "^10.0.7",
@@ -51,14 +55,5 @@
   },
   "workspaces": [
     "packages/*"
-  ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{js,ts,vue}": "eslint --fix"
-  },
-  "dependencies": {}
+  ]
 }
