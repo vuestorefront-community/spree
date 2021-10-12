@@ -43,7 +43,7 @@ import {
   SfCheckbox,
   SfAddressPicker
 } from '@storefront-ui/vue';
-import { userShippingGetters } from '@upsidelab/vue-storefront-spree';
+import { userShippingGetters } from '@vue-storefront/spree';
 
 export default {
   name: 'UserShippingAddresses',

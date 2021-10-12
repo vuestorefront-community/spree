@@ -1,5 +1,5 @@
 {
-  "name": "@upsidelab/vue-storefront-spree",
+  "name": "@vue-storefront/spree",
   "private": true,
   "license": "MIT",
   "engines": {

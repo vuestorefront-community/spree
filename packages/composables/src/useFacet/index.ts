@@ -1,4 +1,4 @@
-import { GetProductsParams } from '@upsidelab/vue-storefront-spree-api';
+import { GetProductsParams } from '@vue-storefront/spree-api';
 import { Context, useFacetFactory, FacetSearchResult } from '@vue-storefront/core';
 import { SearchData, SearchParams } from '../types';
 import { buildPriceFacet } from './price';

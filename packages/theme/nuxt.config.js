@@ -49,11 +49,11 @@ export default {
       // @core-development-only-end
       useRawSource: {
         dev: [
-          '@upsidelab/vue-storefront-spree',
+          '@vue-storefront/spree',
           '@vue-storefront/core'
         ],
         prod: [
-          '@upsidelab/vue-storefront-spree',
+          '@vue-storefront/spree',
           '@vue-storefront/core'
         ]
       }
@@ -62,8 +62,8 @@ export default {
     ['@vue-storefront/nuxt-theme', {
       generate: {
         replace: {
-          apiClient: '@upsidelab/vue-storefront-spree-api',
-          composables: '@upsidelab/vue-storefront-spree'
+          apiClient: '@vue-storefront/spree-api',
+          composables: '@vue-storefront/spree'
         }
       }
     }],
@@ -71,7 +71,7 @@ export default {
     /* project-only-start
     ['@vue-storefront/nuxt-theme'],
     project-only-end */
-    ['@upsidelab/vue-storefront-spree/nuxt', {}]
+    ['@vue-storefront/spree/nuxt', {}]
   ],
   modules: [
     'nuxt-i18n',

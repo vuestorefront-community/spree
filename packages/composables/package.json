@@ -1,5 +1,5 @@
 {
-  "name": "@upsidelab/vue-storefront-spree",
+  "name": "@vue-storefront/spree",
   "version": "2.3.0",
   "private": true,
   "sideEffects": false,
@@ -13,7 +13,7 @@
     "prepublish": "yarn build"
   },
   "dependencies": {
-    "@upsidelab/vue-storefront-spree-api": "2.3.0",
+    "@vue-storefront/spree-api": "2.3.0",
     "@vue-storefront/core": "2.3.0",
     "lodash": "^4.17.21"
   },

@@ -14,7 +14,7 @@ const defaultFeatures = {
 module.exports = {
   integrations: {
     spree: {
-      location: '@upsidelab/vue-storefront-spree-api/server',
+      location: '@vue-storefront/spree-api/server',
       configuration: {
         backendUrl: process.env.BACKEND_URL,
         spreeFeatures: defaultFeatures.spree43

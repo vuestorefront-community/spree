@@ -1,7 +1,7 @@
 import { getCurrentInstance } from '@vue/composition-api';
 import type { AgnosticGroupedFacet } from '@vue-storefront/core';
-import type { Category } from '@upsidelab/vue-storefront-spree-api';
-import type { SearchParams, SearchParamsOptionTypeFilter, SearchParamsProductPropertyFilter } from '@upsidelab/vue-storefront-spree';
+import type { Category } from '@vue-storefront/spree-api';
+import type { SearchParams, SearchParamsOptionTypeFilter, SearchParamsProductPropertyFilter } from '@vue-storefront/spree';
 
 const getInstance = () => {
   const vm = getCurrentInstance();

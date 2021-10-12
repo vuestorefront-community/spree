@@ -1,5 +1,5 @@
 import { useBillingFactory, UseBillingParams, Context } from '@vue-storefront/core';
-import { Address } from '@upsidelab/vue-storefront-spree-api';
+import { Address } from '@vue-storefront/spree-api';
 
 const params: UseBillingParams<Address, any> = {
   load: async (context: Context): Promise<Address> => {

@@ -187,7 +187,7 @@ import {
 } from '@storefront-ui/vue';
 import { ref } from '@vue/composition-api';
 import { onSSR } from '@vue-storefront/core';
-import { useBilling, useCountry } from '@upsidelab/vue-storefront-spree';
+import { useBilling, useCountry } from '@vue-storefront/spree';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 

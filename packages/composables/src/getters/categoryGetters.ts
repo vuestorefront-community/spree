@@ -1,5 +1,5 @@
 import { CategoryGetters, AgnosticCategoryTree, AgnosticBreadcrumb } from '@vue-storefront/core';
-import { Category } from '@upsidelab/vue-storefront-spree-api/src/types';
+import { Category } from '@vue-storefront/spree-api/src/types';
 
 export const getCategoryTree = (categories: any): AgnosticCategoryTree => {
   const { root, current } = categories;

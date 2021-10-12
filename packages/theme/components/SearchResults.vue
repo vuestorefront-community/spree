@@ -90,7 +90,7 @@ import {
   SfImage
 } from '@storefront-ui/vue';
 import { ref, watch, computed } from '@vue/composition-api';
-import { productGetters } from '@upsidelab/vue-storefront-spree';
+import { productGetters } from '@vue-storefront/spree';
 
 export default {
   name: 'SearchResults',

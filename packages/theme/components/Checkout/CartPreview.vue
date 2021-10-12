@@ -77,7 +77,7 @@ import {
   SfCircleIcon
 } from '@storefront-ui/vue';
 import { computed, ref } from '@vue/composition-api';
-import { useCart, useShippingProvider, cartGetters } from '@upsidelab/vue-storefront-spree';
+import { useCart, useShippingProvider, cartGetters } from '@vue-storefront/spree';
 // import getShippingMethodPrice from '@/helpers/Checkout/getShippingMethodPrice';
 
 const getShippingMethodPrice = () => 0;
