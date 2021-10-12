@@ -1,5 +1,5 @@
 import { CheckoutGetters} from '@vue-storefront/core';
-import { ShippingMethod } from '@upsidelab/vue-storefront-spree-api/src/types';
+import { ShippingMethod } from '@vue-storefront/spree-api/src/types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getShippingMethodId = (shippingMethod: ShippingMethod): string => '';

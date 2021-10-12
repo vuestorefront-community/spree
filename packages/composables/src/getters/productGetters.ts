@@ -4,7 +4,7 @@ import {
   AgnosticPrice,
   ProductGetters
 } from '@vue-storefront/core';
-import { ProductVariant, Image } from '@upsidelab/vue-storefront-spree-api/src/types';
+import { ProductVariant, Image } from '@vue-storefront/spree-api/src/types';
 
 import _ from 'lodash';
 

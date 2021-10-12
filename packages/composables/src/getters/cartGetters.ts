@@ -1,5 +1,5 @@
 import { CartGetters, AgnosticPrice, AgnosticTotals, AgnosticCoupon, AgnosticDiscount } from '@vue-storefront/core';
-import { Cart, LineItem } from '@upsidelab/vue-storefront-spree-api/src/types';
+import { Cart, LineItem } from '@vue-storefront/spree-api/src/types';
 
 export const getCartItems = (cart: Cart): LineItem[] => cart?.lineItems || [];
 

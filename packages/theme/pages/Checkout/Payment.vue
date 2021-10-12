@@ -111,7 +111,7 @@ import {
 } from '@storefront-ui/vue';
 import { onSSR } from '@vue-storefront/core';
 import { ref, computed } from '@vue/composition-api';
-import { useMakeOrder, useCart, cartGetters } from '@upsidelab/vue-storefront-spree';
+import { useMakeOrder, useCart, cartGetters } from '@vue-storefront/spree';
 
 export default {
   name: 'ReviewOrder',

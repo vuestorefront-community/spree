@@ -1,5 +1,5 @@
 {
-  "name": "@upsidelab/vue-storefront-spree-api",
+  "name": "@vue-storefront/spree-api",
   "version": "2.3.0",
   "private": true,
   "sideEffects": false,

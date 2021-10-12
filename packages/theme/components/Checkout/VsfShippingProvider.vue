@@ -24,7 +24,7 @@
 import { SfButton } from '@storefront-ui/vue';
 import { computed, ref, onMounted } from '@vue/composition-api';
 import { Logger, useVSFContext } from '@vue-storefront/core';
-import { useCart } from '@upsidelab/vue-storefront-spree';
+import { useCart } from '@vue-storefront/spree';
 import ShippingRatePicker from '~/components/Checkout/ShippingRatePicker.vue';
 
 export default {

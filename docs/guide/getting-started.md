@@ -17,7 +17,7 @@ If you're using Spree 4.2, you'll also need to change the configuration used for
 module.exports = {
   integrations: {
     spree: {
-      location: '@upsidelab/vue-storefront-spree-api/server',
+      location: '@vue-storefront/spree-api/server',
       configuration: {
         backendUrl: process.env.BACKEND_URL,
         spreeFeatures: defaultFeatures.spree43
