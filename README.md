@@ -24,7 +24,7 @@ Spree integration is currently in beta stage, with more updates and stable versi
 
 1. Clone this repository
 ```sh
-git clone https://github.com/upsidelab/vue-storefront-spree.git
+git clone https://github.com/vuestorefront/spree.git
 ```
 
 2. Install all required dependencies:

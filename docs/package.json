@@ -4,7 +4,7 @@
   "description": "Documentation for Spree integration for Vue Storefront",
   "main": "index.js",
   "license": "MIT",
-  "repository": "https://github.com/upsidelab/vue-storefront-spree/docs",
+  "repository": "https://github.com/vuestorefront/spree/docs",
   "scripts": {
     "dev": "vuepress dev",
     "build": "vuepress build"

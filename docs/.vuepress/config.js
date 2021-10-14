@@ -23,7 +23,10 @@ module.exports = {
   themeConfig: {
     nav: [
       { text: 'Vue Storefront', link: 'https://vuestorefront.io/' },
-      { text: 'Core Documentation', link: 'https://docs.vuestorefront.io/v2/' }
+      { text: 'Core Documentation', link: 'https://docs.vuestorefront.io/v2/' },
+      { text: 'Demo', link: 'https://vuestorefront-spree.upsidelab.io/' },
+      { text: 'GitHub', link: 'https://github.com/vuestorefront/spree/'},
+      { text: 'Roadmap', link: 'https://github.com/vuestorefront/spree/blob/main/README.md#feature-support'},
     ],
     sidebar: [
       {
