@@ -6,7 +6,7 @@
       class="nav-item"
       v-e2e="`app-header-url_${category}`"
       :label="category"
-      :link="localePath(`/c/${category}`)"
+      :link="localePath(`/c/categories/${category}`)"
     />
   </div>
   <SfModal v-else :visible="isMobileMenuOpen">
@@ -20,7 +20,7 @@
         <SfMenuItem
           :label="category"
           class="sf-header-navigation-item__menu-item"
-          :link="localePath(`/c/${category}`)"
+          :link="localePath(`/c/categories/${category}`)"
           @click.native="toggleMobileMenu"
         />
       </template>
