@@ -1,6 +1,6 @@
 {
   "name": "@vue-storefront/spree",
-  "version": "2.3.0",
+  "version": "0.1.0",
   "private": true,
   "sideEffects": false,
   "main": "lib/index.cjs.js",
@@ -13,7 +13,7 @@
     "prepublish": "yarn build"
   },
   "dependencies": {
-    "@vue-storefront/spree-api": "2.3.0",
+    "@vue-storefront/spree-api": "0.1.0",
     "@vue-storefront/core": "2.3.0",
     "lodash": "^4.17.21"
   },
