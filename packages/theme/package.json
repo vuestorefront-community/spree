@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@nuxtjs/style-resources": "^1.0.0",
-    "@storefront-ui/vue": "^0.10.3",
+    "@storefront-ui/vue": "^0.10.8",
     "@stripe/stripe-js": "^1.17.1",
     "@vue-storefront/spree": "2.3.0",
     "@vue-storefront/middleware": "2.3.0",

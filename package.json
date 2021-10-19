@@ -70,5 +70,8 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "@storefront-ui/vue": "0.10.8"
+  }
 }
