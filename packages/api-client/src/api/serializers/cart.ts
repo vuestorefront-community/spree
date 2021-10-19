@@ -1,6 +1,6 @@
 import { OrderAttr } from '@spree/storefront-api-v2-sdk/types/interfaces/Order';
 import { CouponCode as CouponCodeAttr } from '@spree/storefront-api-v2-sdk/types/interfaces/endpoints/CartClass';
-import { Cart, CouponCode, LineItem } from '../../types';
+import { Cart, LineItem } from '../../types';
 import { deserializeAddress } from './address';
 
 const findAttachment = (attachments: any[], id: string, type: string) => {
@@ -93,6 +93,6 @@ export const deserializeCart = (apiCart: OrderAttr, included: any[], config: any
   token: apiCart.attributes.token
 });
 
-export const serializeCouponCode = ({ couponCode }: CouponCode): CouponCodeAttr => ({
+export const serializeCouponCode = (couponCode: string): CouponCodeAttr => ({
   coupon_code: couponCode
 });

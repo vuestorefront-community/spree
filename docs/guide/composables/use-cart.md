@@ -69,11 +69,11 @@
 
 - `applyCoupon` - function to apply a coupon to the cart. It requires the following params:
   - `currentCart: Cart`
-  - `couponCode: CouponCode`
+  - `couponCode: string`
 
 - `removeCoupon` - function to remove a coupon from the cart. It requires the following params:
   - `currentCart: Cart`
-  - `coupon: string`
+  - `couponCode: string`
 
 - `isInCart` - function to check if a product is already in the cart. It requires the following params:
   - `currentCart: Cart`

@@ -16,7 +16,7 @@ const loadOrCreateCartToken = async (context: Context, currentCart: Cart): Promi
   return cart.token;
 };
 
-const params: UseCartFactoryParams<Cart, LineItem, ProductVariant, Coupon> = {
+const params: UseCartFactoryParams<Cart, LineItem, ProductVariant> = {
   load: async (context: Context) => {
     const cart = await context.$spree.api.getCart();
     return cart;
@@ -58,9 +58,9 @@ const params: UseCartFactoryParams<Cart, LineItem, ProductVariant, Coupon> = {
     return cart;
   },
 
-  removeCoupon: async (context: Context, { currentCart, coupon }) => {
+  removeCoupon: async (context: Context, { currentCart, couponCode }) => {
     const token = await loadOrCreateCartToken(context, currentCart);
-    await context.$spree.api.removeCoupon({ token, couponCode: coupon });
+    await context.$spree.api.removeCoupon({ token, couponCode });
     const cart = await context.$spree.api.getCart();
     return cart;
   },
@@ -70,4 +70,4 @@ const params: UseCartFactoryParams<Cart, LineItem, ProductVariant, Coupon> = {
   }
 };
 
-export default useCartFactory<Cart, LineItem, ProductVariant, Coupon>(params);
+export default useCartFactory<Cart, LineItem, ProductVariant>(params);

@@ -12,10 +12,6 @@ export type Address = {
   phone: string;
 };
 
-export type CouponCode = {
-  couponCode: string;
-};
-
 export type ShippingRate = {
   id: string;
   methodId: string;
