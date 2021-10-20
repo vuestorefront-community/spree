@@ -2,7 +2,7 @@ import webpack from 'webpack';
 import theme from './themeConfig';
 
 export default {
-  mode: 'universal',
+  ssr: true,
   server: {
     port: process.env.PORT || 3000,
     host: process.env.HOST || '0.0.0.0'
@@ -12,10 +12,15 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
+      {
+        hid: 'description',
+        name: 'description',
+        content: process.env.npm_package_description || ''
+      }
     ],
     link: [
-      { rel: 'icon',
+      {
+        rel: 'icon',
         type: 'image/x-icon',
         href: '/favicon.ico'
       },
@@ -43,6 +48,8 @@ export default {
   buildModules: [
     // to core
     '@nuxt/typescript-build',
+    '@nuxtjs/google-fonts',
+    '@nuxtjs/pwa',
     '@nuxtjs/style-resources',
     ['@vue-storefront/nuxt', {
       // @core-development-only-start
@@ -112,6 +119,24 @@ export default {
         }
       }
     }
+  },
+  pwa: {
+    meta: {
+      theme_color: '#5ECE7B'
+    }
+  },
+  googleFonts: {
+    families: {
+      Raleway: {
+        wght: [300, 400, 500, 600, 700],
+        ital: [400]
+      },
+      Roboto: {
+        wght: [300, 400, 500, 700],
+        ital: [300, 400]
+      }
+    },
+    display: 'swap'
   },
   styleResources: {
     scss: [require.resolve('@storefront-ui/shared/styles/_helpers.scss', { paths: [process.cwd()] })]
