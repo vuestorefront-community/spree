@@ -5,7 +5,7 @@ import {
   useCartFactory,
   UseCartFactoryParams
 } from '@vue-storefront/core';
-import { Cart, LineItem, Coupon, ProductVariant } from '../types';
+import { Cart, LineItem, ProductVariant } from '../types';
 
 const loadOrCreateCartToken = async (context: Context, currentCart: Cart): Promise<string> => {
   if (currentCart && currentCart.token) {

@@ -16,24 +16,27 @@ export default async function getProducts({ client, config }: ApiContext, params
     const optionValueIds = optionTypeFilters?.map(filter => filter.optionValueId);
     const properties = productPropertyFilters?.reduce((result, filter) => ({ ...result, [filter.productPropertyName]: filter.productPropertyValue }), {});
 
-    const result = await client.products.list({
-      filter: {
-        taxons: categoryId,
-        option_value_ids: optionValueIds?.join(','),
-        // TODO update type definition in Spree Storefront SDK
-        properties: properties as any,
-        price: priceFilter,
-        name: term
-      },
-      fields: {
-        product: 'name,slug,sku,description,primary_variant,default_variant,variants,option_types,taxons',
-        variant: 'sku,price,display_price,in_stock,product,images,option_values,is_master'
-      },
-      include,
-      page,
-      sort,
-      per_page: itemsPerPage
-    });
+    const result = await client.products.list(
+      undefined,
+      {
+        filter: {
+          taxons: categoryId,
+          option_value_ids: optionValueIds?.join(','),
+          // TODO update type definition in Spree Storefront SDK
+          properties: properties as any,
+          price: priceFilter,
+          name: term
+        },
+        fields: {
+          product: 'name,slug,sku,description,primary_variant,default_variant,variants,option_types,taxons',
+          variant: 'sku,price,display_price,in_stock,product,images,option_values,is_master'
+        },
+        include,
+        page,
+        sort,
+        per_page: itemsPerPage
+      }
+    );
 
     if (result.isSuccess()) {
       const data = result.success();

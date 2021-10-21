@@ -7,8 +7,8 @@ export default async ({ client, config }: ApiContext, { selectedShippingRates })
     const result = await client.checkout.orderUpdate(token, {
       order: {
         shipments_attributes: Object.entries(selectedShippingRates).map(([shipmentId, shippingRateId]: [string, number]) => ({
-          id: parseInt(shipmentId),
-          selected_shipping_rate_id: shippingRateId
+          id: shipmentId,
+          selected_shipping_rate_id: shippingRateId.toString()
         }))
       }
     });
