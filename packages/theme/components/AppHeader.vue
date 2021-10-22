@@ -7,7 +7,7 @@
     >
       <!-- TODO: add mobile view buttons after SFUI team PR -->
       <template #logo>
-        <nuxt-link :to="localePath('/')" class="sf-header__logo">
+        <nuxt-link :to="localePath({ name: 'home' })" class="sf-header__logo">
           <SfImage src="/icons/logo.svg" alt="Vue Storefront Next" class="sf-header__logo-image"/>
         </nuxt-link>
       </template>
@@ -18,10 +18,10 @@
         <LocaleSelector class="smartphone-only" />
       </template>
       <template #header-icons>
-        <div class="sf-header__icons">
+        <div v-e2e="'header-icons'" class="sf-header__icons">
           <SfButton
-            v-e2e="'app-header-account'"
             class="sf-button--pure sf-header__action"
+            aria-label="Open account button"
             @click="handleAccountClick"
           >
             <SfIcon
@@ -31,6 +31,7 @@
           </SfButton>
           <SfButton
             class="sf-button--pure sf-header__action"
+            aria-label="Toggle wishlist sidebar"
             @click="toggleWishlistSidebar"
           >
             <SfIcon
@@ -40,8 +41,8 @@
             />
           </SfButton>
           <SfButton
-            v-e2e="'app-header-cart'"
             class="sf-button--pure sf-header__action"
+            aria-label="Toggle cart sidebar"
             @click="toggleCartSidebar"
           >
             <SfIcon
@@ -69,6 +70,7 @@
           <template #icon>
             <SfButton
               v-if="!!term"
+              aria-label="Close search"
               class="sf-search-bar__button sf-button--pure"
               @click="closeOrFocusSearchBar"
             >
@@ -78,6 +80,7 @@
             </SfButton>
             <SfButton
               v-else
+              aria-label="Open search"
               class="sf-search-bar__button sf-button--pure"
               @click="isSearchOpen ? isSearchOpen = false : isSearchOpen = true"
             >
@@ -95,11 +98,10 @@
 </template>
 
 <script>
-import { SfHeader, SfImage, SfIcon, SfButton, SfBadge, SfSearchBar, SfOverlay, SfMenuItem, SfLink } from '@storefront-ui/vue';
+import { SfHeader, SfImage, SfIcon, SfButton, SfBadge, SfSearchBar, SfOverlay } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
-import { useCart, useWishlist, useUser, useFacet, cartGetters } from '@vue-storefront/spree';
+import { useCart, useFacet, useUser, cartGetters } from '@vue-storefront/spree';
 import { computed, ref, onBeforeUnmount, watch } from '@vue/composition-api';
-import { onSSR } from '@vue-storefront/core';
 import { useUiHelpers } from '~/composables';
 import LocaleSelector from './LocaleSelector';
 import SearchResults from '~/components/SearchResults';
@@ -122,8 +124,6 @@ export default {
     SfSearchBar,
     SearchResults,
     SfOverlay,
-    SfMenuItem,
-    SfLink,
     HeaderNavigation
   },
   directives: { clickOutside },
@@ -131,32 +131,32 @@ export default {
     const { toggleCartSidebar, toggleWishlistSidebar, toggleLoginModal, isMobileMenuOpen } = useUiState();
     const { setTermForUrl, getFacetsFromURL } = useUiHelpers();
     const { isAuthenticated, load: loadUser } = useUser();
-    const { cart, load: loadCart } = useCart();
-    const { load: loadWishlist } = useWishlist();
-    const { result, search } = useFacet('searchResults');
+    const { result: searchResult, search } = useFacet('searchResults');
+    const { cart } = useCart();
     const term = ref(getFacetsFromURL().phrase);
     const isSearchOpen = ref(false);
     const searchBarRef = ref(null);
     const isMobile = ref(mapMobileObserver().isMobile.get());
+
+    const result = computed(() => searchResult.value?.data);
     const cartTotalItems = computed(() => {
       const count = cartGetters.getTotalItems(cart.value);
       return count ? count.toString() : null;
     });
+
     const accountIcon = computed(() => isAuthenticated.value ? 'profile_fill' : 'profile');
+
+    loadUser();
 
     // TODO: https://github.com/DivanteLtd/vue-storefront/issues/4927
     const handleAccountClick = async () => {
       if (isAuthenticated.value) {
-        return root.$router.push('/my-account');
+        const localeAccountPath = root.localePath({ name: 'my-account' });
+        return root.$router.push(localeAccountPath);
       }
+
       toggleLoginModal();
     };
-
-    onSSR(async () => {
-      await loadUser();
-      await loadCart();
-      await loadWishlist();
-    });
 
     const closeSearch = () => {
       if (!isSearchOpen.value) return;
@@ -190,9 +190,7 @@ export default {
       }
     });
 
-    const removeSearchResults = () => {
-      result.value = null;
-    };
+    const removeSearchResults = () => {};
 
     onBeforeUnmount(() => {
       unMapMobileObserver();
@@ -227,7 +225,7 @@ export default {
     --header-padding: 0;
   }
   &__logo-image {
-      height: 100%;
+    height: 100%;
   }
 }
 .header-on-top {

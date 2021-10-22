@@ -1,5 +1,4 @@
-import { CheckoutGetters} from '@vue-storefront/core';
-import { ShippingMethod } from '@vue-storefront/spree-api/src/types';
+import { ShippingMethod } from '@vue-storefront/spree-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getShippingMethodId = (shippingMethod: ShippingMethod): string => '';
@@ -15,7 +14,7 @@ export const getShippingMethodPrice = (shippingMethod: ShippingMethod): number =
 
 export const getFormattedPrice = (price: number) => String(price);
 
-const checkoutGetters: CheckoutGetters<ShippingMethod> = {
+const checkoutGetters = {
   getShippingMethodId,
   getShippingMethodName,
   getShippingMethodDescription,

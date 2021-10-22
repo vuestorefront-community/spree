@@ -9,7 +9,7 @@ export default async function savePaymentMethod({ client, config }: ApiContext, 
     order: {
       payments_attributes: [
         {
-          payment_method_id: methodId
+          payment_method_id: methodId.toString()
         }
       ]
     },

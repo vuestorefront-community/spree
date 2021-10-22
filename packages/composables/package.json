@@ -13,12 +13,18 @@
     "prepublish": "yarn build"
   },
   "dependencies": {
+    "@vue-storefront/core": "^2.4.3",
     "@vue-storefront/spree-api": "0.1.0",
-    "@vue-storefront/core": "2.3.0",
     "lodash": "^4.17.21"
   },
   "peerDependencies": {
-    "@vue/composition-api": "1.0.0-beta.21"
+    "@vue/composition-api": "1.0.0-beta.21",
+    "vue": "^2.0.0 || >=3.0.0-rc.0"
+  },
+  "peerDependenciesMeta": {
+    "@vue/composition-api": {
+      "optional": true
+    }
   },
   "files": [
     "lib/**/*"

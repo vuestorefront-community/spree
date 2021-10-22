@@ -15,6 +15,7 @@ export { default as useUserBilling } from './useUserBilling';
 export { default as useUserOrder } from './useUserOrder';
 export { default as useUserShipping } from './useUserShipping';
 export { default as useWishlist } from './useWishlist';
+export { default as useForgotPassword } from './useForgotPassword';
 export { default as useCountry } from './useCountry';
 export * from './getters';
 export * from './types';

@@ -23,6 +23,9 @@ export const getItemPrice = (item: OrderItem): number => item?.price?.current ||
 
 export const getFormattedPrice = (price: number) => String(price);
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const getOrdersTotal = (orders: any): number => 1;
+
 const orderGetters: UserOrderGetters<Order, OrderItem> = {
   getDate,
   getId,
@@ -33,7 +36,8 @@ const orderGetters: UserOrderGetters<Order, OrderItem> = {
   getItemName,
   getItemQty,
   getItemPrice,
-  getFormattedPrice
+  getFormattedPrice,
+  getOrdersTotal
 };
 
 export default orderGetters;
