@@ -59,13 +59,15 @@ export const getProductGallery = (product: ProductVariant): AgnosticMediaGallery
 };
 
 export const getProductCoverImage = (product: ProductVariant): string => {
+  if (!product) return undefined;
+
   const mainProductImage = product.images[0];
   if (!mainProductImage) {
     return undefined;
   }
 
   const styles = mainProductImage.styles;
-  if (styles.length === 0) {
+  if (!styles || styles.length === 0) {
     return undefined;
   }
 
