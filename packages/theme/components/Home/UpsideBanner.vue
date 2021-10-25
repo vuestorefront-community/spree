@@ -1,12 +1,11 @@
 <template>
-  <client-only>
-    <SfBanner
-      class="upside-banner"
-      description="This demo was developed by the team at Upside. Get in touch if you'd like to upgrade the customer experience of your Spree-based store."
-      buttonText="Contact Us"
-      link="https://upsidelab.io/contact/"
-    />
-  </client-only>
+  <SfBanner
+    class="sf-banner--slim upside-banner"
+    subtitle="This demo was developed by the team at Upside."
+    description="Get in touch if you'd like to upgrade the customer experience of your Spree-based store."
+    buttonText="Learn more"
+    link="https://upsidelab.io/services/vue-storefront-development"
+  />
 </template>
 
 <script>
@@ -61,7 +60,7 @@ export default {
 .upside-banner .sf-banner__call-to-action {
   --button-width: auto;
   --c-secondary: #fd6924;
-  --c-secondary-variant: #fd6924;
+  --c-secondary-variant: #ffa0739c;
   --c-link-hover: white;
   --link-font-size: var(--font-size--base);
   --link-font-weight: var(--font-weight--semibold);

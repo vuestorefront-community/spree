@@ -3,6 +3,7 @@
     <LazyHydrate when-idle>
       <UpsideBanner />
     </LazyHydrate>
+
     <LazyHydrate when-idle>
       <SfHero class="hero">
         <SfHeroItem
@@ -122,9 +123,9 @@ import {
 } from '@storefront-ui/vue';
 import { computed, onMounted, useContext } from '@nuxtjs/composition-api';
 import { useFacet, facetGetters, productGetters, useUser, useWishlist } from '@vue-storefront/spree';
+import UpsideBanner from '~/components/Home/UpsideBanner.vue';
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import NewsletterModal from '~/components/NewsletterModal.vue';
-import UpsideBanner from '~/components/Home/UpsideBanner.vue';
 import LazyHydrate from 'vue-lazy-hydration';
 import { useUiState } from '../composables';
 import cacheControl from './../helpers/cacheControl';
@@ -148,8 +149,8 @@ export default {
     SfHeading,
     SfArrow,
     SfButton,
-    NewsletterModal,
     UpsideBanner,
+    NewsletterModal,
     LazyHydrate
   },
   setup() {
