@@ -1,4 +1,6 @@
-<img src="https://blog.vuestorefront.io/wp-content/uploads/2020/01/1QU9F6hQlFyHsJIbsdmt6FA.png" height="100px" />
+<center>
+  <img src="/vsf-full.svg" height="100px" />
+</center>
 
 # Vue Storefront 2 integration with Spree
 
