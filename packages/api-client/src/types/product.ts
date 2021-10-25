@@ -1,4 +1,4 @@
-import { AgnosticBreadcrumb } from '@vue-storefront/core';
+import { AgnosticBreadcrumb, AgnosticGroupedFacet } from '@vue-storefront/core';
 
 export type OptionValue = {
   id: number;
@@ -54,3 +54,15 @@ export type ProductVariant = {
   }
   displayPrice: string;
 };
+
+export type ProductSearchMetadata = {
+  totalPages: number;
+  totalCount: number;
+  count: number;
+  facets: AgnosticGroupedFacet[];
+}
+
+export type ProductSearchResult = {
+  data: ProductVariant[];
+  meta: ProductSearchMetadata;
+}

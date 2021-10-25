@@ -10,3 +10,7 @@ export type CategorySearchResult = {
   root: Category;
   current: Category;
 };
+
+export type GetCategoryParams = {
+  categorySlug: string;
+};

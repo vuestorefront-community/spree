@@ -1,5 +1,5 @@
 import type { AgnosticGroupedFacet } from '@vue-storefront/core';
-import type { GetProductsOptionTypeFilter, GetProductsPropertyFilter } from '../../types';
+import type { GetProductsOptionTypeFilter, GetProductsPropertyFilter, ProductSearchMetadata } from '../../types';
 
 const deserializeOptionTypeFacet = (optionTypeFilter, selectedOptionTypeFilters: GetProductsOptionTypeFilter[]): AgnosticGroupedFacet => {
   const selectedOptionValueIds = selectedOptionTypeFilters?.map(selectedOptionTypeFilter => selectedOptionTypeFilter.optionValueId) || [];
@@ -48,7 +48,7 @@ const deserializeFacets = (filters, selectedOptionTypeFilters: GetProductsOption
   return facets;
 };
 
-export const deserializeSearchMetadata = (searchMetadata, selectedOptionTypeFilters: GetProductsOptionTypeFilter[], selectedProductPropertyFilters: GetProductsPropertyFilter[]) => ({
+export const deserializeSearchMetadata = (searchMetadata, selectedOptionTypeFilters: GetProductsOptionTypeFilter[], selectedProductPropertyFilters: GetProductsPropertyFilter[]): ProductSearchMetadata => ({
   totalPages: parseInt(searchMetadata.total_pages, 10),
   totalCount: parseInt(searchMetadata.total_count, 10),
   count: parseInt(searchMetadata.count, 10),

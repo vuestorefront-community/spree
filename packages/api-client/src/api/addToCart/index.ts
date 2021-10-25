@@ -1,8 +1,8 @@
-import { ApiContext, Cart } from '../../types';
+import { AddToCartParams, ApiContext, Cart } from '../../types';
 import { cartParams } from '../common/cart';
 import { deserializeCart } from '../serializers/cart';
 
-export default async function addToCart({ client, config }: ApiContext, { token, variantId, quantity }): Promise<Cart> {
+export default async function addToCart({ client, config }: ApiContext, { token, variantId, quantity }: AddToCartParams): Promise<Cart> {
   try {
     config.auth.changeCartToken(token);
 

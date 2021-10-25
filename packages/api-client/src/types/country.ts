@@ -11,3 +11,7 @@ export type Country = {
   isDefault: boolean;
   states?: State[];
 };
+
+export type GetCountryDetailsParams = {
+  iso: string;
+};
