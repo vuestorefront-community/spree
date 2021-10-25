@@ -283,12 +283,12 @@ export default {
       await loadUserBilling();
       await loadCountries();
 
-      if (form.value.country) {
-        await loadStates(form.value.country);
-      }
-
       if (checkoutBillingAddress.value) {
         form.value = _.omit(checkoutBillingAddress.value, ['_id']);
+      }
+
+      if (form.value.country) {
+        await loadStates(form.value.country);
       }
     });
 

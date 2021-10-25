@@ -301,12 +301,12 @@ export default {
       await loadUserShipping();
       await loadCountries();
 
-      if (form.value.country) {
-        await loadStates(form.value.country);
-      }
-
       if (checkoutShippingAddress.value) {
         form.value = _.omit(checkoutShippingAddress.value, ['_id']);
+      }
+
+      if (form.value.country) {
+        await loadStates(form.value.country);
       }
     });
 
