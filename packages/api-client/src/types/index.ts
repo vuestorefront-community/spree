@@ -6,6 +6,7 @@ export * from './product';
 export * from './checkout';
 export * from './category';
 export * from './country';
+export * from './account';
 
 export type Wishlist = Record<string, unknown>;
 
@@ -68,3 +69,7 @@ export type GetProductsParams = {
   itemsPerPage: number;
   sort: string;
 }
+
+export type GetProductParams = {
+  slug: string;
+};

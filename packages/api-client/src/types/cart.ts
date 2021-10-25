@@ -44,3 +44,18 @@ export type Cart = {
 };
 
 export type Order = Cart;
+
+export type AddToCartParams = {
+  token: string;
+  variantId: string;
+  quantity: number;
+};
+
+export type ApplyCouponParams = {
+  token: string;
+  couponCode: string;
+};
+
+export type ClearCartParams = {
+  token: string;
+}

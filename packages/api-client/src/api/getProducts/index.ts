@@ -1,8 +1,8 @@
-import type { ApiContext, GetProductsParams } from '../../types';
+import type { ApiContext, GetProductsParams, ProductSearchResult } from '../../types';
 import { addHostToProductImages, deserializeLimitedVariants } from '../serializers/product';
 import { deserializeSearchMetadata } from '../serializers/search';
 
-export default async function getProducts({ client, config }: ApiContext, params: GetProductsParams) {
+export default async function getProducts({ client, config }: ApiContext, params: GetProductsParams): Promise<ProductSearchResult> {
   try {
     const { categoryId, term, optionTypeFilters, productPropertyFilters, priceFilter, page, itemsPerPage, sort } = params;
     let include;

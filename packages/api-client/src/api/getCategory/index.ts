@@ -1,9 +1,9 @@
-import { ApiContext, Category } from '../../types';
+import { ApiContext, Category, CategorySearchResult, GetCategoryParams } from '../../types';
 import { deserializeCategories } from '../serializers/category';
 
 const findCategory = (categories: Category[], slug: string) => categories.find(e => e.slug === slug);
 
-export default async function getCategory({ client }: ApiContext, { categorySlug }) {
+export default async function getCategory({ client }: ApiContext, { categorySlug }: GetCategoryParams): Promise<CategorySearchResult> {
   const result = await client.taxons.list({ fields: { taxon: 'name,permalink,children,parent,is_root' }, per_page: 500 });
 
   if (result.isSuccess()) {

@@ -1,7 +1,7 @@
-import { ApiContext } from '../../types';
+import { ApiContext, GetProductParams, ProductVariant } from '../../types';
 import { addHostToProductImages, deserializeSingleProductVariants } from '../serializers/product';
 
-export default async function getProduct({ client, config }: ApiContext, { slug }) {
+export default async function getProduct({ client, config }: ApiContext, { slug }: GetProductParams): Promise<ProductVariant[]> {
   let include;
 
   if (config.spreeFeatures.fetchPrimaryVariant) {
