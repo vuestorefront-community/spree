@@ -2,7 +2,8 @@
   <SfAddressPicker
     class="address-picker"
     v-if="addresses && addresses.length > 0"
-    v-model="selectedAddressId"
+    :selected="selectedAddressId"
+    @change="onSelectAddress"
   >
     <SfAddress
       v-for="address in addresses"
@@ -24,9 +25,7 @@
 </template>
 
 <script>
-import { ref, onMounted, watch } from '@vue/composition-api';
 import { SfAddressPicker } from '@storefront-ui/vue';
-import _ from 'lodash';
 
 export default {
   components: {
@@ -37,35 +36,28 @@ export default {
       type: Array,
       default: () => []
     },
-    savedAddress: {
-      type: Object,
-      default: undefined
+    value: {
+      type: String,
+      default: ''
     }
   },
-  setup(props, { emit }) {
-    const { addresses, savedAddress } = props;
-    const selectedAddressId = ref(undefined);
-
-    const isMatchingAddress = (checkoutAddress, userAddress) => {
-      const checkoutAddressWithoutId = _.omit(checkoutAddress, ['_id']);
-      const userAddressWithoutId = _.omit(userAddress, ['_id']);
-      return _.isEqual(checkoutAddressWithoutId, userAddressWithoutId);
-    };
-
-    onMounted(() => {
-      if (savedAddress) {
-        const address = addresses.find(e => isMatchingAddress(savedAddress, e));
-        if (address) selectedAddressId.value = address._id;
-      }
-    });
-
-    watch(() => selectedAddressId.value, (newVal) => {
-      emit('input', newVal);
-    });
-
+  data() {
     return {
-      selectedAddressId
+      selectedAddressId: this.value
     };
+  },
+  methods: {
+    onSelectAddress(addressId) {
+      this.selectedAddressId = addressId;
+
+      const addressIdToEmit = addressId === '' ? undefined : addressId;
+      this.$emit('input', addressIdToEmit);
+    }
+  },
+  watch: {
+    value(newValue) {
+      this.selectedAddressId = newValue;
+    }
   }
 };
 </script>

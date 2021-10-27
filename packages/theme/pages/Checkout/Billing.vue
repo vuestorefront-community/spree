@@ -6,13 +6,13 @@
       class="sf-heading--left sf-heading--no-underline title"
     />
     <AddressPicker
-      v-if="isAuthenticated && billing"
-      v-model="selectedAddressId"
-      :addresses="billing.addresses"
+      v-if="isAuthenticated && savedAddresses"
+      v-model="selectedSavedAddressId"
+      :addresses="savedAddresses.addresses"
       :saved-address="checkoutBillingAddress"
     />
     <form @submit.prevent="handleSubmit(handleFormSubmit)">
-      <div v-if="!selectedAddressId" class="form">
+      <div v-if="!selectedSavedAddressId" class="form">
         <ValidationProvider
           name="firstName"
           rules="required|min:2"
@@ -100,7 +100,6 @@
           slim
         >
           <SfSelect
-            data-cy="shipping-details-input_state"
             class="form__element form form__select sf-select--underlined"
             v-model="form.state"
             name="state"
@@ -243,9 +242,9 @@ export default {
     const { billing: checkoutBillingAddress, load, save } = useBilling();
     const { countries, states, load: loadCountries, loadStates } = useCountry();
     const { isAuthenticated } = useUser();
-    const { billing, load: loadUserBilling } = useUserBilling();
+    const { billing: savedAddresses, load: loadSavedAddresses } = useUserBilling();
 
-    const selectedAddressId = ref(undefined);
+    const selectedSavedAddressId = ref(undefined);
     const form = ref({
       firstName: '',
       lastName: '',
@@ -257,30 +256,52 @@ export default {
       postalCode: '',
       phone: null
     });
+
+    const selectedSavedAddress = computed(() => {
+      if (!selectedSavedAddressId.value) {
+        return undefined;
+      }
+
+      return savedAddresses.value.addresses.find(e => e._id === selectedSavedAddressId.value);
+    });
     const isStateRequired = computed(() => form.value.country && countries.value.find(e => e.key === form.value.country).stateRequired);
 
     const handleFormSubmit = async () => {
-      if (isAuthenticated.value && selectedAddressId.value) {
-        const selectedAddress = billing.value.addresses.find(e => e._id === selectedAddressId.value);
-        await save({ billingDetails: selectedAddress });
+      if (isAuthenticated.value && selectedSavedAddress.value) {
+        await save({ billingDetails: selectedSavedAddress.value });
       } else {
         await save({ billingDetails: form.value });
       }
       context.root.$router.push('/checkout/payment');
     };
 
+    const isEqualAddress = (a, b) => {
+      const aWithoutId = _.omit(a, ['_id']);
+      const bWithoutId = _.omit(b, ['_id']);
+      return _.isEqual(aWithoutId, bWithoutId);
+    };
+
+    const populateSelectedAddressId = () => {
+      if (checkoutBillingAddress.value && savedAddresses.value?.addresses) {
+        selectedSavedAddressId.value = savedAddresses.value.addresses.find(e => isEqualAddress(e, checkoutBillingAddress.value))?._id;
+      }
+    };
+
     onMounted(async () => {
       await load();
+      await loadSavedAddresses();
       await loadCountries();
 
       if (form.value.country) {
         await loadStates(form.value.country);
       }
+
+      populateSelectedAddressId();
     });
 
     onSSR(async () => {
       await load();
-      await loadUserBilling();
+      await loadSavedAddresses();
       await loadCountries();
 
       if (checkoutBillingAddress.value) {
@@ -290,6 +311,8 @@ export default {
       if (form.value.country) {
         await loadStates(form.value.country);
       }
+
+      populateSelectedAddressId();
     });
 
     watch(() => form.value.country, async (newValue, oldValue) => {
@@ -301,7 +324,7 @@ export default {
 
     onMounted(async () => {
       await load();
-      await loadUserBilling();
+      await loadSavedAddresses();
       await loadCountries();
 
       if (checkoutBillingAddress.value) {
@@ -315,8 +338,8 @@ export default {
       countries,
       states,
       isStateRequired,
-      billing,
-      selectedAddressId,
+      savedAddresses,
+      selectedSavedAddressId,
       checkoutBillingAddress,
       handleFormSubmit
     };
