@@ -5,8 +5,14 @@
       :title="$t('Billing')"
       class="sf-heading--left sf-heading--no-underline title"
     />
+    <AddressPicker
+      v-if="isAuthenticated && savedAddresses"
+      v-model="selectedSavedAddressId"
+      :addresses="savedAddresses.addresses"
+      :saved-address="checkoutBillingAddress"
+    />
     <form @submit.prevent="handleSubmit(handleFormSubmit)">
-      <div class="form">
+      <div v-if="!selectedSavedAddressId" class="form">
         <ValidationProvider
           name="firstName"
           rules="required|min:2"
@@ -94,7 +100,6 @@
           slim
         >
           <SfSelect
-            data-cy="shipping-details-input_state"
             class="form__element form form__select sf-select--underlined"
             v-model="form.state"
             name="state"
@@ -201,9 +206,11 @@ import {
 } from '@storefront-ui/vue';
 import { ref, watch, computed, onMounted } from '@vue/composition-api';
 import { onSSR } from '@vue-storefront/core';
-import { useBilling, useCountry } from '@vue-storefront/spree';
+import { useBilling, useCountry, useUser, useUserBilling } from '@vue-storefront/spree';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import AddressPicker from '~/components/Checkout/AddressPicker';
+import _ from 'lodash';
 
 extend('required', {
   ...required,
@@ -227,13 +234,17 @@ export default {
     SfSelect,
     SfRadio,
     SfCheckbox,
+    AddressPicker,
     ValidationProvider,
     ValidationObserver
   },
   setup(props, context) {
-    const { load, save } = useBilling();
+    const { billing: checkoutBillingAddress, load, save } = useBilling();
     const { countries, states, load: loadCountries, loadStates } = useCountry();
+    const { isAuthenticated } = useUser();
+    const { billing: savedAddresses, load: loadSavedAddresses } = useUserBilling();
 
+    const selectedSavedAddressId = ref(undefined);
     const form = ref({
       firstName: '',
       lastName: '',
@@ -245,29 +256,63 @@ export default {
       postalCode: '',
       phone: null
     });
+
+    const selectedSavedAddress = computed(() => {
+      if (!selectedSavedAddressId.value) {
+        return undefined;
+      }
+
+      return savedAddresses.value.addresses.find(e => e._id === selectedSavedAddressId.value);
+    });
     const isStateRequired = computed(() => form.value.country && countries.value.find(e => e.key === form.value.country).stateRequired);
 
     const handleFormSubmit = async () => {
-      await save({ billingDetails: form.value });
+      if (isAuthenticated.value && selectedSavedAddress.value) {
+        await save({ billingDetails: selectedSavedAddress.value });
+      } else {
+        await save({ billingDetails: form.value });
+      }
       context.root.$router.push('/checkout/payment');
+    };
+
+    const isEqualAddress = (a, b) => {
+      const aWithoutId = _.omit(a, ['_id']);
+      const bWithoutId = _.omit(b, ['_id']);
+      return _.isEqual(aWithoutId, bWithoutId);
+    };
+
+    const populateSelectedAddressId = () => {
+      if (checkoutBillingAddress.value && savedAddresses.value?.addresses) {
+        selectedSavedAddressId.value = savedAddresses.value.addresses.find(e => isEqualAddress(e, checkoutBillingAddress.value))?._id;
+      }
     };
 
     onMounted(async () => {
       await load();
+      await loadSavedAddresses();
       await loadCountries();
 
       if (form.value.country) {
         await loadStates(form.value.country);
       }
+
+      populateSelectedAddressId();
     });
 
     onSSR(async () => {
       await load();
+      await loadSavedAddresses();
       await loadCountries();
+
+      if (checkoutBillingAddress.value) {
+        form.value = _.omit(checkoutBillingAddress.value, ['_id']);
+      }
 
       if (form.value.country) {
         await loadStates(form.value.country);
       }
+
+      populateSelectedAddressId();
     });
 
     watch(() => form.value.country, async (newValue, oldValue) => {
@@ -277,11 +322,25 @@ export default {
       }
     });
 
+    onMounted(async () => {
+      await load();
+      await loadSavedAddresses();
+      await loadCountries();
+
+      if (checkoutBillingAddress.value) {
+        form.value = _.omit(checkoutBillingAddress.value, ['_id']);
+      }
+    });
+
     return {
+      isAuthenticated,
       form,
       countries,
       states,
       isStateRequired,
+      savedAddresses,
+      selectedSavedAddressId,
+      checkoutBillingAddress,
       handleFormSubmit
     };
   }

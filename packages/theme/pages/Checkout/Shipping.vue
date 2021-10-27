@@ -5,8 +5,14 @@
       :title="$t('Shipping')"
       class="sf-heading--left sf-heading--no-underline title"
     />
+    <AddressPicker
+      v-if="isAuthenticated && savedAddresses"
+      v-model="selectedSavedAddressId"
+      :addresses="savedAddresses.addresses"
+      :saved-address="checkoutShippingAddress"
+    />
     <form @submit.prevent="handleSubmit(handleFormSubmit)">
-      <div class="form">
+      <div v-if="!selectedSavedAddressId" class="form">
         <ValidationProvider
           v-if="!isAuthenticated"
           name="email"
@@ -214,9 +220,11 @@ import {
 } from '@storefront-ui/vue';
 import { ref, watch, computed, onMounted } from '@vue/composition-api';
 import { onSSR, useVSFContext } from '@vue-storefront/core';
-import { useShipping, useCountry, useUser } from '@vue-storefront/spree';
+import { useShipping, useCountry, useUser, useUserShipping } from '@vue-storefront/spree';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import AddressPicker from '~/components/Checkout/AddressPicker';
+import _ from 'lodash';
 
 extend('required', {
   ...required,
@@ -238,17 +246,20 @@ export default {
     SfInput,
     SfButton,
     SfSelect,
+    AddressPicker,
     ValidationProvider,
     ValidationObserver,
     VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
   },
   setup () {
     const isFormSubmitted = ref(false);
-    const { load, save, loading } = useShipping();
     const { countries, states, load: loadCountries, loadStates } = useCountry();
+    const { shipping: checkoutShippingAddress, load, save, loading } = useShipping();
+    const { shipping: savedAddresses, load: loadSavedAddresses } = useUserShipping();
     const { isAuthenticated } = useUser();
     const { $spree } = useVSFContext();
 
+    const selectedSavedAddressId = ref(undefined);
     const form = ref({
       email: '',
       firstName: '',
@@ -261,36 +272,84 @@ export default {
       postalCode: '',
       phone: null
     });
+
+    const selectedSavedAddress = computed(() => {
+      if (!selectedSavedAddressId.value) {
+        return undefined;
+      }
+
+      return savedAddresses.value.addresses.find(e => e._id === selectedSavedAddressId.value);
+    });
     const isStateRequired = computed(() => form.value.country && countries.value.find(e => e.key === form.value.country).stateRequired);
 
     const handleFormSubmit = async () => {
-      if (!isAuthenticated.value) await $spree.api.saveGuestCheckoutEmail(form.value.email);
-      await save({ shippingDetails: form.value });
+      if (!isAuthenticated.value) {
+        await $spree.api.saveGuestCheckoutEmail(form.value.email);
+      }
+
+      if (isAuthenticated.value && selectedSavedAddress.value) {
+        await save({ shippingDetails: selectedSavedAddress.value });
+      } else {
+        await save({ shippingDetails: form.value });
+      }
+
       isFormSubmitted.value = true;
+    };
+
+    const isEqualAddress = (a, b) => {
+      const aWithoutId = _.omit(a, ['_id']);
+      const bWithoutId = _.omit(b, ['_id']);
+      return _.isEqual(aWithoutId, bWithoutId);
+    };
+
+    const populateSelectedAddressId = () => {
+      if (checkoutShippingAddress.value && savedAddresses.value?.addresses) {
+        selectedSavedAddressId.value = savedAddresses.value.addresses.find(e => isEqualAddress(e, checkoutShippingAddress.value))?._id;
+      }
     };
 
     onMounted(async () => {
       await load();
+      await loadSavedAddresses();
       await loadCountries();
 
       if (form.value.country) {
         await loadStates(form.value.country);
       }
+
+      populateSelectedAddressId();
     });
 
     onSSR(async () => {
       await load();
+      await loadSavedAddresses();
       await loadCountries();
+
+      if (checkoutShippingAddress.value) {
+        form.value = _.omit(checkoutShippingAddress.value, ['_id']);
+      }
 
       if (form.value.country) {
         await loadStates(form.value.country);
       }
+
+      populateSelectedAddressId();
     });
 
     watch(() => form.value.country, async (newValue, oldValue) => {
       if (newValue !== oldValue) {
         form.value.state = null;
         await loadStates(newValue);
+      }
+    });
+
+    onMounted(async () => {
+      await load();
+      await loadSavedAddresses();
+      await loadCountries();
+
+      if (checkoutShippingAddress.value) {
+        form.value = _.omit(checkoutShippingAddress.value, ['_id']);
       }
     });
 
@@ -302,6 +361,9 @@ export default {
       form,
       countries,
       states,
+      savedAddresses,
+      selectedSavedAddressId,
+      checkoutShippingAddress,
       handleFormSubmit
     };
   }
