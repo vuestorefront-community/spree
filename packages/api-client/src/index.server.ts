@@ -32,6 +32,8 @@ import getShipments from './api/getShipments';
 import saveShippingMethod from './api/saveShippingMethod';
 import getPaymentMethods from './api/getPaymentMethods';
 import savePaymentMethod from './api/savePaymentMethod';
+import getPaymentConfirmationData from './api/getPaymentConfirmationData';
+import handlePaymentConfirmationResponse from './api/handlePaymentConfirmationResponse';
 import makeOrder from './api/makeOrder';
 
 const defaultSettings = {
@@ -100,6 +102,8 @@ const { createApiClient } = apiClientFactory<any, any>({
     saveShippingMethod,
     getPaymentMethods,
     savePaymentMethod,
+    getPaymentConfirmationData,
+    handlePaymentConfirmationResponse,
     makeOrder
   },
   extensions: [tokenExtension]
