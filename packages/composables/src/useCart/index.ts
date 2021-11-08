@@ -66,6 +66,10 @@ const params: UseCartFactoryParams<Cart, LineItem, ProductVariant> = {
   },
 
   isInCart: (_context: Context, { currentCart, product }) => {
+    if (!currentCart || !currentCart.lineItems) {
+      return false;
+    }
+
     return currentCart.lineItems.find(e => e._variantId === product._variantId) !== undefined;
   }
 };
