@@ -30,7 +30,8 @@ export const getCartItemSku = (lineItem: LineItem): string => lineItem.sku;
 export const getCartTotals = (cart: Cart): AgnosticTotals => {
   return {
     total: cart?.totalAmount || 0,
-    subtotal: cart?.itemTotalAmount || 0
+    subtotal: cart?.itemTotalAmount || 0,
+    special: cart?.itemTotalAmount || 0
   };
 };
 
