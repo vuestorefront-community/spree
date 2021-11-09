@@ -12,6 +12,10 @@ export type Address = {
   phone: string;
 };
 
+export type AddressWithEmail = Address & {
+  email: string | undefined;
+}
+
 export type ShippingRate = {
   id: string;
   methodId: string;
@@ -26,6 +30,7 @@ export type Shipment = {
 }
 
 export type Checkout = {
+  email: string;
   shippingAddress: Address;
   billingAddress: Address;
 };

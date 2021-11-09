@@ -1,16 +1,19 @@
 import { useShippingFactory, UseShippingParams, Context } from '@vue-storefront/core';
-import { Address } from '@vue-storefront/spree-api';
+import { AddressWithEmail } from '@vue-storefront/spree-api';
 
-const params: UseShippingParams<Address, any> = {
-  load: async (context: Context): Promise<Address> => {
+const params: UseShippingParams<AddressWithEmail, any> = {
+  load: async (context: Context): Promise<AddressWithEmail> => {
     const checkout = await context.$spree.api.getCheckout();
-    return checkout.shippingAddress;
+    return {
+      email: checkout.email,
+      ...checkout.shippingAddress
+    }
   },
 
-  save: async (context: Context, { shippingDetails }: { shippingDetails: Address }): Promise<Address> => {
+  save: async (context: Context, { shippingDetails }: { shippingDetails: AddressWithEmail }): Promise<AddressWithEmail> => {
     await context.$spree.api.saveCheckoutShippingAddress({ shippingAddress: shippingDetails });
     return shippingDetails;
   }
 };
 
-export default useShippingFactory<Address, any>(params);
+export default useShippingFactory<AddressWithEmail, any>(params);

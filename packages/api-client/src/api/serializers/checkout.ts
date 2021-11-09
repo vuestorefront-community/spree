@@ -15,6 +15,7 @@ export const deserializeCheckout = (checkout: OrderAttr, included: JsonApiDocume
   const billingAddressParams = included.find(e => e.type === 'address' && e.id === billingAddressId);
 
   return {
+    email: checkout.attributes.email,
     shippingAddress: shippingAddressParams ? deserializeAddress(shippingAddressParams) : undefined,
     billingAddress: billingAddressParams ? deserializeAddress(billingAddressParams) : undefined
   };
