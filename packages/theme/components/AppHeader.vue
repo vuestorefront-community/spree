@@ -61,7 +61,7 @@
           aria-label="Search"
           class="sf-header__search"
           :value="term"
-          @input="handleSearch"
+          @input="handleSearch($event)"
           @keydown.enter="handleSearch($event)"
           @focus="isSearchOpen = true"
           @keydown.esc="closeSearch"
