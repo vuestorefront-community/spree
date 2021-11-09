@@ -7,7 +7,7 @@ const params: UseShippingParams<AddressWithEmail, any> = {
     return {
       email: checkout.email,
       ...checkout.shippingAddress
-    }
+    };
   },
 
   save: async (context: Context, { shippingDetails }: { shippingDetails: AddressWithEmail }): Promise<AddressWithEmail> => {
