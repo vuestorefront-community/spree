@@ -1,22 +1,22 @@
 export default {
   home: {
     bannerA: {
-      link: '/',
+      link: '/c/categories/women',
       image: {
         mobile: '/homepage/bannerB.webp',
         desktop: '/homepage/bannerF.webp'
       }
     },
     bannerB: {
-      link: '/',
+      link: '/c/categories/women',
       image: '/homepage/bannerE.webp'
     },
     bannerC: {
-      link: '/',
+      link: '/c/categories/women',
       image: '/homepage/bannerC.webp'
     },
     bannerD: {
-      link: '/',
+      link: '/c/categories/women',
       image: '/homepage/bannerG.webp'
     }
   }
