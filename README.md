@@ -11,7 +11,9 @@ See it action: [Vue Storefront - Spree demo](https://vuestorefront-spree.upsidel
 
 This repository contains an Spree integration for [Vue Storefront 2](https://github.com/vuestorefront/vue-storefront/).
 
-This integration is being developed and maintained by [Upside](https://upsidelab.io)
+This integration is being developed and maintained by [Upside](https://upsidelab.io) 
+
+<a href="https://upsidelab.io"><img src="https://user-images.githubusercontent.com/6420475/141106487-333774a5-04b2-46a4-8367-7cb11e46906e.png" height="100px" /></a>
 
 Spree integration is currently in beta stage, with more updates and stable version coming soon.
 
