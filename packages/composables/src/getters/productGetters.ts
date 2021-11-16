@@ -52,10 +52,11 @@ export const getProductGallery = (product: ProductVariant): AgnosticMediaGallery
   const findBigImageStyle = (image: Image) => findImageStyleUrlByDimensions(image, 650, 870);
 
   return product.images.map((image) => ({
-    small: findSmallImageStyle(image),
-    normal: findNormalImageStyle(image),
-    big: findBigImageStyle(image)
-  }));
+    mobile: { url: findSmallImageStyle(image) },
+    desktop: { url: findNormalImageStyle(image) },
+    big: { url: findBigImageStyle(image) },
+    alt: product.name
+  })) as any;
 };
 
 export const getProductCoverImage = (product: ProductVariant): string => {
