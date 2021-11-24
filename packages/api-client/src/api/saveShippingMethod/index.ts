@@ -1,5 +1,6 @@
 import { ApiContext } from '../../types';
 import getCurrentCartToken from '../authentication/getCurrentCartToken';
+import { deserializeCartShipments } from '../serializers/shipping';
 
 export default async ({ client, config }: ApiContext, { selectedShippingRates }) => {
   try {
@@ -10,7 +11,8 @@ export default async ({ client, config }: ApiContext, { selectedShippingRates })
           id: shipmentId,
           selected_shipping_rate_id: shippingRateId.toString()
         }))
-      }
+      },
+      include: 'shipments,shipments.shipping_rates'
     });
 
     if (result.isFail()) {
@@ -23,7 +25,7 @@ export default async ({ client, config }: ApiContext, { selectedShippingRates })
       throw result.fail();
     }
 
-    return advancedCheckoutResult.success().data;
+    return deserializeCartShipments(result.success().included);
   } catch (e) {
     console.error(e);
     throw e;

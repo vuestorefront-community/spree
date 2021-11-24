@@ -8,11 +8,11 @@
     <SfRadio
       v-e2e="'shipping-method'"
       v-for="rate in shippingRates"
-      :key="rate.id"
-      :label="rate.name"
-      :value="rate.id"
-      :description="$n(rate.cost, 'currency')"
-      :selected ="selectedRateId"
+      :key="checkoutGetters.getShippingMethodId(rate)"
+      :label="checkoutGetters.getShippingMethodName(rate)"
+      :value="checkoutGetters.getShippingMethodId(rate)"
+      :description="$n(checkoutGetters.getShippingMethodPrice(rate), 'currency')"
+      :selected="selectedRateId"
       name="shippingMethod"
       class="form__radio"
       @input="selectRate(rate.id)"
@@ -22,6 +22,7 @@
 
 <script>
 import { SfHeading, SfRadio } from '@storefront-ui/vue';
+import { checkoutGetters } from '@vue-storefront/spree';
 
 export default {
   name: 'ShippingRatePicker',
@@ -44,7 +45,8 @@ export default {
 
   data() {
     return {
-      selectedRateId: null
+      selectedRateId: null,
+      checkoutGetters
     };
   },
 

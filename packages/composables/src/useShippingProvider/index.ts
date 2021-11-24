@@ -1,22 +1,22 @@
-import { useShippingProviderFactory, UseShippingProviderParams, Context } from '@vue-storefront/core';
-import { Shipping, ShippingMethod } from '../types';
+import {
+  useShippingProviderFactory,
+  UseShippingProviderParams,
+  Context
+} from '@vue-storefront/core';
+import { Shipment, ShippingMethod } from '@vue-storefront/spree-api/src/types';
 
-let provider = {};
-
-const params: UseShippingProviderParams<Shipping, ShippingMethod> = {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  load: async (context: Context, { customQuery }) => {
-    console.log('Mocked: loadShippingProvider');
-
-    return provider;
+const params: UseShippingProviderParams<Shipment[], ShippingMethod> = {
+  load: async (context: Context) => {
+    const shipments = await context.$spree.api.getShipments();
+    return shipments;
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  save: async (context: Context, { shippingMethod, customQuery }) => {
-    console.log('Mocked: saveShippingProvider');
-    provider = shippingMethod;
-    return provider;
+  save: async (context: Context, { shippingMethod }) => {
+    const shipments = await context.$spree.api.saveShippingMethod({
+      selectedShippingRates: shippingMethod
+    });
+    return shipments;
   }
 };
 
-export default useShippingProviderFactory<Shipping, ShippingMethod>(params);
+export default useShippingProviderFactory<Shipment[], ShippingMethod>(params);
