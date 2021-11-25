@@ -5,16 +5,16 @@ import {
 } from '@vue-storefront/core';
 
 const factoryParams: UseForgotPasswordFactoryParams<any> = {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  resetPassword: async (context: Context, { email, customQuery }) => {
-    console.log('Mocked: resetPassword');
-    return {};
+  resetPassword: async (context: Context, { email }) => {
+    await context.$spree.api.forgotPassword(email);
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  setNewPassword: async (context: Context, { tokenValue, newPassword, customQuery }) => {
-    console.log('Mocked: setNewPassword');
-    return {};
+  setNewPassword: async (context: Context, { tokenValue, newPassword }) => {
+    await context.$spree.api.resetPassword({
+      token: tokenValue,
+      password: newPassword
+    });
   }
 };
 

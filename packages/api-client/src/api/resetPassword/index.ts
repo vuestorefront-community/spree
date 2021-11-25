@@ -1,13 +1,10 @@
-import { ApiContext, ResetPasswordParams } from '../..';
+import { ApiContext, ResetPasswordParams } from '../../types';
 
-export default async function resetPassword(
-  { client }: ApiContext,
-  { token, password, passwordConfirmation }: ResetPasswordParams
-): Promise<void> {
+export default async function resetPassword({ client }: ApiContext, { token, password }: ResetPasswordParams): Promise<void> {
   const result = await client.account.resetPassword(token, {
     user: {
       password,
-      password_confirmation: passwordConfirmation
+      password_confirmation: password
     }
   });
 
