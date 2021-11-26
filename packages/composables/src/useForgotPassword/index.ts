@@ -3,21 +3,27 @@ import {
   useForgotPasswordFactory,
   UseForgotPasswordFactoryParams
 } from '@vue-storefront/core';
+import { PasswordResetResult } from '../types';
 
-const factoryParams: UseForgotPasswordFactoryParams<any> = {
+const factoryParams: UseForgotPasswordFactoryParams<PasswordResetResult> = {
   resetPassword: async (context: Context, { email }) => {
     await context.$spree.api.forgotPassword(email);
+
+    return {};
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setNewPassword: async (context: Context, { tokenValue, newPassword }) => {
     await context.$spree.api.resetPassword({
       token: tokenValue,
       password: newPassword
     });
+
+    return {
+      isPasswordChanged: true
+    };
   }
 };
 
-const useForgotPassword = useForgotPasswordFactory<any>(factoryParams);
+const useForgotPassword = useForgotPasswordFactory<PasswordResetResult>(factoryParams);
 
 export default useForgotPassword;

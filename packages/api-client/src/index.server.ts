@@ -35,6 +35,8 @@ import savePaymentMethod from './api/savePaymentMethod';
 import getPaymentConfirmationData from './api/getPaymentConfirmationData';
 import handlePaymentConfirmationResponse from './api/handlePaymentConfirmationResponse';
 import makeOrder from './api/makeOrder';
+import forgotPassword from './api/forgotPassword';
+import resetPassword from './api/resetPassword';
 
 const defaultSettings = {
   backendUrl: 'https://demo.spreecommerce.org',
@@ -104,7 +106,9 @@ const { createApiClient } = apiClientFactory<any, any>({
     savePaymentMethod,
     getPaymentConfirmationData,
     handlePaymentConfirmationResponse,
-    makeOrder
+    makeOrder,
+    forgotPassword,
+    resetPassword
   },
   extensions: [tokenExtension]
 });
