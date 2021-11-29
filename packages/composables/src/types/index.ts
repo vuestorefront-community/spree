@@ -87,3 +87,7 @@ export type SearchData = {
   facets: AgnosticGroupedFacet[];
   itemsPerPage: number;
 };
+
+export type PasswordResetResult = {
+  isPasswordChanged?: boolean;
+};

@@ -27,3 +27,5 @@ module.exports = {
 };
 
 ```
+
+In order for the password reset feature to work properly, you need to change the URL of password reset emails to point to: `/resetPassword?token=...`

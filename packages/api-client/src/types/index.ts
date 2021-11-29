@@ -73,3 +73,8 @@ export type GetProductsParams = {
 export type GetProductParams = {
   slug: string;
 };
+
+export type ResetPasswordParams = {
+  token: string;
+  password: string;
+};

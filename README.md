@@ -94,7 +94,7 @@ For more details, refer to the official [architecture diagram](https://docs.vues
 | Product catalog | Available | Default implementation uses /v2/storefront/products endpoint for filtering, it's advisable to use ElasticSearch for best performance | Product details page | Available | |
 | Account | Partial | Requires Spree 4.2 |
 | Account - saved addresses | Available | Requires Spree 4.2 |
-| Account - reset password | Coming soon | VSF doesn't contain pages for resetting password, but we'll provide composables for handling this logic |
+| Account - reset password | Available | URL from password reset emails should point to: `/resetPassword?token=...` |
 | Account - order history | Available | |
 | Cart | Available | Fully functional. Associating guest orders upon login requires Spree 4.3 and needs to be enable via configuration |
 | Checkout | Available | |
