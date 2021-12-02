@@ -92,12 +92,22 @@ export default {
   i18n: {
     currency: 'USD',
     country: 'US',
-    locales: ['en'],
+    locales: [
+      {
+        code: 'en',
+        file: 'en.js'
+      },
+      {
+        code: 'de',
+        file: 'de.js'
+      }
+    ],
     defaultLocale: 'en',
     strategy: 'no_prefix',
     currencies: [
       { name: 'USD', label: 'Dollar' }
     ],
+    langDir: 'lang/',
     vueI18n: {
       silentTranslationWarn: true,
       fallbackLocale: 'en',
@@ -108,14 +118,6 @@ export default {
             currency: 'USD',
             currencyDisplay: 'symbol'
           }
-        }
-      },
-      messages: {
-        en: {
-          welcome: 'Welcome 1'
-        },
-        de: {
-          welcome: 'Welcome 2'
         }
       }
     }
