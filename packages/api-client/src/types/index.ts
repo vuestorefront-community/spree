@@ -68,10 +68,13 @@ export type GetProductsParams = {
   page: number;
   itemsPerPage: number;
   sort: string;
+
+  currency: string;
 }
 
 export type GetProductParams = {
   slug: string;
+  currency: string;
 };
 
 export type ResetPasswordParams = {

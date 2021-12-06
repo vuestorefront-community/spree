@@ -1,7 +1,7 @@
 import { ApiContext, GetProductParams, ProductVariant } from '../../types';
 import { addHostToProductImages, deserializeSingleProductVariants } from '../serializers/product';
 
-export default async function getProduct({ client, config }: ApiContext, { slug }: GetProductParams): Promise<ProductVariant[]> {
+export default async function getProduct({ client, config }: ApiContext, { slug, currency }: GetProductParams): Promise<ProductVariant[]> {
   let include;
 
   if (config.spreeFeatures.fetchPrimaryVariant) {
@@ -18,8 +18,9 @@ export default async function getProduct({ client, config }: ApiContext, { slug 
         product: 'name,slug,sku,description,primary_variant,default_variant,variants,option_types,product_properties,taxons',
         variant: 'sku,price,display_price,in_stock,product,images,option_values,is_master'
       },
-      include
-    }
+      include,
+      currency
+    },
   );
 
   if (result.isSuccess()) {

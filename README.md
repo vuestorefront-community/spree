@@ -99,7 +99,7 @@ For more details, refer to the official [architecture diagram](https://docs.vues
 | Checkout - Shipping methods | Available | |
 | Checkout - Payment methods | Partial | Only "Cash" supported out of the box. Additional changes need to be made in backend to support OOB support for providers like Stripe. This will be available in the next version of Spree's API. |
 | Wishlists | Coming soon | This will be integrated with the API provided by the latest version of spree_wishlist |
-| Multi-currency support | Coming soon | Requires Spree 4.2 |
+| Multi-currency support | Partial | |
 
 ## Caching and performance concerns
 
