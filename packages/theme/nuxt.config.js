@@ -96,10 +96,12 @@ export default {
     locales: [
       {
         code: 'en',
+        label: 'English',
         file: 'en.js'
       },
       {
         code: 'de',
+        label: 'German',
         file: 'de.js'
       }
     ],
@@ -120,8 +122,18 @@ export default {
             currency: 'USD',
             currencyDisplay: 'symbol'
           }
+        },
+        de: {
+          currency: {
+            style: 'currency',
+            currency: 'EUR',
+            currencyDisplay: 'symbol'
+          }
         }
-      }
+      },
+    },
+    detectBrowserLanguage: {
+      cookieKey: 'vsf-locale'
     }
   },
   pwa: {
