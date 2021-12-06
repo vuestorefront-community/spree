@@ -28,9 +28,3 @@ export type Shipment = {
   id: string;
   availableShippingRates: ShippingRate[];
 }
-
-export type Checkout = {
-  email: string;
-  shippingAddress: Address;
-  billingAddress: Address;
-};
