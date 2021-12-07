@@ -2,6 +2,7 @@ import { GetProductsParams } from '@vue-storefront/spree-api';
 import { Context, useFacetFactory, FacetSearchResult } from '@vue-storefront/core';
 import { SearchData, SearchParams } from '../types';
 import { buildPriceFacet } from './price';
+import { getCurrencyCookie } from '../utils/cookies';
 
 const factoryParams = {
   search: async (context: Context, params: FacetSearchResult<SearchData>): Promise<SearchData> => {
@@ -16,7 +17,8 @@ const factoryParams = {
       priceFilter: searchParams.priceFilter,
       page: searchParams.page,
       itemsPerPage: searchParams.itemsPerPage,
-      sort: searchParams.sort
+      sort: searchParams.sort,
+      currency: getCurrencyCookie(context)
     };
     const productsResponse = await context.$spree.api.getProducts(getProductsParams);
 
