@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { ApiContext } from '../../types';
+import { ApiContext, GetCartParams } from '../../types';
 import getCurrentCartToken from '../authentication/getCurrentCartToken';
 
-export default async function changeCurrency({ config }: ApiContext, { currency }) {
+export default async function changeCurrency({ config }: ApiContext, { currency }: GetCartParams) {
   try {
     const token = await getCurrentCartToken(config);
     const response = await axios.patch(
