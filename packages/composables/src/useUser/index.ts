@@ -8,6 +8,7 @@ import {
 import { User } from '../types';
 import useCart from '../useCart';
 import { handleApiErrorResponse, extractApiErrorSummary } from '../utils/error';
+import { getCurrencyCookie } from '../utils/cookies';
 
 const params: UseUserFactoryParams<User, any, any> = {
   provide() {
@@ -50,7 +51,7 @@ const params: UseUserFactoryParams<User, any, any> = {
       const guestCartToken = context.cart?.value?.token;
       await context.$spree.api.logIn({ username, password, guestCartToken });
 
-      const cart = await context.$spree.api.getCart();
+      const cart = await context.$spree.api.getCart({currency: getCurrencyCookie(context)});
       context.setCart(cart);
 
       return {};
