@@ -63,3 +63,8 @@ export type ClearCartParams = {
 export type GetCartParams = {
   currency: string;
 }
+
+export type GetChangeCartParams = {
+  currency: string;
+  newCurrency: string;
+}

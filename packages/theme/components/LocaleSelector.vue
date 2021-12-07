@@ -77,11 +77,15 @@ export default {
     const currency = root.$cookies.get('vsf-currency')
 
     const cartChangeCurrency = async (code, locale) => {
-      root.$cookies.set('vsf-currency', code)
-      root.$cookies.set('vsf-locale', locale)
+      const response = await $spree.api.changeCurrency({
+        currency: currency,
+        newCurrency: code
+      });
 
-      await $spree.api.changeCurrency({currency: code});
-
+      if (response){
+        root.$cookies.set('vsf-currency', code)
+        root.$cookies.set('vsf-locale', locale)
+      }
       window.location.reload()
     }
     
