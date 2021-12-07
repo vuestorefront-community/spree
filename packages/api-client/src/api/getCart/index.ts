@@ -1,4 +1,4 @@
-import { ApiContext, Cart } from '../../types';
+import { ApiContext, Cart, GetCartParams } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializeCart } from '../serializers/cart';
 import { cartParams } from '../common/cart';
@@ -26,7 +26,7 @@ const emptyCart: Cart = {
   token: undefined
 };
 
-export default async function getCart({ client, config }: ApiContext): Promise<Cart> {
+export default async function getCart({ client, config }: ApiContext, { currency }: GetCartParams): Promise<Cart> {
   try {
     const token = await getCurrentBearerOrCartToken({ client, config });
 
@@ -37,7 +37,10 @@ export default async function getCart({ client, config }: ApiContext): Promise<C
       return emptyCart;
     }
 
-    const result = await client.cart.show(token, cartParams);
+    const result = await client.cart.show(token, {
+      ...cartParams,
+      currency: currency
+    });
 
     if (result.isSuccess()) {
       const payload = result.success();

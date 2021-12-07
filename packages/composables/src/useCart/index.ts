@@ -6,6 +6,7 @@ import {
   UseCartFactoryParams
 } from '@vue-storefront/core';
 import { Cart, LineItem, ProductVariant } from '../types';
+import { getCurrencyCookie } from '../utils/cookies';
 
 const loadOrCreateCartToken = async (context: Context, currentCart: Cart): Promise<string> => {
   if (currentCart && currentCart.token) {
@@ -18,7 +19,7 @@ const loadOrCreateCartToken = async (context: Context, currentCart: Cart): Promi
 
 const params: UseCartFactoryParams<Cart, LineItem, ProductVariant> = {
   load: async (context: Context) => {
-    const cart = await context.$spree.api.getCart();
+    const cart = await context.$spree.api.getCart({currency: getCurrencyCookie(context)});
     return cart;
   },
 
@@ -43,7 +44,7 @@ const params: UseCartFactoryParams<Cart, LineItem, ProductVariant> = {
   clear: async (context: Context, { currentCart }) => {
     const token = await loadOrCreateCartToken(context, currentCart);
     await context.$spree.api.clearCart({ token });
-    const cart = await context.$spree.api.getCart();
+    const cart = await context.$spree.api.getCart({currency: getCurrencyCookie(context)});
     return cart;
   },
 
@@ -54,14 +55,14 @@ const params: UseCartFactoryParams<Cart, LineItem, ProductVariant> = {
     } catch (e) {
       throw e.response?.data?.summary ? new Error(e.response.data.summary) : e;
     }
-    const cart = await context.$spree.api.getCart();
+    const cart = await context.$spree.api.getCart({currency: getCurrencyCookie(context)});
     return cart;
   },
 
   removeCoupon: async (context: Context, { currentCart, couponCode }) => {
     const token = await loadOrCreateCartToken(context, currentCart);
     await context.$spree.api.removeCoupon({ token, couponCode });
-    const cart = await context.$spree.api.getCart();
+    const cart = await context.$spree.api.getCart({currency: getCurrencyCookie(context)});
     return cart;
   },
 
