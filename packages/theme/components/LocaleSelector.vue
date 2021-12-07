@@ -80,7 +80,7 @@ export default {
       root.$cookies.set('vsf-currency', code)
       root.$cookies.set('vsf-locale', locale)
 
-      const response = await $spree.api.changeCurrency();
+      await $spree.api.changeCurrency({currency: code});
 
       window.location.reload()
     }
