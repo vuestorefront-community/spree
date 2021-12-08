@@ -200,9 +200,9 @@ export default {
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
     const { reviews: productReviews, search: searchReviews } = useReview('productReviews');
-    const { id, slug, query, path } = route.value.params;
+    const { id, slug } = route.value.params;
 
-    const product = computed(() => productGetters.getFiltered(products.value, { master: true, attributes: query })[0]);
+    const product = computed(() => productGetters.getFiltered(products.value, { master: true, attributes: route.value.query })[0]);
     const optionTypes = computed(() => productGetters.getOptionTypeNames(product.value));
     const options = computed(() => productGetters.getAttributes(products.value, optionTypes.value));
     const configuration = computed(() => productGetters.getAttributes(product.value, optionTypes.value));
@@ -221,7 +221,7 @@ export default {
 
     const updateFilter = (filter) => {
       router.push({
-        path,
+        path: route.value.path,
         query: {
           ...configuration.value,
           ...filter
