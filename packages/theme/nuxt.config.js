@@ -44,7 +44,7 @@ export default {
     ]
   },
   loading: { color: '#fff' },
-  plugins: [],
+  plugins: ['~/plugins/i18n.js'],
   buildModules: [
     // to core
     '@nuxtjs/composition-api/module',
@@ -132,9 +132,7 @@ export default {
         }
       },
     },
-    detectBrowserLanguage: {
-      cookieKey: 'vsf-locale'
-    }
+    detectBrowserLanguage: false
   },
   pwa: {
     meta: {
