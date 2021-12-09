@@ -34,7 +34,7 @@
       <SfList>
         <SfListItem v-for="currency in availableCurrencies" :key="currency.code">
           <span @click="cartChangeCurrency(currency.code, currency.locale)">
-            <SfCharacteristic class="currencyuage">
+            <SfCharacteristic class="currency">
               <template #title>
                 {{ currency.code }}
               </template>
@@ -77,16 +77,27 @@ export default {
     const currency = root.$cookies.get('vsf-currency')
 
     const cartChangeCurrency = async (code, locale) => {
-      const response = await $spree.api.changeCurrency({
-        currency: currency,
-        newCurrency: code
-      });
+      const token = root.$cookies.get('spree-cart-token');
+      
+      if (token){
+        const response = await $spree.api.changeCurrency({
+          currency: currency,
+          newCurrency: code
+        });
 
-      if (response){
-        root.$cookies.set('vsf-currency', code)
-        root.$cookies.set('vsf-locale', locale)
+        if (response){
+          updateLocaleCookies(code, locale);
+        }
+      } else {
+        updateLocaleCookies(code, locale)
       }
+      
       window.location.reload()
+    }
+
+    function updateLocaleCookies(code, locale){
+      root.$cookies.set('vsf-currency', code)
+      root.$cookies.set('vsf-locale', locale)
     }
     
     Object.entries(numberFormats).forEach(([country]) => {
@@ -133,6 +144,11 @@ export default {
       padding: var(--spacer-sm) 0;
     }
 
+    .currency {
+      padding: var(--spacer-sm) 0;
+      cursor: pointer;
+    }
+
     @include for-desktop {
       display: flex;
     }
@@ -164,6 +180,7 @@ export default {
     background: none;
     --button-box-shadow: none;
     font-weight: normal;
+
     &:hover,
     &--selected {
       color: var(--c-text);
