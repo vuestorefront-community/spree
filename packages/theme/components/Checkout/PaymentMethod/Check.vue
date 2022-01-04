@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { onMounted } from '@vue/composition-api';
+import { onMounted } from '@nuxtjs/composition-api';
 import { useVSFContext } from '@vue-storefront/core';
 
 export default {

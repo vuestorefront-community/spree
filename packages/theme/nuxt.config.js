@@ -47,10 +47,12 @@ export default {
   plugins: [],
   buildModules: [
     // to core
+    '@nuxtjs/composition-api/module',
     '@nuxt/typescript-build',
     '@nuxtjs/google-fonts',
     '@nuxtjs/pwa',
     '@nuxtjs/style-resources',
+    ['@vue-storefront/spree/nuxt', {}],
     ['@vue-storefront/nuxt', {
       // @core-development-only-start
       coreDevelopment: true,
@@ -74,12 +76,11 @@ export default {
           composables: '@vue-storefront/spree'
         }
       }
-    }],
+    }]
     // @core-development-only-end
     /* project-only-start
     ['@vue-storefront/nuxt-theme'],
     project-only-end */
-    ['@vue-storefront/spree/nuxt', {}]
   ],
   modules: [
     ['nuxt-i18n', {
@@ -104,6 +105,7 @@ export default {
     ],
     defaultLocale: 'en',
     strategy: 'no_prefix',
+    detectBrowserLanguage: false,
     currencies: [
       { name: 'USD', label: 'Dollar' }
     ],

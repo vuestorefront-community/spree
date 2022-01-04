@@ -1,5 +1,5 @@
 import { sharedRef, useVSFContext } from '@vue-storefront/core';
-import { computed } from '@vue/composition-api';
+import { computed } from '@nuxtjs/composition-api';
 import { UseCountry } from '../types';
 
 export default function useCountry(id: string): UseCountry {

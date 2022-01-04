@@ -25,7 +25,7 @@
 
 <script>
 import { SfButton, SfRadio } from '@storefront-ui/vue';
-import { ref, onMounted, computed } from '@vue/composition-api';
+import { ref, onMounted, computed } from '@nuxtjs/composition-api';
 import { useVSFContext } from '@vue-storefront/core';
 import Stripe from '~/components/Checkout/PaymentMethod/Stripe';
 import Check from '~/components/Checkout/PaymentMethod/Check';
