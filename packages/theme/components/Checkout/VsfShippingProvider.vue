@@ -22,7 +22,7 @@
 
 <script>
 import { SfButton } from '@storefront-ui/vue';
-import { computed, ref, onMounted } from '@vue/composition-api';
+import { computed, ref, onMounted } from '@nuxtjs/composition-api';
 import { Logger, useVSFContext } from '@vue-storefront/core';
 import { useCart } from '@vue-storefront/spree';
 import ShippingRatePicker from '~/components/Checkout/ShippingRatePicker.vue';
