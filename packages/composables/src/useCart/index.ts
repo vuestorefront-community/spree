@@ -30,13 +30,13 @@ const params: UseCartFactoryParams<Cart, LineItem, ProductVariant> = {
 
   removeItem: async (context: Context, { currentCart, product }) => {
     const token = await loadOrCreateCartToken(context, currentCart);
-    const cart = await context.$spree.api.removeFromCart({ lineItemId: product._id, token });
+    const cart = await context.$spree.api.removeFromCart({ lineItemId: product.id, token });
     return cart;
   },
 
   updateItemQty: async (context: Context, { currentCart, product, quantity }) => {
     const token = await loadOrCreateCartToken(context, currentCart);
-    const cart = await context.$spree.api.updateItemQuantity({ lineItemId: product._id, quantity, token });
+    const cart = await context.$spree.api.updateItemQuantity({ lineItemId: product.id, quantity, token });
     return cart;
   },
 
