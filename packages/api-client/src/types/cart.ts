@@ -1,7 +1,7 @@
 import { Address } from './checkout';
 
 export type LineItem = {
-  _id: number;
+  id: number;
   _variantId: number;
   _description: string;
   _categoriesRef: string[];
