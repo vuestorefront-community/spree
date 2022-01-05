@@ -38,7 +38,7 @@ const deserializeLineItem = (lineItem: any, attachments: any[], config: any): Li
     : '';
 
   return {
-    _id: parseInt(lineItem.id, 10),
+    id: parseInt(lineItem.id, 10),
     _variantId: parseInt(variant.id, 10),
     _description: '',
     _categoriesRef: [],
