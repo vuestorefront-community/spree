@@ -1,14 +1,14 @@
 import { ForgotPasswordGetters } from '@vue-storefront/core';
-import type { PasswordResetResult } from '@vue-storefront/spree-api';
+import { PasswordResetResult } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getResetPasswordToken(result: PasswordResetResult): string {
+  // reset password token is provided by query param
   return '';
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function isPasswordChanged(result: PasswordResetResult): boolean {
-  return true;
+  return result.isPasswordChanged;
 }
 
 const forgotPasswordGetters: ForgotPasswordGetters<PasswordResetResult> = {

@@ -23,7 +23,7 @@ export default async function logIn({ client, config }: ApiContext, params): Pro
     const bearerToken = response.success();
     await config.auth.changeOAuthToken(bearerToken);
 
-    if (config.spreeFeatures.associateGuestCart) {
+    if (config.spreeFeatures.associateGuestCart && guestCartToken) {
       await associateCart(config, guestCartToken, bearerToken);
     }
   } else {

@@ -47,10 +47,12 @@ export default {
   plugins: [],
   buildModules: [
     // to core
+    '@nuxtjs/composition-api/module',
     '@nuxt/typescript-build',
     '@nuxtjs/google-fonts',
     '@nuxtjs/pwa',
     '@nuxtjs/style-resources',
+    ['@vue-storefront/spree/nuxt', {}],
     ['@vue-storefront/nuxt', {
       // @core-development-only-start
       coreDevelopment: true,
@@ -74,12 +76,11 @@ export default {
           composables: '@vue-storefront/spree'
         }
       }
-    }],
+    }]
     // @core-development-only-end
     /* project-only-start
     ['@vue-storefront/nuxt-theme'],
     project-only-end */
-    ['@vue-storefront/spree/nuxt', {}]
   ],
   modules: [
     ['nuxt-i18n', {
@@ -92,12 +93,23 @@ export default {
   i18n: {
     currency: 'USD',
     country: 'US',
-    locales: ['en'],
+    locales: [
+      {
+        code: 'en',
+        file: 'en.js'
+      },
+      {
+        code: 'de',
+        file: 'de.js'
+      }
+    ],
     defaultLocale: 'en',
     strategy: 'no_prefix',
+    detectBrowserLanguage: false,
     currencies: [
       { name: 'USD', label: 'Dollar' }
     ],
+    langDir: 'lang/',
     vueI18n: {
       silentTranslationWarn: true,
       fallbackLocale: 'en',
@@ -108,14 +120,6 @@ export default {
             currency: 'USD',
             currencyDisplay: 'symbol'
           }
-        }
-      },
-      messages: {
-        en: {
-          welcome: 'Welcome 1'
-        },
-        de: {
-          welcome: 'Welcome 2'
         }
       }
     }

@@ -1,6 +1,7 @@
 <template>
   <ValidationObserver v-slot="{ handleSubmit }">
     <SfHeading
+      v-e2e="'shipping-heading'"
       :level="3"
       :title="$t('Shipping')"
       class="sf-heading--left sf-heading--no-underline title"
@@ -36,6 +37,7 @@
           slim
         >
           <SfInput
+            v-e2e="'shipping-firstName'"
             v-model="form.firstName"
             label="First name"
             name="firstName"
@@ -52,6 +54,7 @@
           slim
         >
           <SfInput
+            v-e2e="'shipping-lastName'"
             v-model="form.lastName"
             label="Last name"
             name="lastName"
@@ -68,6 +71,7 @@
           slim
         >
           <SfInput
+            v-e2e="'shipping-streetName'"
             v-model="form.addressLine1"
             label="Street name"
             name="streetName"
@@ -84,6 +88,7 @@
           slim
         >
           <SfInput
+            v-e2e="'shipping-apartment'"
             v-model="form.addressLine2"
             label="House/Apartment number"
             name="apartment"
@@ -100,6 +105,7 @@
           slim
         >
           <SfInput
+            v-e2e="'shipping-city'"
             v-model="form.city"
             label="City"
             name="city"
@@ -112,6 +118,7 @@
         <ValidationProvider
           v-if="states && states.length > 0"
           v-slot="{ errors }"
+          name="state"
           rules="required"
           slim
         >
@@ -141,6 +148,7 @@
           slim
         >
           <SfSelect
+            v-e2e="'shipping-country'"
             v-model="form.country"
             label="Country"
             name="country"
@@ -165,6 +173,7 @@
           slim
         >
           <SfInput
+            v-e2e="'shipping-zipcode'"
             v-model="form.postalCode"
             label="Zip-code"
             name="zipCode"
@@ -181,6 +190,7 @@
           slim
         >
           <SfInput
+            v-e2e="'shipping-phone'"
             v-model="form.phone"
             label="Phone number"
             name="phone"
@@ -205,7 +215,7 @@
       </div>
       <VsfShippingProvider
         v-if="isFormSubmitted"
-        @submit="$router.push('/checkout/billing')"
+        @submit="router.push(localePath({ name: 'billing' }))"
       />
     </form>
   </ValidationObserver>
@@ -218,7 +228,7 @@ import {
   SfButton,
   SfSelect
 } from '@storefront-ui/vue';
-import { ref, watch, computed, onMounted } from '@vue/composition-api';
+import { ref, watch, computed, onMounted, useRouter } from '@nuxtjs/composition-api';
 import { onSSR, useVSFContext } from '@vue-storefront/core';
 import { useShipping, useCountry, useUser, useUserShipping } from '@vue-storefront/spree';
 import { required, min, digits } from 'vee-validate/dist/rules';
@@ -252,6 +262,7 @@ export default {
     VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
   },
   setup () {
+    const router = useRouter();
     const isFormSubmitted = ref(false);
     const { countries, states, load: loadCountries, loadStates } = useCountry();
     const { shipping: checkoutShippingAddress, load, save, loading } = useShipping();
@@ -317,6 +328,10 @@ export default {
         await loadStates(form.value.country);
       }
 
+      if (checkoutShippingAddress.value) {
+        form.value = _.omit(checkoutShippingAddress.value, ['_id']);
+      }
+
       populateSelectedAddressId();
     });
 
@@ -325,12 +340,12 @@ export default {
       await loadSavedAddresses();
       await loadCountries();
 
-      if (checkoutShippingAddress.value) {
-        form.value = _.omit(checkoutShippingAddress.value, ['_id']);
-      }
-
       if (form.value.country) {
         await loadStates(form.value.country);
+      }
+
+      if (checkoutShippingAddress.value) {
+        form.value = _.omit(checkoutShippingAddress.value, ['_id']);
       }
 
       populateSelectedAddressId();
@@ -343,17 +358,8 @@ export default {
       }
     });
 
-    onMounted(async () => {
-      await load();
-      await loadSavedAddresses();
-      await loadCountries();
-
-      if (checkoutShippingAddress.value) {
-        form.value = _.omit(checkoutShippingAddress.value, ['_id']);
-      }
-    });
-
     return {
+      router,
       loading,
       isFormSubmitted,
       isAuthenticated,

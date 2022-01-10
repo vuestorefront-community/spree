@@ -17,11 +17,16 @@
       class="form__radio"
       @input="selectRate(rate.id)"
     />
+    <SfAlert
+      v-if="!areShippingRatesAvailable"
+      message="There is no shipping method available for this shipment"
+      type="warning"
+    />
   </div>
 </template>
 
 <script>
-import { SfHeading, SfRadio } from '@storefront-ui/vue';
+import { SfHeading, SfRadio, SfAlert } from '@storefront-ui/vue';
 import { checkoutGetters } from '@vue-storefront/spree';
 
 export default {
@@ -29,7 +34,8 @@ export default {
 
   components: {
     SfHeading,
-    SfRadio
+    SfRadio,
+    SfAlert
   },
 
   props: {
@@ -53,6 +59,9 @@ export default {
   computed: {
     shippingRates() {
       return this.shipment.availableShippingRates;
+    },
+    areShippingRatesAvailable() {
+      return this.shippingRates.length > 0;
     }
   },
 
