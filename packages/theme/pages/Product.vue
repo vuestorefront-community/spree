@@ -38,18 +38,18 @@
                 ({{ totalReviews }})
               </a>
             </div>
-            <SfButton data-cy="product-btn_read-all" class="sf-button--text">{{ $t('Read all reviews') }}</SfButton>
+            <SfButton class="sf-button--text">{{ $t('Read all reviews') }}</SfButton>
           </div>
         </div>
         <div>
           <p class="product__description desktop-only">
             {{ productGetters.getDescription(product) }}
           </p>
-          <SfButton data-cy="product-btn_size-guide" class="sf-button--text desktop-only product__guide">
+          <SfButton class="sf-button--text desktop-only product__guide">
             {{ $t('Size guide') }}
           </SfButton>
           <SfSelect
-            data-cy="product-select_size"
+            v-e2e="'size-select'"
             v-if="options.size"
             :value="configuration.size"
             @input="size => updateFilter({ size })"
@@ -68,17 +68,16 @@
           <div v-if="options.color && options.color.length > 1" class="product__colors desktop-only">
             <p class="product__color-label">{{ $t('Color') }}:</p>
             <SfColor
-              data-cy="product-color_update"
               v-for="(color, i) in options.color"
               :key="i"
               :color="color.value"
               :selected="color.value === configuration.color"
               class="product__color"
-              @click="updateFilter({color: color.value})"
+              @click="updateFilter({ color: color.value })"
             />
           </div>
           <SfAddToCart
-            data-cy="product-cart_add"
+            v-e2e="'product_add-to-cart'"
             v-model="qty"
             :disabled="loading || !isInStock"
             class="product__add-to-cart"
@@ -88,7 +87,7 @@
 
         <LazyHydrate when-idle>
           <SfTabs :open-tab="1" class="product__tabs">
-            <SfTab data-cy="product-tab_description" title="Description">
+            <SfTab title="Description">
               <div class="product__description">
                   {{ $t('Product description') }}
               </div>
@@ -106,7 +105,7 @@
                 </template>
               </SfProperty>
             </SfTab>
-            <SfTab title="Read reviews" data-cy="product-tab_reviews">
+            <SfTab title="Read reviews">
               <SfReview
                 v-for="review in reviews"
                 :key="reviewGetters.getReviewId(review)"
@@ -123,7 +122,6 @@
             </SfTab>
             <SfTab
               title="Additional Information"
-              data-cy="product-tab_additional"
               class="product__additional-info"
             >
             <div class="product__additional-info">
@@ -156,10 +154,6 @@
       <InstagramFeed />
     </LazyHydrate>
 
-    <LazyHydrate when-visible>
-      <MobileStoreBanner />
-    </LazyHydrate>
-
   </div>
 </template>
 <script>
@@ -185,24 +179,30 @@ import {
 
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
-import { ref, computed } from '@vue/composition-api';
+import { ref, computed, useRoute, useRouter } from '@nuxtjs/composition-api';
 import { useProduct, useCart, productGetters, useReview, reviewGetters } from '@vue-storefront/spree';
 import { onSSR } from '@vue-storefront/core';
-import MobileStoreBanner from '~/components/MobileStoreBanner.vue';
 import LazyHydrate from 'vue-lazy-hydration';
+import cacheControl from './../helpers/cacheControl';
 
 export default {
   name: 'Product',
   transition: 'fade',
-  setup(props, context) {
+  middleware: cacheControl({
+    'max-age': 60,
+    'stale-when-revalidate': 5
+  }),
+  setup() {
     const qty = ref(1);
-    const { id, slug } = context.root.$route.params;
+    const route = useRoute();
+    const router = useRouter();
     const { products, search } = useProduct('products');
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
     const { reviews: productReviews, search: searchReviews } = useReview('productReviews');
+    const { id, slug } = route.value.params;
 
-    const product = computed(() => productGetters.getFiltered(products.value, { master: true, attributes: context.root.$route.query })[0]);
+    const product = computed(() => productGetters.getFiltered(products.value, { master: true, attributes: route.value.query })[0]);
     const optionTypes = computed(() => productGetters.getOptionTypeNames(product.value));
     const options = computed(() => productGetters.getAttributes(products.value, optionTypes.value));
     const configuration = computed(() => productGetters.getAttributes(product.value, optionTypes.value));
@@ -211,9 +211,6 @@ export default {
     const breadcrumbs = computed(() => productGetters.getBreadcrumbs(product.value));
     const isInStock = computed(() => productGetters.getInStock(product.value));
     const reviews = computed(() => reviewGetters.getItems(productReviews.value));
-
-    // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
-    // const breadcrumbs = computed(() => productGetters.getBreadcrumbs ? productGetters.getBreadcrumbs(product.value) : props.fallbackBreadcrumbs);
     const productGallery = computed(() => productGetters.getGallery(product.value));
 
     onSSR(async () => {
@@ -223,8 +220,8 @@ export default {
     });
 
     const updateFilter = (filter) => {
-      context.root.$router.push({
-        path: context.root.$route.path,
+      router.push({
+        path: route.value.path,
         query: {
           ...configuration.value,
           ...filter
@@ -274,7 +271,6 @@ export default {
     SfButton,
     InstagramFeed,
     RelatedProducts,
-    MobileStoreBanner,
     LazyHydrate
   },
   data() {
@@ -399,6 +395,7 @@ export default {
     margin-top: 0;
   }
   &__tabs {
+    --tabs-title-z-index: 0;
     margin: var(--spacer-lg) auto var(--spacer-2xl);
     --tabs-title-font-size: var(--font-size--lg);
     @include for-desktop {

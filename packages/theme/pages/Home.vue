@@ -34,7 +34,9 @@
     <LazyHydrate when-visible>
       <div class="similar-products">
         <SfHeading title="Match with it" :level="2"/>
-        <nuxt-link :to="localePath('/c/women')" class="smartphone-only">See all</nuxt-link>
+        <nuxt-link :to="localePath('/c/categories/women')" class="smartphone-only">
+          {{ $t('See all') }}
+        </nuxt-link>
       </div>
     </LazyHydrate>
 
@@ -82,7 +84,7 @@
           <SfButton
             class="sf-call-to-action__button"
             data-testid="cta-button"
-            @click="handleNewsletterClick"
+            @click="toggleNewsletterModal"
           >
             {{ $t('Subscribe') }}
           </SfButton>
@@ -114,14 +116,13 @@ import {
   SfArrow,
   SfButton
 } from '@storefront-ui/vue';
-import { computed, onMounted } from '@vue/composition-api';
+import { computed, onMounted, useContext } from '@nuxtjs/composition-api';
 import { useFacet, facetGetters, productGetters } from '@vue-storefront/spree';
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import NewsletterModal from '~/components/NewsletterModal.vue';
 import LazyHydrate from 'vue-lazy-hydration';
 import { useUiState } from '../composables';
 import cacheControl from './../helpers/cacheControl';
-const { toggleNewsletterModal } = useUiState();
 
 export default {
   name: 'Home',
@@ -146,95 +147,96 @@ export default {
     LazyHydrate
   },
   setup() {
+    const { $config } = useContext();
+    const { toggleNewsletterModal } = useUiState();
     const { search, result } = useFacet('home');
+
     const products = computed(() => facetGetters.getProducts(result.value));
 
     onMounted(async () => {
       await search({ categorySlug: 'categories/women' });
     });
 
+    const heroes = [
+      {
+        title: 'Colorful summer dresses are already in store',
+        subtitle: 'SUMMER COLLECTION 2019',
+        background: '#eceff1',
+        image: '/homepage/bannerH.webp'
+      },
+      {
+        title: 'Colorful summer dresses are already in store',
+        subtitle: 'SUMMER COLLECTION 2019',
+        background: '#efebe9',
+        image: '/homepage/bannerA.webp',
+        className:
+          'sf-hero-item--position-bg-top-left sf-hero-item--align-right'
+      },
+      {
+        title: 'Colorful summer dresses are already in store',
+        subtitle: 'SUMMER COLLECTION 2019',
+        background: '#fce4ec',
+        image: '/homepage/bannerB.webp'
+      }
+    ];
+
+    const banners = [
+      {
+        slot: 'banner-A',
+        subtitle: 'Dresses',
+        title: 'Cocktail & Party',
+        description:
+          'Find stunning women\'s cocktail dresses and party dresses. Stand out in lace and metallic cocktail dresses from all your favorite brands.',
+        buttonText: 'Shop now',
+        image: {
+          mobile: $config.theme.home.bannerA.image.mobile,
+          desktop: $config.theme.home.bannerA.image.desktop
+        },
+        class: 'sf-banner--slim desktop-only',
+        link: $config.theme.home.bannerA.link
+      },
+      {
+        slot: 'banner-B',
+        subtitle: 'Dresses',
+        title: 'Linen Dresses',
+        description:
+          'Find stunning women\'s cocktail dresses and party dresses. Stand out in lace and metallic cocktail dresses from all your favorite brands.',
+        buttonText: 'Shop now',
+        image: $config.theme.home.bannerB.image,
+        class: 'sf-banner--slim banner-central desktop-only',
+        link: $config.theme.home.bannerB.link
+      },
+      {
+        slot: 'banner-C',
+        subtitle: 'T-Shirts',
+        title: 'The Office Life',
+        image: $config.theme.home.bannerC.image,
+        class: 'sf-banner--slim banner__tshirt',
+        link: $config.theme.home.bannerC.link
+      },
+      {
+        slot: 'banner-D',
+        subtitle: 'Summer Sandals',
+        title: 'Eco Sandals',
+        image: $config.theme.home.bannerD.image,
+        class: 'sf-banner--slim',
+        link: $config.theme.home.bannerD.link
+      }
+    ];
+
+    const onSubscribe = (emailAddress) => {
+      console.log(`Email ${emailAddress} was added to newsletter.`);
+      toggleNewsletterModal();
+    };
+
     return {
+      toggleNewsletterModal,
+      onSubscribe,
+      banners,
+      heroes,
       products,
       productGetters
     };
-  },
-  data() {
-    return {
-      heroes: [
-        {
-          title: 'Colorful summer dresses are already in store',
-          subtitle: 'SUMMER COLLECTION 2019',
-          background: '#eceff1',
-          image: '/homepage/bannerH.webp'
-        },
-        {
-          title: 'Colorful summer dresses are already in store',
-          subtitle: 'SUMMER COLLECTION 2019',
-          background: '#efebe9',
-          image: '/homepage/bannerA.webp',
-          className:
-            'sf-hero-item--position-bg-top-left sf-hero-item--align-right'
-        },
-        {
-          title: 'Colorful summer dresses are already in store',
-          subtitle: 'SUMMER COLLECTION 2019',
-          background: '#fce4ec',
-          image: '/homepage/bannerB.webp'
-        }
-      ],
-      banners: [
-        {
-          slot: 'banner-A',
-          subtitle: 'Dresses',
-          title: 'Cocktail & Party',
-          description:
-            'Find stunning women\'s cocktail dresses and party dresses. Stand out in lace and metallic cocktail dresses from all your favorite brands.',
-          buttonText: 'Shop now',
-          image: {
-            mobile: this.$config.theme.home.bannerA.image.mobile,
-            desktop: this.$config.theme.home.bannerA.image.desktop
-          },
-          class: 'sf-banner--slim desktop-only',
-          link: this.$config.theme.home.bannerA.link
-        },
-        {
-          slot: 'banner-B',
-          subtitle: 'Dresses',
-          title: 'Linen Dresses',
-          description:
-            'Find stunning women\'s cocktail dresses and party dresses. Stand out in lace and metallic cocktail dresses from all your favorite brands.',
-          buttonText: 'Shop now',
-          image: this.$config.theme.home.bannerB.image,
-          class: 'sf-banner--slim banner-central desktop-only',
-          link: this.$config.theme.home.bannerB.link
-        },
-        {
-          slot: 'banner-C',
-          subtitle: 'T-Shirts',
-          title: 'The Office Life',
-          image: this.$config.theme.home.bannerC.image,
-          class: 'sf-banner--slim banner__tshirt',
-          link: this.$config.theme.home.bannerC.link
-        },
-        {
-          slot: 'banner-D',
-          subtitle: 'Summer Sandals',
-          title: 'Eco Sandals',
-          image: this.$config.theme.home.bannerD.image,
-          class: 'sf-banner--slim',
-          link: this.$config.theme.home.bannerD.link
-        }
-      ]
-    };
-  },
-  methods: {
-    handleNewsletterClick() {
-      toggleNewsletterModal();
-    },
-    onSubscribe(emailAddress) {
-      console.log(`Email ${emailAddress} was added to newsletter.`);
-      toggleNewsletterModal();
-    }
   }
 };
 </script>

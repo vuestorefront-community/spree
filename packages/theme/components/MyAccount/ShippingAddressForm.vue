@@ -181,7 +181,7 @@ import {
 } from '@storefront-ui/vue';
 import { required, min, oneOf } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { reactive, watch, computed, onMounted } from '@vue/composition-api';
+import { reactive, watch, computed, onMounted } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
 import { useCountry } from '@vue-storefront/spree';
 

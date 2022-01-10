@@ -1,6 +1,8 @@
 import { OrderAttr } from '@spree/storefront-api-v2-sdk/types/interfaces/Order';
+import { JsonApiDocument } from '@spree/storefront-api-v2-sdk/types/interfaces/JsonApi';
 import { CouponCode as CouponCodeAttr } from '@spree/storefront-api-v2-sdk/types/interfaces/endpoints/CartClass';
-import { Cart, LineItem } from '../../types';
+import { Cart, LineItem, ApiConfig } from '../../types';
+
 import { deserializeAddress } from './address';
 
 const findAttachment = (attachments: any[], id: string, type: string) => {
@@ -27,18 +29,19 @@ const formatOptions = (optionsText: string) => {
   }, {});
 };
 
-const deserializeLineItem = (lineItem: any, attachments: any[], config: any): LineItem => {
+const deserializeLineItem = (lineItem: any, attachments: JsonApiDocument[], config: ApiConfig): LineItem => {
   const variant = findAttachment(attachments, lineItem.relationships.variant.data.id, 'variant');
   const product = findAttachment(attachments, variant.relationships.product.data.id, 'product');
-  const image = product.relationships.images.data && product.relationships.images.data.length > 0
-    ? findAttachment(attachments, product.relationships.images.data[0].id, 'image')
-    : undefined;
-  const imageUrl = image
-    ? formatImageUrl(image.attributes.styles, config.backendUrl)
-    : '';
+  const variantImagesData = variant.relationships.images.data;
+  const productImagesData = product.relationships.images.data;
+
+  const imagesData = variantImagesData.length > 0 ? variantImagesData : productImagesData;
+  const image = findAttachment(attachments, imagesData[0]?.id, 'image');
+
+  const imageUrl = image ? formatImageUrl(image.attributes.styles, config.backendUrl) : '';
 
   return {
-    _id: parseInt(lineItem.id, 10),
+    id: parseInt(lineItem.id, 10),
     _variantId: parseInt(variant.id, 10),
     _description: '',
     _categoriesRef: [],
