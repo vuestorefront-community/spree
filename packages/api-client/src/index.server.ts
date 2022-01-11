@@ -40,7 +40,7 @@ import resetPassword from './api/resetPassword';
 
 const defaultSettings = {
   backendUrl: 'https://demo.spreecommerce.org',
-  assetsURL: null,
+  assetsUrl: null,
   spreeFeatures: {
     associateGuestCart: true,
     fetchPrimaryVariant: true

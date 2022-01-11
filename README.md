@@ -61,7 +61,7 @@ module.exports = {
       location: '@vue-storefront/spree-api/server',
       configuration: {
         backendUrl: process.env.BACKEND_URL,
-        assetsURL: process.env.ASSETS_URL,
+        assetsUrl: process.env.ASSETS_URL,
         spreeFeatures: {
           // Associate guest cart after the customer logs in. Requires Spree 4.3+
           associateGuestCart: false,
