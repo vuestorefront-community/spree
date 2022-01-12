@@ -1,18 +1,17 @@
 import axios from 'axios';
 import { ApiContext } from '../../types';
-import getCurrentCartToken from '../authentication/getCurrentCartToken';
+import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
+import getAuthorizationHeaders from '../authentication/getAuthorizationHeaders';
 
-export default async function handlePaymentConfirmationResponse({ config }: ApiContext, { confirmationResponse }) {
+export default async function handlePaymentConfirmationResponse({ client, config }: ApiContext, { confirmationResponse }) {
   try {
-    const token = await getCurrentCartToken(config);
+    const token = await getCurrentBearerOrCartToken({ client, config });
     const endpoint = config.backendUrl.concat('/api/v2/storefront/intents/handle_response');
     const response = await axios.post(
       endpoint,
       { response: confirmationResponse },
       {
-        headers: {
-          'X-Spree-Order-Token': token.orderToken
-        }
+        headers: getAuthorizationHeaders(token)
       }
     );
 

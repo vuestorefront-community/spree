@@ -1,10 +1,10 @@
 import { ApiContext } from '../../types';
-import getCurrentCartToken from '../authentication/getCurrentCartToken';
+import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializeCartShipments } from '../serializers/shipping';
 
 export default async ({ client, config }: ApiContext, { selectedShippingRates }) => {
   try {
-    const token = await getCurrentCartToken(config);
+    const token = await getCurrentBearerOrCartToken({ client, config });
     const result = await client.checkout.orderUpdate(token, {
       order: {
         shipments_attributes: Object.entries(selectedShippingRates).map(([shipmentId, shippingRateId]: [string, number]) => ({
