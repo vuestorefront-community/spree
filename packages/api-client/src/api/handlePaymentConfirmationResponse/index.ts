@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ApiContext } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
-import getAuthenticationHeaders from '../authentication/getAuthenticationHeaders';
+import getAuthorizationHeaders from '../authentication/getAuthorizationHeaders';
 
 export default async function handlePaymentConfirmationResponse({ client, config }: ApiContext, { confirmationResponse }) {
   try {
@@ -11,7 +11,7 @@ export default async function handlePaymentConfirmationResponse({ client, config
       endpoint,
       { response: confirmationResponse },
       {
-        headers: getAuthenticationHeaders(token)
+        headers: getAuthorizationHeaders(token)
       }
     );
 
