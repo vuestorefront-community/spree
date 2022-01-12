@@ -1,16 +1,13 @@
-import { ShippingMethod } from '@vue-storefront/spree-api';
+import { ShippingRate } from '@vue-storefront/spree-api/src/types';
+
+export const getShippingMethodId = (shippingMethod: ShippingRate): string => shippingMethod?.id || '';
+
+export const getShippingMethodName = (shippingMethod: ShippingRate): string => shippingMethod?.name || '';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getShippingMethodId = (shippingMethod: ShippingMethod): string => '';
+export const getShippingMethodDescription = (shippingMethod: ShippingRate): string => '';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getShippingMethodName = (shippingMethod: ShippingMethod): string => '';
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getShippingMethodDescription = (shippingMethod: ShippingMethod): string => '';
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getShippingMethodPrice = (shippingMethod: ShippingMethod): number => 0;
+export const getShippingMethodPrice = (shippingMethod: ShippingRate): string => shippingMethod?.cost || '';
 
 export const getFormattedPrice = (price: number) => String(price);
 

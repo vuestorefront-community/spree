@@ -35,7 +35,7 @@ export const getCartTotals = (cart: Cart): AgnosticTotals => {
   };
 };
 
-export const getCartShippingPrice = (cart: Cart): number => cart.shipTotalAmount;
+export const getCartShippingPrice = (cart: Cart): number => cart?.shipTotalAmount;
 
 export const getCartTotalItems = (cart: Cart): number => cart?.itemCount || 0;
 
