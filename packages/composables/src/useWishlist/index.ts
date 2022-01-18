@@ -4,16 +4,12 @@ import {
   useWishlistFactory,
   UseWishlistFactoryParams
 } from '@vue-storefront/core';
-import { ref, Ref } from '@nuxtjs/composition-api';
 import { Wishlist, WishlistProduct, ProductVariant } from '../types';
 
-export const wishlist: Ref<Wishlist> = ref(null);
-
 const params: UseWishlistFactoryParams<Wishlist, WishlistProduct, ProductVariant> = {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context) => {
-    console.log('Mocked: loadWishlist');
-    return {};
+    const wishlist = await context.$spree.api.getWishlist();
+    return wishlist;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
