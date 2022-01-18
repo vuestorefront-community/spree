@@ -5,6 +5,7 @@ export type WishedProduct = {
   sku: string;
   price: string;
   displayPrice: string;
+  image: string;
 };
 
 export type Wishlist = {
