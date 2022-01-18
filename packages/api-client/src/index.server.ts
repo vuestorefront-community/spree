@@ -37,6 +37,7 @@ import makeOrder from './api/makeOrder';
 import forgotPassword from './api/forgotPassword';
 import resetPassword from './api/resetPassword';
 import getWishlist from './api/getWishlist';
+import addToWishlist from './api/addToWishlist';
 
 const defaultSettings = {
   backendUrl: 'https://demo.spreecommerce.org',
@@ -108,7 +109,8 @@ const { createApiClient } = apiClientFactory<any, any>({
     makeOrder,
     forgotPassword,
     resetPassword,
-    getWishlist
+    getWishlist,
+    addToWishlist
   },
   extensions: [tokenExtension]
 });

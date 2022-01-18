@@ -12,10 +12,11 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistProduct, ProductVariant
     return wishlist;
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addItem: async (context: Context, { currentWishlist, product }) => {
-    console.log('Mocked: addToWishlist');
-    return {};
+    await context.$spree.api.addToWishlist(currentWishlist, product);
+
+    const wishlist = await context.$spree.api.getWishlist();
+    return wishlist;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

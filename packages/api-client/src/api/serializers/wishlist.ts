@@ -1,5 +1,10 @@
 import { JsonApiDocument } from '@spree/storefront-api-v2-sdk/types/interfaces/JsonApi';
-import { ApiConfig, Wishlist, WishedProduct } from '../../types';
+import {
+  ApiConfig,
+  Wishlist,
+  WishedProduct,
+  ProductVariant
+} from '../../types';
 import { extractRelationships, extractSingleRelationship } from './common';
 
 const deserializeWishedProductImage = (
@@ -55,4 +60,12 @@ export const deserializeWishlist = (
 ): Wishlist => ({
   token: data.attributes.access_hash,
   wishedProducts: deserializeWishedProducts(data, included, config)
+});
+
+export const serializeWishedProduct = (
+  product: ProductVariant
+  // eslint-disable-next-line camelcase
+): { variant_id: string; quantity: number } => ({
+  variant_id: String(product._variantId),
+  quantity: 1
 });
