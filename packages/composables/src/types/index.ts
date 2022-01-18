@@ -1,4 +1,4 @@
-import type { CategorySearchResult, LineItem, ProductVariant, Order, Country, State } from '@vue-storefront/spree-api';
+import type { CategorySearchResult, LineItem, ProductVariant, Order, Country, State, WishedProduct } from '@vue-storefront/spree-api';
 import type { AgnosticGroupedFacet, ComputedProperty } from '@vue-storefront/core';
 
 export { UseCategory, UseProduct } from '@vue-storefront/core';
@@ -23,7 +23,7 @@ export type User = {
   email?: string;
 };
 
-export { Cart, Order, LineItem, ProductVariant, Category } from '@vue-storefront/spree-api';
+export { Cart, Order, LineItem, ProductVariant, Category, Wishlist } from '@vue-storefront/spree-api';
 
 export type UserAddress = Record<string, unknown>;
 
@@ -37,9 +37,7 @@ export type Shipping = Record<string, unknown>;
 
 export type ShippingMethod = Record<string, unknown>;
 
-export type WishlistProduct = Record<string, unknown>;
-
-export type Wishlist = Record<string, unknown>;
+export type WishlistProduct = WishedProduct;
 
 export type ProductsResponse = {
   data: ProductVariant[];
