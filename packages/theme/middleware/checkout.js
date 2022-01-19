@@ -17,14 +17,14 @@ export default async ({ app, $vsf }) => {
       break;
     case 'billing':
       if (!canEnterBilling(cart)) {
-        app.context.redirect('/shipping');
+        app.context.redirect('/checkout/shipping');
       }
       break;
     case 'payment':
       if (!canEnterBilling(cart)) {
-        app.context.redirect('/shipping');
+        app.context.redirect('/checkout/shipping');
       } else if (!canEnterPayment(cart)) {
-        app.context.redirect('/billing');
+        app.context.redirect('/checkout/billing');
       }
       break;
   }
