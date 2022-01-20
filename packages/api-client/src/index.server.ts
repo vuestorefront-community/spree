@@ -37,6 +37,8 @@ import makeOrder from './api/makeOrder';
 import forgotPassword from './api/forgotPassword';
 import resetPassword from './api/resetPassword';
 
+const createAxiosFetcher = require('@spree/storefront-api-v2-sdk/dist/server/createAxiosFetcher').default;
+
 const defaultSettings = {
   backendUrl: 'https://demo.spreecommerce.org',
   spreeFeatures: {
@@ -51,7 +53,10 @@ const onCreate = (settings) => {
       ...defaultSettings,
       ...settings
     },
-    client: makeClient({ host: settings.backendUrl || defaultSettings.backendUrl })
+    client: makeClient({
+      host: settings.backendUrl || defaultSettings.backendUrl,
+      createFetcher: createAxiosFetcher
+    })
   };
 };
 
