@@ -120,14 +120,16 @@ export default {
           currency: {
             style: 'currency',
             currency: 'USD',
-            currencyDisplay: 'symbol'
+            currencyDisplay: 'symbol',
+            currencyDefault: 'USD'
           }
         },
         de: {
           currency: {
             style: 'currency',
             currency: 'EUR',
-            currencyDisplay: 'symbol'
+            currencyDisplay: 'symbol',
+            currencyDefault: 'EUR'
           }
         }
       },
