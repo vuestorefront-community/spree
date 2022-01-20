@@ -10,7 +10,7 @@
     <SfBottomModal :is-open="isLangModalOpen" title="Choose language" @click:close="isLangModalOpen = !isLangModalOpen">
       <SfList>
         <SfListItem v-for="lang in availableLocales" :key="lang.code">
-          <a :href="switchLocalePath(lang.code)">
+          <a href="javascript:void(0)" @click="changeLocale(lang.code)">
             <SfCharacteristic class="language">
               <template #title>
                 <span>{{ lang.label }}</span>
@@ -97,7 +97,11 @@ export default {
 
     function updateLocaleCookies(code, locale){
       root.$cookies.set('vsf-currency', code)
-      root.$cookies.set('vsf-locale', locale)
+    }
+
+    function changeLocale(code){
+      root.$cookies.set('vsf-locale', code)
+      window.location.reload();
     }
     
     Object.entries(numberFormats).forEach(([country]) => {
@@ -118,6 +122,7 @@ export default {
       isLangModalOpen,
       isCurrencyModalOpen,
       cartChangeCurrency,
+      changeLocale,
     };
   },
 };

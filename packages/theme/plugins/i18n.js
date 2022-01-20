@@ -1,9 +1,18 @@
 export default ({ app }) => {
-    const localeCookie = app.$cookies.get('vsf-locale');
-    const locale = localeCookie || app.i18n.defaultLocale;
+  const localeCookie = app.$cookies.get('vsf-locale');
+  const currencyCookie = app.$cookies.get('vsf-currency') || 'USD';
+  const locale = localeCookie || app.i18n.defaultLocale;
 
-    if (!localeCookie){
-      app.$cookies.set('vsf-locale', locale)
+  app.i18n.setNumberFormat(locale, {
+    currency: {
+      style: 'currency',
+      currency: currencyCookie,
+      currencyDisplay: 'symbol'
     }
-    app.i18n.setLocale(locale);
+  });
+
+  if (!localeCookie){
+    app.$cookies.set('vsf-locale', locale)
+  }
+  app.i18n.setLocale(locale);
 }
