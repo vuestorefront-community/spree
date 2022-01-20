@@ -103,13 +103,14 @@ export default {
       root.$cookies.set('vsf-locale', code)
       window.location.reload();
     }
-    
+
     Object.entries(numberFormats).forEach(([country]) => {
-      const countryCurrency = numberFormats[country].currency.currency;
+      const countryCurrency = numberFormats[country].currency.currencyDefault;
 
       if (countryCurrency !== currency){
         availableCurrencies.push({
-          locale: country, code: numberFormats[country].currency.currency
+          locale: country, 
+          code: countryCurrency
         })
       }
     });

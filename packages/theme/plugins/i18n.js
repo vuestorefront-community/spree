@@ -7,7 +7,8 @@ export default ({ app }) => {
     currency: {
       style: 'currency',
       currency: currencyCookie,
-      currencyDisplay: 'symbol'
+      currencyDisplay: 'symbol',
+      currencyDefault: app.i18n.numberFormats[locale].currency.currencyDefault
     }
   });
 
