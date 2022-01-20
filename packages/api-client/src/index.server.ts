@@ -40,6 +40,8 @@ import forgotPassword from './api/forgotPassword';
 import resetPassword from './api/resetPassword';
 import changeCurrency from './api/changeCurrency';
 
+const createAxiosFetcher = require('@spree/storefront-api-v2-sdk/dist/server/createAxiosFetcher').default;
+
 const defaultSettings = {
   backendUrl: 'https://demo.spreecommerce.org',
   spreeFeatures: {
