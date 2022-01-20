@@ -1,5 +1,6 @@
 import { apiClientFactory, ApiClientExtension } from '@vue-storefront/core';
 import { makeClient } from '@spree/storefront-api-v2-sdk';
+import createAxiosFetcher from '@spree/storefront-api-v2-sdk/dist/server/createAxiosFetcher';
 import getProduct from './api/getProduct';
 import getProducts from './api/getProducts';
 import getCategory from './api/getCategory';
@@ -36,8 +37,6 @@ import handlePaymentConfirmationResponse from './api/handlePaymentConfirmationRe
 import makeOrder from './api/makeOrder';
 import forgotPassword from './api/forgotPassword';
 import resetPassword from './api/resetPassword';
-
-const createAxiosFetcher = require('@spree/storefront-api-v2-sdk/dist/server/createAxiosFetcher').default;
 
 const defaultSettings = {
   backendUrl: 'https://demo.spreecommerce.org',
