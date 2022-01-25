@@ -1,4 +1,5 @@
 export default {
+  defaultCurrency: 'USD',
   home: {
     bannerA: {
       link: '/c/categories/women',

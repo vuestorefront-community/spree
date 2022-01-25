@@ -6,7 +6,8 @@ import { deserializeCart } from '../serializers/cart';
 import { cartParams } from '../common/cart';
 
 async function createCart({ client, config }: ApiContext, token: IToken): Promise<Cart> {
-  const createCartResult = await client.cart.create(token, cartParams);
+  const currency = await config.internationalization.getCurrency();
+  const createCartResult = await client.cart.create(token, { ...cartParams, currency });
 
   if (createCartResult.isSuccess()) {
     const payload = createCartResult.success();
@@ -27,7 +28,8 @@ async function createCart({ client, config }: ApiContext, token: IToken): Promis
 export default async function getOrCreateCart({ client, config }: ApiContext): Promise<Cart> {
   try {
     const token = await getCurrentBearerOrCartToken({ client, config });
-    const result = await client.cart.show(token, cartParams);
+    const currency = await config.internationalization.getCurrency();
+    const result = await client.cart.show(token, { ...cartParams, currency });
 
     if (result.isSuccess()) {
       const payload = result.success();
