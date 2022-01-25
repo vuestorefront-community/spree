@@ -5,6 +5,7 @@ import { deserializeCartShipments } from '../serializers/shipping';
 export default async ({ client, config }: ApiContext, { selectedShippingRates }) => {
   try {
     const token = await getCurrentBearerOrCartToken({ client, config });
+    const currency = await config.internationalization.getCurrency();
     const result = await client.checkout.orderUpdate(token, {
       order: {
         shipments_attributes: Object.entries(selectedShippingRates).map(([shipmentId, shippingRateId]: [string, number]) => ({
@@ -12,6 +13,7 @@ export default async ({ client, config }: ApiContext, { selectedShippingRates })
           selected_shipping_rate_id: shippingRateId.toString()
         }))
       },
+      currency,
       include: 'shipments,shipments.shipping_rates'
     });
 

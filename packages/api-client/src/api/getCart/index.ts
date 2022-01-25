@@ -26,7 +26,7 @@ const emptyCart: Cart = {
   token: undefined
 };
 
-export default async function getCart({ client, config }: ApiContext, { currency }: GetCartParams): Promise<Cart> {
+export default async function getCart({ client, config }: ApiContext): Promise<Cart> {
   try {
     const token = await getCurrentBearerOrCartToken({ client, config });
 
@@ -37,9 +37,11 @@ export default async function getCart({ client, config }: ApiContext, { currency
       return emptyCart;
     }
 
+    const currency = await config.internationalization.getCurrency();
+
     const result = await client.cart.show(token, {
       ...cartParams,
-      currency: currency
+      currency
     });
 
     if (result.isSuccess()) {

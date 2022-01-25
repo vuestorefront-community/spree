@@ -4,7 +4,9 @@ import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCar
 export default async function makeOrder({ client, config }: ApiContext) {
   try {
     const token = await getCurrentBearerOrCartToken({ client, config });
-    await client.checkout.complete(token);
+    const currency = await config.internationalization.getCurrency();
+
+    await client.checkout.complete(token, { currency });
     await config.auth.removeCartToken();
   } catch (e) {
     console.error(e);

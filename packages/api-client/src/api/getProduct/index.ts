@@ -1,7 +1,9 @@
 import { ApiContext, GetProductParams, ProductVariant } from '../../types';
 import { addHostToProductImages, deserializeSingleProductVariants } from '../serializers/product';
 
-export default async function getProduct({ client, config }: ApiContext, { slug, currency }: GetProductParams): Promise<ProductVariant[]> {
+export default async function getProduct({ client, config }: ApiContext, { slug }: GetProductParams): Promise<ProductVariant[]> {
+  const currency = await config.internationalization.getCurrency();
+
   let include;
 
   if (config.spreeFeatures.fetchPrimaryVariant) {

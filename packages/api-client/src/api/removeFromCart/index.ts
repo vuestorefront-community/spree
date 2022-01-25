@@ -5,7 +5,8 @@ import { deserializeCart } from '../serializers/cart';
 export default async function removeFromCart({ client, config }: ApiContext, { lineItemId, token }): Promise<Cart> {
   try {
     config.auth.changeCartToken(token);
-    const result = await client.cart.removeItem({ orderToken: token }, lineItemId, cartParams);
+    const currency = await config.internationalization.getCurrency();
+    const result = await client.cart.removeItem({ orderToken: token }, lineItemId, { ...cartParams, currency });
 
     if (result.isSuccess()) {
       const payload = result.success();

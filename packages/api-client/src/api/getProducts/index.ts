@@ -4,7 +4,8 @@ import { deserializeSearchMetadata } from '../serializers/search';
 
 export default async function getProducts({ client, config }: ApiContext, params: GetProductsParams): Promise<ProductSearchResult> {
   try {
-    const { categoryId, term, optionTypeFilters, productPropertyFilters, priceFilter, page, itemsPerPage, sort, currency } = params;
+    const currency = await config.internationalization.getCurrency();
+    const { categoryId, term, optionTypeFilters, productPropertyFilters, priceFilter, page, itemsPerPage, sort } = params;
     let include;
 
     if (config.spreeFeatures.fetchPrimaryVariant) {

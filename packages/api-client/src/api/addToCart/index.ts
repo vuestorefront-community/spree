@@ -5,6 +5,7 @@ import { deserializeCart } from '../serializers/cart';
 export default async function addToCart({ client, config }: ApiContext, { token, variantId, quantity }: AddToCartParams): Promise<Cart> {
   try {
     config.auth.changeCartToken(token);
+    const currency = await config.internationalization.getCurrency();
 
     const result = await client.cart.addItem(
       {
@@ -13,6 +14,7 @@ export default async function addToCart({ client, config }: ApiContext, { token,
       {
         variant_id: variantId,
         quantity,
+        currency,
         ...cartParams
       }
     );

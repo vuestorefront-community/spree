@@ -74,11 +74,11 @@ export default {
     const isCurrencyModalOpen = ref(false);
     const availableLocales = computed(() => locales.filter(i => i.code !== locale));
     const availableCurrencies = [];
-    const currency = root.$cookies.get('vsf-currency')
+    const currency = root.$cookies.get('vsf-spree-currency')
 
     const cartChangeCurrency = async (code, locale) => {
       const token = root.$cookies.get('spree-cart-token');
-      
+
       if (token){
         const response = await $spree.api.changeCurrency({
           currency: currency,
@@ -91,12 +91,12 @@ export default {
       } else {
         updateLocaleCookies(code, locale)
       }
-      
+
       window.location.reload()
     }
 
     function updateLocaleCookies(code, locale){
-      root.$cookies.set('vsf-currency', code)
+      root.$cookies.set('vsf-spree-currency', code)
     }
 
     function changeLocale(code){
@@ -109,7 +109,7 @@ export default {
 
       if (countryCurrency !== currency){
         availableCurrencies.push({
-          locale: country, 
+          locale: country,
           code: countryCurrency
         })
       }

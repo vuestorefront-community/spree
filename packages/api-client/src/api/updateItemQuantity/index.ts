@@ -5,6 +5,7 @@ import { deserializeCart } from '../serializers/cart';
 export default async function updateItemQuantity({ client, config }: ApiContext, { lineItemId, quantity, token }): Promise<Cart> {
   try {
     config.auth.changeCartToken(token);
+    const currency = await config.internationalization.getCurrency();
 
     const result = await client.cart.setQuantity(
       {
@@ -13,6 +14,7 @@ export default async function updateItemQuantity({ client, config }: ApiContext,
       {
         line_item_id: lineItemId,
         quantity,
+        currency,
         ...cartParams
       }
     );
