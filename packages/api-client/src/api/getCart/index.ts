@@ -1,4 +1,4 @@
-import { ApiContext, Cart, GetCartParams } from '../../types';
+import { ApiContext, Cart } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializeCart } from '../serializers/cart';
 import { cartParams } from '../common/cart';

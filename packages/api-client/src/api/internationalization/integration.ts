@@ -13,5 +13,5 @@ export default function createInternationalizationIntegration(req, res): Interna
 
       return currentCurrency;
     }
-  }
+  };
 }
