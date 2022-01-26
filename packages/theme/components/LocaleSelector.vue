@@ -74,44 +74,44 @@ export default {
     const isCurrencyModalOpen = ref(false);
     const availableLocales = computed(() => locales.filter(i => i.code !== locale));
     const availableCurrencies = [];
-    const currency = root.$cookies.get('vsf-spree-currency')
+    const currency = root.$cookies.get('vsf-spree-currency');
 
     const cartChangeCurrency = async (code, locale) => {
       const token = root.$cookies.get('spree-cart-token');
 
-      if (token){
+      if (token) {
         const response = await $spree.api.changeCurrency({
           currency: currency,
           newCurrency: code
         });
 
-        if (response){
+        if (response) {
           updateLocaleCookies(code, locale);
         }
       } else {
-        updateLocaleCookies(code, locale)
+        updateLocaleCookies(code, locale);
       }
 
-      window.location.reload()
+      window.location.reload();
+    };
+
+    function updateLocaleCookies(code) {
+      root.$cookies.set('vsf-spree-currency', code);
     }
 
-    function updateLocaleCookies(code, locale){
-      root.$cookies.set('vsf-spree-currency', code)
-    }
-
-    function changeLocale(code){
-      root.$cookies.set('vsf-locale', code)
+    function changeLocale(code) {
+      root.$cookies.set('vsf-locale', code);
       window.location.reload();
     }
 
     Object.entries(numberFormats).forEach(([country]) => {
       const countryCurrency = numberFormats[country].currency.currencyDefault;
 
-      if (countryCurrency !== currency){
+      if (countryCurrency !== currency) {
         availableCurrencies.push({
           locale: country,
           code: countryCurrency
-        })
+        });
       }
     });
 
@@ -123,9 +123,9 @@ export default {
       isLangModalOpen,
       isCurrencyModalOpen,
       cartChangeCurrency,
-      changeLocale,
+      changeLocale
     };
-  },
+  }
 };
 </script>
 

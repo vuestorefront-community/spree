@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Logger } from '@vue-storefront/core';
 import { ApiContext, GetChangeCartParams } from '../../types';
 import getCurrentCartToken from '../authentication/getCurrentCartToken';
 
@@ -14,11 +15,12 @@ export default async function changeCurrency({ config }: ApiContext, { currency,
         headers: {
           'X-Spree-Order-Token': token.orderToken
         }
-      },
-    )
+      }
+    );
 
     return response.data;
   } catch (e) {
+    Logger.error(e);
     throw e;
   }
 }

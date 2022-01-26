@@ -22,7 +22,7 @@ export default async function getProduct({ client, config }: ApiContext, { slug 
       },
       include,
       currency
-    },
+    }
   );
 
   if (result.isSuccess()) {

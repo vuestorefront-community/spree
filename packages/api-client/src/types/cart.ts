@@ -60,10 +60,6 @@ export type ClearCartParams = {
   token: string;
 }
 
-export type GetCartParams = {
-  currency: string;
-}
-
 export type GetChangeCartParams = {
   currency: string;
   newCurrency: string;

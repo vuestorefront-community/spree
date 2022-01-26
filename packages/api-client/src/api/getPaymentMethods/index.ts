@@ -18,7 +18,7 @@ export default async function getPaymentMethods({ client, config }: ApiContext) 
         },
         headers: getAuthorizationHeaders(token)
       }
-    )
+    );
     return response.data.data.map(deserializePaymentMethods);
   } catch (e) {
     console.error(e);

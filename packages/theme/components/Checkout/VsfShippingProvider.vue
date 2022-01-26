@@ -35,7 +35,7 @@ export default {
     ShippingRatePicker
   },
 
-  setup(props, { root, emit }) {
+  setup(_props, { emit }) {
     const { $spree } = useVSFContext();
     const { setCart } = useCart();
     const { state: shipments, save: saveShipments, load: loadShipments } = useShippingProvider();
