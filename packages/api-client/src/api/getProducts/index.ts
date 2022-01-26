@@ -4,6 +4,7 @@ import { deserializeSearchMetadata } from '../serializers/search';
 
 export default async function getProducts({ client, config }: ApiContext, params: GetProductsParams): Promise<ProductSearchResult> {
   try {
+    const currency = await config.internationalization.getCurrency();
     const { categoryId, term, optionTypeFilters, productPropertyFilters, priceFilter, page, itemsPerPage, sort } = params;
     let include;
 
@@ -34,7 +35,8 @@ export default async function getProducts({ client, config }: ApiContext, params
         include,
         page,
         sort,
-        per_page: itemsPerPage
+        per_page: itemsPerPage,
+        currency
       }
     );
 

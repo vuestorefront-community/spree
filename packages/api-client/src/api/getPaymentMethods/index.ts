@@ -1,15 +1,27 @@
+import axios from 'axios';
 import { ApiContext } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializePaymentMethods } from '../serializers/payment';
+import getAuthorizationHeaders from '../authentication/getAuthorizationHeaders';
 
 export default async function getPaymentMethods({ client, config }: ApiContext) {
-  const token = await getCurrentBearerOrCartToken({ client, config });
-  const result = await client.checkout.paymentMethods(token);
+  try {
+    const token = await getCurrentBearerOrCartToken({ client, config });
+    // TODO check if new spree sdk supports additional params here
+    const currency = await config.internationalization.getCurrency();
 
-  if (result.isSuccess()) {
-    const payload = result.success();
-    return payload.data.map(deserializePaymentMethods);
-  } else {
-    throw result.fail();
+    const response = await axios.get(
+      `${config.backendUrl}/api/v2/storefront/checkout/payment_methods`,
+      {
+        params: {
+          currency: currency
+        },
+        headers: getAuthorizationHeaders(token)
+      }
+    );
+    return response.data.data.map(deserializePaymentMethods);
+  } catch (e) {
+    console.error(e);
+    throw e;
   }
 }

@@ -59,3 +59,8 @@ export type ApplyCouponParams = {
 export type ClearCartParams = {
   token: string;
 }
+
+export type GetChangeCartParams = {
+  currency: string;
+  newCurrency: string;
+}
