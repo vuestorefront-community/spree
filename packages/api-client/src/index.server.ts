@@ -1,6 +1,5 @@
 import { apiClientFactory, ApiClientExtension } from '@vue-storefront/core';
-import { makeClient } from '@spree/storefront-api-v2-sdk';
-import createAxiosFetcher from '@spree/storefront-api-v2-sdk/dist/server/createAxiosFetcher';
+import { makeClient } from '@spree/storefront-api-v2-sdk/src';
 import getProduct from './api/getProduct';
 import getProducts from './api/getProducts';
 import getCategory from './api/getCategory';
@@ -39,7 +38,9 @@ import makeOrder from './api/makeOrder';
 import forgotPassword from './api/forgotPassword';
 import resetPassword from './api/resetPassword';
 import changeCurrency from './api/changeCurrency';
-
+import {AxiosInstance} from 'axios';
+import {objectToQuerystring} from '@spree/storefront-api-v2-sdk/src/helpers/request';
+import FetchError from '@spree/storefront-api-v2-sdk/src/errors/FetchError';
 const defaultSettings = {
   backendUrl: 'https://demo.spreecommerce.org',
   spreeFeatures: {
@@ -56,7 +57,88 @@ const onCreate = (settings) => {
     },
     client: makeClient({
       host: settings.backendUrl || defaultSettings.backendUrl,
-      createFetcher: createAxiosFetcher
+      createFetcher: (fetcherOptions) => {
+        let Axios;
+
+        if (globalThis.axios) {
+          Axios = globalThis.axios;
+        } else {
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          Axios = require('axios').default;
+        }
+
+        const axios: AxiosInstance = Axios.create({
+          baseURL: fetcherOptions.host,
+          headers: { 'Content-Type': 'application/json' },
+          paramsSerializer: (params) => objectToQuerystring(params)
+        });
+
+        return {
+          fetch: async (fetchOptions) => {
+            try {
+              const { url, params, method, headers, responseParsing } = fetchOptions;
+              let payload;
+
+              switch (method.toUpperCase()) {
+                case 'PUT':
+                case 'POST':
+                case 'DELETE':
+                case 'PATCH':
+                  payload = { data: params };
+                  break;
+                default:
+                  payload = { params };
+              }
+
+              let responseType: string;
+
+              switch (responseParsing) {
+                case 'json':
+                case 'text':
+                  responseType = responseParsing;
+                  break;
+                case 'stream':
+                  responseType = 'stream';
+                  break;
+                default:
+                  responseType = undefined;
+              }
+
+              const response = await axios({
+                url,
+                method: method.toUpperCase(),
+                headers,
+                responseType,
+                ...payload
+              });
+
+              return { data: response.data };
+            } catch (error) {
+              if (Axios.isAxiosError(error)) {
+                const { response } = error;
+
+                if (!response) {
+                  throw new FetchError(null, error.request, null, error.message);
+                }
+
+                const reducedResponse = { ...response };
+
+                // Reduce logging by removing the 'enumerable' flag on some keys in AxiosResponse.
+                Object.defineProperties(reducedResponse, {
+                  config: { enumerable: false },
+                  data: { enumerable: false },
+                  headers: { enumerable: false },
+                  request: { enumerable: false }
+                });
+
+                throw new FetchError(reducedResponse, error.request, reducedResponse.data, error.message);
+              }
+
+              throw new FetchError(null, null, null, error.message);
+            }
+          }
+        };
+      }
     })
   };
 };
