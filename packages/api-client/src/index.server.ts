@@ -38,9 +38,13 @@ import makeOrder from './api/makeOrder';
 import forgotPassword from './api/forgotPassword';
 import resetPassword from './api/resetPassword';
 import changeCurrency from './api/changeCurrency';
+<<<<<<< HEAD
 import {AxiosInstance} from 'axios';
 import {objectToQuerystring} from '@spree/storefront-api-v2-sdk/src/helpers/request';
 import FetchError from '@spree/storefront-api-v2-sdk/src/errors/FetchError';
+=======
+
+>>>>>>> main
 const defaultSettings = {
   backendUrl: 'https://demo.spreecommerce.org',
   spreeFeatures: {
