@@ -14,8 +14,13 @@ export default async function getProducts({ client, config }: ApiContext, params
       include = 'default_variant,variants.option_values,option_types,taxons,images';
     }
 
+    const unique = Array.from(new Set(productPropertyFilters.map(filter => filter.productPropertyName)).values())
+    let properties = {};
+    for (var uniqueProperty of unique){
+       properties[uniqueProperty] = (productPropertyFilters.filter(property => property.productPropertyName === uniqueProperty).map(property => property.productPropertyValue)).join(',')
+      }
+
     const optionValueIds = optionTypeFilters?.map(filter => filter.optionValueId);
-    const properties = productPropertyFilters?.reduce((result, filter) => ({ ...result, [filter.productPropertyName]: filter.productPropertyValue }), {});
 
     const result = await client.products.list(
       undefined,
