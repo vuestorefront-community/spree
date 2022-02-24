@@ -14,11 +14,13 @@ export default async function getProducts({ client, config }: ApiContext, params
       include = 'default_variant,variants.option_values,option_types,taxons,images';
     }
 
-    const unique = Array.from(new Set(productPropertyFilters.map(filter => filter.productPropertyName)).values())
-    let properties = {};
-    for (var uniqueProperty of unique){
-       properties[uniqueProperty] = (productPropertyFilters.filter(property => property.productPropertyName === uniqueProperty).map(property => property.productPropertyValue)).join(',')
-      }
+    const uniqueProductPropertyNames = Array.from(new Set(productPropertyFilters.map(filter => filter.productPropertyName)).values());
+    const properties = {};
+    for (const uniqueProperty of uniqueProductPropertyNames) {
+      const filteredProductPropertyNames = productPropertyFilters.filter(property => property.productPropertyName === uniqueProperty);
+      const mappedProductPropertyNames = filteredProductPropertyNames.map(property => property.productPropertyValue);
+      properties[uniqueProperty] = mappedProductPropertyNames.join(',');
+    }
 
     const optionValueIds = optionTypeFilters?.map(filter => filter.optionValueId);
 
