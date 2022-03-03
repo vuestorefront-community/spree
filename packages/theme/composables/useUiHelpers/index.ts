@@ -29,7 +29,6 @@ const getOptionTypeFiltersFromURL = (): SearchParamsOptionTypeFilter[] => {
 const getProductPropertyFiltersFromURL = (): SearchParamsProductPropertyFilter[] => {
   const instance = getInstance();
   const { query } = instance.$route;
-
   return Object
     .entries(query)
     .filter(([key]) => key.startsWith('p.'))
@@ -75,6 +74,7 @@ const useUiHelpers = () => {
     const queryWithoutFilters = Object.fromEntries(
       Object.entries(query).filter(([key]) => !key.startsWith('o.') && !key.startsWith('p.') && key !== 'price')
     );
+
     instance.$router.push({ query: { ...queryWithoutFilters, ...filters }});
   };
 
@@ -88,6 +88,10 @@ const useUiHelpers = () => {
 
   const isFacetColor = (facet: AgnosticGroupedFacet): boolean => facet.label === 'Color';
 
+  const isFacetPrice = (facet: AgnosticGroupedFacet): boolean => facet.label === 'Price';
+
+  const getSearchPriceFromUrl = () => getFacetsFromURL().priceFilter;
+
   const isFacetCheckbox = (facet: AgnosticGroupedFacet): boolean => !isFacetColor(facet);
 
   const getSearchTermFromUrl = () => getFacetsFromURL().term;
@@ -100,8 +104,10 @@ const useUiHelpers = () => {
     changeItemsPerPage,
     setTermForUrl,
     isFacetColor,
+    isFacetPrice,
     isFacetCheckbox,
-    getSearchTermFromUrl
+    getSearchTermFromUrl,
+    getSearchPriceFromUrl
   };
 };
 

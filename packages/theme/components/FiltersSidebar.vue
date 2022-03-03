@@ -29,14 +29,27 @@
             />
           </div>
           <div v-else>
-            <SfFilter
-              v-for="option in facet.options"
-              :key="`${facet.id}-${option.value}`"
-              :label="option.value + `${option.count ? ` (${option.count})` : ''}`"
-              :selected="isFilterSelected(facet, option)"
-              class="filters__item"
-              @change="() => selectFilter(facet, option)"
-            />
+            <div
+              v-if="isFacetPrice(facet)"
+            >
+              <SfRange
+                :value="setStartingRange()"
+                :disabled="false"
+                :config="priceRangeConfig"
+                class="filters__item"
+                @change="(value) => onPriceChanged(facet,value)"
+              />
+            </div>
+            <div v-else>
+              <SfFilter
+                v-for="option in facet.options"
+                :key="`${facet.id}-${option.value}`"
+                :label="option.value + `${option.count ? ` (${option.count})` : ''}`"
+                :selected="isFilterSelected(facet, option)"
+                class="filters__item"
+                @change="() => selectFilter(facet, option)"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -47,14 +60,27 @@
             :header="facet.label"
             class="filters__accordion-item"
           >
-            <SfFilter
-              v-for="option in facet.options"
-              :key="`${facet.id}-${option.id}`"
-              :label="option.value"
-              :selected="isFilterSelected(facet, option)"
-              class="filters__item"
-              @change="() => selectFilter(facet, option)"
-            />
+            <div
+              v-if="isFacetPrice(facet)"
+            >
+              <SfRange
+                :value="setStartingRange()"
+                :disabled="false"
+                :config="priceRangeConfig"
+                class="filters__item"
+                @change="(value) => onPriceChanged(facet,value)"
+              />
+            </div>
+            <div v-else>
+              <SfFilter
+                v-for="option in facet.options"
+                :key="`${facet.id}-${option.value}`"
+                :label="option.value + `${option.count ? ` (${option.count})` : ''}`"
+                :selected="isFilterSelected(facet, option)"
+                class="filters__item"
+                @change="() => selectFilter(facet, option)"
+              />
+            </div>
           </SfAccordionItem>
         </div>
       </SfAccordion>
@@ -87,7 +113,8 @@ import {
   SfHeading,
   SfFilter,
   SfAccordion,
-  SfColor
+  SfColor,
+  SfRange
 } from '@storefront-ui/vue';
 
 import { ref, computed, watch, onMounted } from '@nuxtjs/composition-api';
@@ -103,16 +130,25 @@ export default {
     SfFilter,
     SfAccordion,
     SfColor,
-    SfHeading
+    SfHeading,
+    SfRange
   },
   setup(props, context) {
-    const { changeFilters, isFacetColor } = useUiHelpers();
+    const { changeFilters, isFacetColor, isFacetPrice, getSearchPriceFromUrl} = useUiHelpers();
     const { toggleFilterSidebar, isFilterSidebarOpen } = useUiState();
     const { result } = useFacet();
+    const selectedPrice = ref({});
+
+    let range = [0, 300];
+    const urlPriceRange = getSearchPriceFromUrl();
+    if (typeof urlPriceRange !== 'undefined') {
+      range = urlPriceRange.split(',');
+      selectedPrice.value = ([range[0], range[1]].map(String)).join(',');
+    }
+    selectedPrice.value = ([range[0], range[1]].map(String)).join(',')
 
     const facets = computed(() => facetGetters.getGrouped(result.value, ['color', 'size']));
     const selectedFilters = ref({});
-
     const setSelectedFilters = () => {
       if (!facets.value.length || Object.keys(selectedFilters.value).length) return;
       selectedFilters.value = facets.value.reduce((prev, curr) => ({
@@ -121,6 +157,44 @@ export default {
           .filter(o => o.selected)
           .map(o => o.id)
       }), {});
+    };
+
+    const setStartingRange = () => {
+      if (typeof selectedPrice.value !== 'string') {
+        [0, 300];
+      } else {
+        const splittedPriceString = selectedPrice.value.split(',');
+        [splittedPriceString[0], splittedPriceString[1]];
+      }
+    };
+
+    const priceRangeConfig = ref({
+      start: range,
+      range: {min: 0, max: 300},
+      step: 1,
+      connect: true,
+      direction: 'ltr',
+      orientation: 'horizontal',
+      behaviour: 'tap-drag',
+      tooltips: true,
+      keyboardSupport: true,
+      format: {to: function(value) {
+        return new Intl.NumberFormat('de-DE', {style: 'currency', currency: 'USD'}).format(value);
+      },
+      from: function(value) {
+        return new Intl.NumberFormat('de-DE', {style: 'currency', currency: 'USD'}).formatToParts(value)[0].value;
+      }},
+      ariaFormat: {to: function (value) {
+        return value;
+      }}
+    });
+
+    const onPriceChanged = (facet, value) => {
+      const minChosenPrice = value[0].slice(0, -5);
+      const maxChosenPrice = value[1].slice(0, -5);
+      console.log(minChosenPrice);
+      console.log(maxChosenPrice);
+      selectedPrice.value = ([minChosenPrice, maxChosenPrice].map(String)).join(',');
     };
 
     const isFilterSelected = (facet, option) => (selectedFilters.value[facet.id] || []).includes(option.id);
@@ -145,6 +219,8 @@ export default {
     };
 
     const applyFilters = () => {
+      Vue.set(selectedFilters.value, 'price', []);
+      selectedFilters.value.price.push(selectedPrice.value);
       toggleFilterSidebar();
       changeFilters(selectedFilters.value);
     };
@@ -167,12 +243,16 @@ export default {
     return {
       facets,
       isFacetColor,
+      isFacetPrice,
       selectFilter,
       isFilterSelected,
       isFilterSidebarOpen,
       toggleFilterSidebar,
       clearFilters,
-      applyFilters
+      applyFilters,
+      onPriceChanged,
+      setStartingRange,
+      priceRangeConfig
     };
   }
 };
