@@ -179,10 +179,10 @@ export default {
       tooltips: true,
       keyboardSupport: true,
       format: {to: function(value) {
-        return new Intl.NumberFormat('de-DE', {style: 'currency', currency: 'USD'}).format(value);
+        return new Intl.NumberFormat('de-DE', {style: 'currency', currency: 'USD'}).format(value).replace(/[$]/g, '');
       },
       from: function(value) {
-        return new Intl.NumberFormat('de-DE', {style: 'currency', currency: 'USD'}).formatToParts(value)[0].value;
+        return value;
       }},
       ariaFormat: {to: function (value) {
         return value;
@@ -190,8 +190,8 @@ export default {
     });
 
     const onPriceChanged = (facet, value) => {
-      const minChosenPrice = value[0].slice(0, -5);
-      const maxChosenPrice = value[1].slice(0, -5);
+      const minChosenPrice = value[0].slice(0, -4);
+      const maxChosenPrice = value[1].slice(0, -4);
       selectedPrice.value = ([minChosenPrice, maxChosenPrice].map(String)).join(',');
     };
 
