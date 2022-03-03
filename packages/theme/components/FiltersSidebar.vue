@@ -67,7 +67,7 @@
                 :value="setStartingRange()"
                 :disabled="false"
                 :config="priceRangeConfig"
-                class="filters__item"
+                class="filters__smartphone-slider"
                 @change="(value) => onPriceChanged(facet,value)"
               />
             </div>
@@ -145,7 +145,7 @@ export default {
       range = urlPriceRange.split(',');
       selectedPrice.value = ([range[0], range[1]].map(String)).join(',');
     }
-    selectedPrice.value = ([range[0], range[1]].map(String)).join(',')
+    selectedPrice.value = ([range[0], range[1]].map(String)).join(',');
 
     const facets = computed(() => facetGetters.getGrouped(result.value, ['color', 'size']));
     const selectedFilters = ref({});
@@ -300,6 +300,7 @@ export default {
     --checkbox-padding: 0 var(--spacer-sm) 0 var(--spacer-xl);
     padding: var(--spacer-sm) 0;
     border-bottom: 1px solid var(--c-light);
+
     &:last-child {
       border-bottom: 0;
     }
@@ -309,6 +310,15 @@ export default {
       border: 0;
       padding: 0;
     }
+  }
+  &__smartphone-slider{
+    --radio-container-padding: 0 var(--spacer-sm)  var(--spacer-xl);
+    --radio-background: transparent;
+    --filter-label-color: var(--c-secondary-variant);
+    --filter-count-color: var(--c-secondary-variant);
+    border-bottom: 1px solid var(--c-light);
+    border-right: 70px solid var(--c-white);
+
   }
   &__accordion-item {
     --accordion-item-content-padding: 0;
