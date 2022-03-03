@@ -35,10 +35,12 @@ export type AuthIntegrationContext = {
 
 export type InternationalizationIntegration = {
   getCurrency: () => string;
+  getLocale: () => string;
 }
 
 export type InternationalizationIntegrationContext = {
   getCurrency: () => Promise<string>;
+  getLocale: () => Promise<string>;
 }
 
 export type ApiConfig = {
