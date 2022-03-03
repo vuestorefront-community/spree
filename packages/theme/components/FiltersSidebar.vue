@@ -192,8 +192,6 @@ export default {
     const onPriceChanged = (facet, value) => {
       const minChosenPrice = value[0].slice(0, -5);
       const maxChosenPrice = value[1].slice(0, -5);
-      console.log(minChosenPrice);
-      console.log(maxChosenPrice);
       selectedPrice.value = ([minChosenPrice, maxChosenPrice].map(String)).join(',');
     };
 
