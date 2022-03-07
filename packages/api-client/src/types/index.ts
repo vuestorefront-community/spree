@@ -32,8 +32,17 @@ export type AuthIntegrationContext = {
   removeCartToken: () => Promise<void>;
 }
 
+export type InternationalizationIntegration = {
+  getCurrency: () => string;
+}
+
+export type InternationalizationIntegrationContext = {
+  getCurrency: () => Promise<string>;
+}
+
 export type ApiConfig = {
   auth: AuthIntegrationContext;
+  internationalization: InternationalizationIntegrationContext;
   backendUrl: string;
   spreeFeatures: {
     associateGuestCart: boolean;

@@ -94,12 +94,12 @@ For more details, refer to the official [architecture diagram](https://docs.vues
 | Account - saved addresses | Available | Requires Spree 4.2 |
 | Account - reset password | Available | URL from password reset emails should point to: `/resetPassword?token=...` |
 | Account - order history | Available | |
-| Cart | Available | Fully functional. Associating guest orders upon login requires Spree 4.3 and needs to be enable via configuration |
+| Cart | Available | Associating guest orders upon login requires Spree 4.3 and needs to be enable via configuration |
 | Checkout | Available | |
 | Checkout - Shipping methods | Available | |
-| Checkout - Payment methods | Partial | Only "Cash" supported out of the box. Additional changes need to be made in backend to support OOB support for providers like Stripe. This will be available in the next version of Spree's API. |
+| Checkout - Payment methods | Available | Cash and Stripe Elements gateways supported out of the box. |
 | Wishlists | Coming soon | This will be integrated with the API provided by the latest version of spree_wishlist |
-| Multi-currency support | Coming soon | Requires Spree 4.2 |
+| Multi-currency support | Available | Requires Spree 4.2 or spree_multi_currency extension |
 
 ## Caching and performance concerns
 

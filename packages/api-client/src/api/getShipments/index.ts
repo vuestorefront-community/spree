@@ -5,7 +5,8 @@ import { deserializeShipment } from '../serializers/shipping';
 export default async function getShipments({ client, config }: ApiContext) {
   try {
     const token = await getCurrentBearerOrCartToken({ client, config });
-    const result = await client.checkout.shippingMethods(token);
+    const currency = await config.internationalization.getCurrency();
+    const result = await client.checkout.shippingMethods(token, { currency });
 
     if (result.isSuccess()) {
       const payload = result.success();

@@ -44,7 +44,7 @@ export default {
     ]
   },
   loading: { color: '#fff' },
-  plugins: [],
+  plugins: ['~/plugins/i18n.js'],
   buildModules: [
     // to core
     '@nuxtjs/composition-api/module',
@@ -96,10 +96,12 @@ export default {
     locales: [
       {
         code: 'en',
+        label: 'English',
         file: 'en.js'
       },
       {
         code: 'de',
+        label: 'German',
         file: 'de.js'
       }
     ],
@@ -118,11 +120,21 @@ export default {
           currency: {
             style: 'currency',
             currency: 'USD',
-            currencyDisplay: 'symbol'
+            currencyDisplay: 'symbol',
+            currencyDefault: 'USD'
+          }
+        },
+        de: {
+          currency: {
+            style: 'currency',
+            currency: 'EUR',
+            currencyDisplay: 'symbol',
+            currencyDefault: 'EUR'
           }
         }
-      }
-    }
+      },
+    },
+    detectBrowserLanguage: false
   },
   pwa: {
     meta: {

@@ -24,6 +24,7 @@ import removeCoupon from './api/removeCoupon';
 import saveCheckoutShippingAddress from './api/saveCheckoutShippingAddress';
 import saveCheckoutBillingAddress from './api/saveCheckoutBillingAddress';
 import createAuthIntegration from './api/authentication/integration';
+import createInternationalizationIntegration from './api/internationalization/integration';
 import getOrCreateCart from './api/getOrCreateCart';
 import getOrders from './api/getOrders';
 import saveGuestCheckoutEmail from './api/saveGuestCheckoutEmail';
@@ -39,6 +40,7 @@ import resetPassword from './api/resetPassword';
 import getWishlist from './api/getWishlist';
 import addToWishlist from './api/addToWishlist';
 import removeFromWishlist from './api/removeFromWishlist';
+import changeCurrency from './api/changeCurrency';
 
 const defaultSettings = {
   backendUrl: 'https://demo.spreecommerce.org',
@@ -62,11 +64,13 @@ const tokenExtension: ApiClientExtension = {
   name: 'tokenExtension',
   hooks: (req, res) => {
     const auth = createAuthIntegration(req, res);
+    const internationalization = createInternationalizationIntegration(req, res);
 
     return {
       beforeCreate: ({ configuration }) => ({
         ...configuration,
-        auth
+        auth,
+        internationalization
       })
     };
   }
@@ -112,7 +116,8 @@ const { createApiClient } = apiClientFactory<any, any>({
     resetPassword,
     getWishlist,
     addToWishlist,
-    removeFromWishlist
+    removeFromWishlist,
+    changeCurrency
   },
   extensions: [tokenExtension]
 });

@@ -6,12 +6,15 @@ import getAuthorizationHeaders from '../authentication/getAuthorizationHeaders';
 export default async function getPaymentConfirmationData({ client, config }: ApiContext) {
   try {
     const token = await getCurrentBearerOrCartToken({ client, config });
+    const currency = await config.internationalization.getCurrency();
     const endpoint = config.backendUrl.concat('/api/v2/storefront/intents/payment_confirmation_data');
     const response = await axios.post(
       endpoint,
-      {},
       {
-        headers: getAuthorizationHeaders(token)
+        headers: getAuthorizationHeaders(token),
+        params: {
+          currency
+        }
       }
     );
 
