@@ -13,27 +13,31 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistProduct | ProductVarian
   },
 
   addItem: async (context: Context, { currentWishlist, product }) => {
-    await context.$spree.api.addToWishlist(currentWishlist, product);
+    const wishlistToken = currentWishlist?.token;
+    await context.$spree.api.addToWishlist(wishlistToken, product);
 
     const wishlist = await context.$spree.api.getWishlist();
     return wishlist;
   },
 
   removeItem: async (context: Context, { currentWishlist, product }) => {
-    const wishedProduct = product.wishedProductId
+    // product param is either ProductVariant (which doesn't have wishedProductId property) or WishlistProduct
+    // (depends on where this method is called)
+    const wishedProduct: WishlistProduct = product.wishedProductId
       ? product
       : currentWishlist.wishedProducts.find(e => e.variantId === product._variantId);
+    const wishlistToken = currentWishlist?.token;
 
-    await context.$spree.api.removeFromWishlist(currentWishlist, wishedProduct.wishedProductId);
+    await context.$spree.api.removeFromWishlist(wishlistToken, wishedProduct.wishedProductId);
 
     const wishlist = await context.$spree.api.getWishlist();
     return wishlist;
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   clear: async (context: Context, { currentWishlist }) => {
-    console.log('Mocked: clearWishlist');
-    return {};
+    await context.$spree.api.deleteWishlist(currentWishlist.token);
+    const wishlist = await context.$spree.api.getWishlist();
+    return wishlist;
   },
 
   isInWishlist: (context: Context, { currentWishlist, product }) => {

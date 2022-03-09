@@ -11,8 +11,9 @@ const deserializeWishedProductImage = (
   images: JsonApiDocument[],
   backendUrl: string
 ): string => {
-  const imageUrl = images[0]?.attributes.original_url;
+  if (!images || images.length < 1) return undefined;
 
+  const imageUrl = images[0].attributes.original_url;
   return backendUrl.concat(imageUrl);
 };
 
@@ -27,11 +28,11 @@ const deserializeWishedProduct = (
 
   return {
     wishedProductId: wishedProduct.id,
-    variantId: variant.id,
-    name: product.attributes.name,
-    sku: variant.attributes.sku,
-    price: variant.attributes.price,
-    displayPrice: variant.attributes.display_price,
+    variantId: variant?.id,
+    name: product?.attributes.name,
+    sku: variant?.attributes.sku,
+    price: variant?.attributes.price,
+    displayPrice: variant?.attributes.display_price,
     image: deserializeWishedProductImage(images, config.backendUrl)
   };
 };

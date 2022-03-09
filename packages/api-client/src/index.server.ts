@@ -40,6 +40,7 @@ import resetPassword from './api/resetPassword';
 import getWishlist from './api/getWishlist';
 import addToWishlist from './api/addToWishlist';
 import removeFromWishlist from './api/removeFromWishlist';
+import deleteWishlist from './api/deleteWishlist';
 import changeCurrency from './api/changeCurrency';
 
 const defaultSettings = {
@@ -117,6 +118,7 @@ const { createApiClient } = apiClientFactory<any, any>({
     getWishlist,
     addToWishlist,
     removeFromWishlist,
+    deleteWishlist,
     changeCurrency
   },
   extensions: [tokenExtension]
