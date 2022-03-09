@@ -1,7 +1,7 @@
 import { Address } from './checkout';
 
 export type LineItem = {
-  _id: number;
+  id: number;
   _variantId: number;
   _description: string;
   _categoriesRef: string[];
@@ -58,4 +58,9 @@ export type ApplyCouponParams = {
 
 export type ClearCartParams = {
   token: string;
+}
+
+export type GetChangeCartParams = {
+  currency: string;
+  newCurrency: string;
 }

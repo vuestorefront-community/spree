@@ -21,10 +21,10 @@ import removeFromCart from './api/removeFromCart';
 import clearCart from './api/clearCart';
 import applyCoupon from './api/applyCoupon';
 import removeCoupon from './api/removeCoupon';
-import getCheckout from './api/getCheckout';
 import saveCheckoutShippingAddress from './api/saveCheckoutShippingAddress';
 import saveCheckoutBillingAddress from './api/saveCheckoutBillingAddress';
 import createAuthIntegration from './api/authentication/integration';
+import createInternationalizationIntegration from './api/internationalization/integration';
 import getOrCreateCart from './api/getOrCreateCart';
 import getOrders from './api/getOrders';
 import saveGuestCheckoutEmail from './api/saveGuestCheckoutEmail';
@@ -37,6 +37,7 @@ import handlePaymentConfirmationResponse from './api/handlePaymentConfirmationRe
 import makeOrder from './api/makeOrder';
 import forgotPassword from './api/forgotPassword';
 import resetPassword from './api/resetPassword';
+import changeCurrency from './api/changeCurrency';
 
 const defaultSettings = {
   backendUrl: 'https://demo.spreecommerce.org',
@@ -61,11 +62,13 @@ const tokenExtension: ApiClientExtension = {
   name: 'tokenExtension',
   hooks: (req, res) => {
     const auth = createAuthIntegration(req, res);
+    const internationalization = createInternationalizationIntegration(req, res);
 
     return {
       beforeCreate: ({ configuration }) => ({
         ...configuration,
-        auth
+        auth,
+        internationalization
       })
     };
   }
@@ -95,7 +98,6 @@ const { createApiClient } = apiClientFactory<any, any>({
     clearCart,
     applyCoupon,
     removeCoupon,
-    getCheckout,
     saveCheckoutShippingAddress,
     saveCheckoutBillingAddress,
     getOrCreateCart,
@@ -109,7 +111,8 @@ const { createApiClient } = apiClientFactory<any, any>({
     handlePaymentConfirmationResponse,
     makeOrder,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    changeCurrency
   },
   extensions: [tokenExtension]
 });

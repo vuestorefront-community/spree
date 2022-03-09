@@ -63,7 +63,7 @@
           class="sf-property--full-width sf-property--large summary__property-total"
         />
 
-        <VsfPaymentProvider @change:payment="handlePaymentChange"/>
+        <VsfPaymentProvider @change:payment="handlePaymentChange" />
 
         <SfCheckbox v-e2e="'terms'" v-model="terms" name="terms" class="summary__terms">
           <template #label>
@@ -73,16 +73,15 @@
           </template>
         </SfCheckbox>
 
-        <div class="summary__action">
+        <div v-e2e="'payment-summary-buttons'" class="summary__action">
           <SfButton
             type="button"
             class="sf-button color-secondary summary__back-button"
-            @click="$router.push('/checkout/billing')"
+            @click="router.push('/checkout/billing')"
           >
             {{ $t('Go back') }}
           </SfButton>
           <SfButton
-            v-e2e="'make-an-order'"
             :disabled="loading || !isPaymentReady || !terms"
             class="summary__action-button"
             @click="processOrder"
@@ -110,7 +109,7 @@ import {
   SfLink
 } from '@storefront-ui/vue';
 import { onSSR } from '@vue-storefront/core';
-import { ref, computed } from '@vue/composition-api';
+import { ref, computed, useRouter } from '@nuxtjs/composition-api';
 import { useMakeOrder, useCart, cartGetters } from '@vue-storefront/spree';
 
 export default {
@@ -129,7 +128,8 @@ export default {
     SfLink,
     VsfPaymentProvider: () => import('~/components/Checkout/VsfPaymentProvider')
   },
-  setup(props, context) {
+  setup() {
+    const router = useRouter();
     const { cart, load } = useCart();
     const { make, loading, error: makeError } = useMakeOrder();
 
@@ -160,16 +160,17 @@ export default {
         return;
       }
 
-      context.root.$router.push(`/checkout/thank-you?order=${cart.value.number}`);
+      router.push(`/checkout/thank-you?order=${cart.value.number}`);
     };
 
     return {
+      router,
       isPaymentReady,
       terms,
       loading,
       products: computed(() => cartGetters.getItems(cart.value)),
       totals: computed(() => cartGetters.getTotals(cart.value)),
-      tableHeaders: ['Description', 'Colour', 'Size', 'Quantity', 'Amount'],
+      tableHeaders: ['Description', 'Size', 'Color', 'Quantity', 'Amount'],
       cartGetters,
       processOrder,
       handlePaymentChange

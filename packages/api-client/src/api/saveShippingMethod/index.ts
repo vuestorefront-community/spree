@@ -1,16 +1,20 @@
 import { ApiContext } from '../../types';
-import getCurrentCartToken from '../authentication/getCurrentCartToken';
+import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
+import { deserializeCartShipments } from '../serializers/shipping';
 
 export default async ({ client, config }: ApiContext, { selectedShippingRates }) => {
   try {
-    const token = await getCurrentCartToken(config);
+    const token = await getCurrentBearerOrCartToken({ client, config });
+    const currency = await config.internationalization.getCurrency();
     const result = await client.checkout.orderUpdate(token, {
       order: {
         shipments_attributes: Object.entries(selectedShippingRates).map(([shipmentId, shippingRateId]: [string, number]) => ({
           id: shipmentId,
           selected_shipping_rate_id: shippingRateId.toString()
         }))
-      }
+      },
+      currency,
+      include: 'shipments,shipments.shipping_rates'
     });
 
     if (result.isFail()) {
@@ -23,7 +27,7 @@ export default async ({ client, config }: ApiContext, { selectedShippingRates })
       throw result.fail();
     }
 
-    return advancedCheckoutResult.success().data;
+    return deserializeCartShipments(result.success().included);
   } catch (e) {
     console.error(e);
     throw e;

@@ -32,8 +32,8 @@
       />
       <SfProperty
         :name="$t('Shipping')"
-        v-if="selectedShippingMethod && selectedShippingMethod.zoneRates"
-        :value="$n(getShippingMethodPrice(selectedShippingMethod, totals.total), 'currency')"
+        v-if="shippingPrice"
+        :value="$n(shippingPrice, 'currency')"
         class="sf-property--full-width sf-property--large property"
       />
       <SfProperty
@@ -76,11 +76,8 @@ import {
   SfInput,
   SfCircleIcon
 } from '@storefront-ui/vue';
-import { computed, ref } from '@vue/composition-api';
-import { useCart, useShippingProvider, cartGetters } from '@vue-storefront/spree';
-// import getShippingMethodPrice from '@/helpers/Checkout/getShippingMethodPrice';
-
-const getShippingMethodPrice = () => 0;
+import { computed, ref } from '@nuxtjs/composition-api';
+import { useCart, cartGetters } from '@vue-storefront/spree';
 
 export default {
   name: 'CartPreview',
@@ -95,7 +92,6 @@ export default {
   },
   setup () {
     const { cart, removeItem, updateItemQty, applyCoupon, error: cartError } = useCart();
-    const { state } = useShippingProvider();
 
     const listIsHidden = ref(false);
     const promoCode = ref('');
@@ -105,6 +101,7 @@ export default {
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
     const totals = computed(() => cartGetters.getTotals(cart.value));
     const discounts = computed(() => cartGetters.getDiscounts(cart.value));
+    const shippingPrice = computed(() => cartGetters.getShippingPrice(cart.value));
 
     return {
       discounts,
@@ -112,6 +109,7 @@ export default {
       listIsHidden,
       products,
       totals,
+      shippingPrice,
       promoCode,
       showPromoCode,
       removeItem,
@@ -137,9 +135,7 @@ export default {
         }
       ],
 
-      selectedShippingMethod: computed(() => state.value && state.value.response && state.value.response.shippingMethod),
       hasSpecialPrice: computed(() => totals.value.special > 0 && totals.value.special < totals.value.subtotal),
-      getShippingMethodPrice,
       cartError
     };
   }

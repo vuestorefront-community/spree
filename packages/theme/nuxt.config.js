@@ -44,13 +44,15 @@ export default {
     ]
   },
   loading: { color: '#fff' },
-  plugins: [],
+  plugins: ['~/plugins/i18n.js'],
   buildModules: [
     // to core
+    '@nuxtjs/composition-api/module',
     '@nuxt/typescript-build',
     '@nuxtjs/google-fonts',
     '@nuxtjs/pwa',
     '@nuxtjs/style-resources',
+    ['@vue-storefront/spree/nuxt', {}],
     ['@vue-storefront/nuxt', {
       // @core-development-only-start
       coreDevelopment: true,
@@ -74,12 +76,11 @@ export default {
           composables: '@vue-storefront/spree'
         }
       }
-    }],
+    }]
     // @core-development-only-end
     /* project-only-start
     ['@vue-storefront/nuxt-theme'],
     project-only-end */
-    ['@vue-storefront/spree/nuxt', {}]
   ],
   modules: [
     ['nuxt-i18n', {
@@ -95,15 +96,18 @@ export default {
     locales: [
       {
         code: 'en',
+        label: 'English',
         file: 'en.js'
       },
       {
         code: 'de',
+        label: 'German',
         file: 'de.js'
       }
     ],
     defaultLocale: 'en',
     strategy: 'no_prefix',
+    detectBrowserLanguage: false,
     currencies: [
       { name: 'USD', label: 'Dollar' }
     ],
@@ -116,11 +120,21 @@ export default {
           currency: {
             style: 'currency',
             currency: 'USD',
-            currencyDisplay: 'symbol'
+            currencyDisplay: 'symbol',
+            currencyDefault: 'USD'
+          }
+        },
+        de: {
+          currency: {
+            style: 'currency',
+            currency: 'EUR',
+            currencyDisplay: 'symbol',
+            currencyDefault: 'EUR'
           }
         }
-      }
-    }
+      },
+    },
+    detectBrowserLanguage: false
   },
   pwa: {
     meta: {

@@ -37,7 +37,12 @@ export default async function getCart({ client, config }: ApiContext): Promise<C
       return emptyCart;
     }
 
-    const result = await client.cart.show(token, cartParams);
+    const currency = await config.internationalization.getCurrency();
+
+    const result = await client.cart.show(token, {
+      ...cartParams,
+      currency
+    });
 
     if (result.isSuccess()) {
       const payload = result.success();

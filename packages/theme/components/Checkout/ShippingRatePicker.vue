@@ -8,27 +8,34 @@
     <SfRadio
       v-e2e="'shipping-method'"
       v-for="rate in shippingRates"
-      :key="rate.id"
-      :label="rate.name"
-      :value="rate.id"
-      :description="$n(rate.cost, 'currency')"
-      :selected ="selectedRateId"
+      :key="checkoutGetters.getShippingMethodId(rate)"
+      :label="checkoutGetters.getShippingMethodName(rate)"
+      :value="checkoutGetters.getShippingMethodId(rate)"
+      :description="$n(checkoutGetters.getShippingMethodPrice(rate), 'currency')"
+      :selected="selectedRateId"
       name="shippingMethod"
       class="form__radio"
       @input="selectRate(rate.id)"
+    />
+    <SfAlert
+      v-if="!areShippingRatesAvailable"
+      message="There is no shipping method available for this shipment"
+      type="warning"
     />
   </div>
 </template>
 
 <script>
-import { SfHeading, SfRadio } from '@storefront-ui/vue';
+import { SfHeading, SfRadio, SfAlert } from '@storefront-ui/vue';
+import { checkoutGetters } from '@vue-storefront/spree';
 
 export default {
   name: 'ShippingRatePicker',
 
   components: {
     SfHeading,
-    SfRadio
+    SfRadio,
+    SfAlert
   },
 
   props: {
@@ -44,13 +51,17 @@ export default {
 
   data() {
     return {
-      selectedRateId: null
+      selectedRateId: null,
+      checkoutGetters
     };
   },
 
   computed: {
     shippingRates() {
       return this.shipment.availableShippingRates;
+    },
+    areShippingRatesAvailable() {
+      return this.shippingRates.length > 0;
     }
   },
 

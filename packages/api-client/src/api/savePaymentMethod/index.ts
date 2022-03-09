@@ -1,9 +1,10 @@
 /* eslint-disable camelcase */
 import { ApiContext } from '../../types';
-import getCurrentCartToken from '../authentication/getCurrentCartToken';
+import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 
 export default async function savePaymentMethod({ client, config }: ApiContext, methodId: number, payload: any): Promise<void> {
-  const token = await getCurrentCartToken(config);
+  const token = await getCurrentBearerOrCartToken({ client, config });
+  const currency = await config.internationalization.getCurrency();
 
   const result = await client.checkout.orderUpdate(token, {
     order: {
@@ -13,6 +14,7 @@ export default async function savePaymentMethod({ client, config }: ApiContext, 
         }
       ]
     },
+    currency,
     payment_source: {
       [methodId]: payload
     }

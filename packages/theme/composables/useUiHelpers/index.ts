@@ -1,11 +1,11 @@
-import { getCurrentInstance } from '@vue/composition-api';
+import { getCurrentInstance } from '@nuxtjs/composition-api';
 import type { AgnosticGroupedFacet } from '@vue-storefront/core';
 import type { Category } from '@vue-storefront/spree-api';
 import type { SearchParams, SearchParamsOptionTypeFilter, SearchParamsProductPropertyFilter } from '@vue-storefront/spree';
 
 const getInstance = () => {
   const vm = getCurrentInstance();
-  return vm.$root as any;
+  return vm.root.proxy as any;
 };
 
 const getOptionTypeFiltersFromURL = (): SearchParamsOptionTypeFilter[] => {

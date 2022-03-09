@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { onMounted, ref, computed } from '@vue/composition-api';
+import { onMounted, ref, computed } from '@nuxtjs/composition-api';
 import { useVSFContext } from '@vue-storefront/core';
 import { loadStripe } from '@stripe/stripe-js';
 

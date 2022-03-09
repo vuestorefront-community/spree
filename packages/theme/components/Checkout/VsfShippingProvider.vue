@@ -22,9 +22,9 @@
 
 <script>
 import { SfButton } from '@storefront-ui/vue';
-import { computed, ref, onMounted } from '@vue/composition-api';
+import { computed, ref, onMounted } from '@nuxtjs/composition-api';
 import { Logger, useVSFContext } from '@vue-storefront/core';
-import { useCart } from '@vue-storefront/spree';
+import { useCart, useShippingProvider } from '@vue-storefront/spree';
 import ShippingRatePicker from '~/components/Checkout/ShippingRatePicker.vue';
 
 export default {
@@ -35,11 +35,11 @@ export default {
     ShippingRatePicker
   },
 
-  setup(props, { emit }) {
+  setup(_props, { emit }) {
     const { $spree } = useVSFContext();
     const { setCart } = useCart();
+    const { state: shipments, save: saveShipments, load: loadShipments } = useShippingProvider();
 
-    const shipments = ref([]);
     const selectedShippingRates = ref({});
 
     const allShipmentsSelected = computed(() => {
@@ -51,7 +51,7 @@ export default {
     });
 
     onMounted(async () => {
-      shipments.value = await $spree.api.getShipments();
+      await loadShipments();
       selectedShippingRates.value = shipments.value.reduce((prev, curr) => ({...prev, [curr.id]: null }), {});
     });
 
@@ -61,7 +61,7 @@ export default {
 
     const save = async () => {
       try {
-        await $spree.api.saveShippingMethod({ selectedShippingRates: selectedShippingRates.value });
+        await saveShipments({ shippingMethod: selectedShippingRates.value });
         const updatedCart = await $spree.api.getCart();
         setCart(updatedCart);
 
