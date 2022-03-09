@@ -21,6 +21,9 @@ module.exports = {
 
 By default the integration will use the `BACKEND_URL` environment variable. If it's not present, it will fallback to `https://demo.spreecommerce.org`.
 
+## Assets URL
+The `ASSETS_URL` indicate the main url for images, css. f it's not present, it will fallback to `BACKEND_URL`.
+
 ## Spree Features
 
 Spree features is an object containing features flags to be enabled.
