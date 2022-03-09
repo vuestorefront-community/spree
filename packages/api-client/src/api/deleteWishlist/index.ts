@@ -1,9 +1,9 @@
 import axios from 'axios';
 import getCurrentBearerToken from '../authentication/getCurrentBearerToken';
 import getAuthorizationHeaders from '../authentication/getAuthorizationHeaders';
-import { ApiContext } from '../../types';
+import { ApiContext, DeleteWishlistParams } from '../../types';
 
-export default async function deleteWishlist({ client, config }: ApiContext, wishlistToken: string): Promise<void> {
+export default async function deleteWishlist({ client, config }: ApiContext, { wishlistToken }: DeleteWishlistParams): Promise<void> {
   const bearerToken = await getCurrentBearerToken({ client, config });
   if (!bearerToken || !wishlistToken) return;
 

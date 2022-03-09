@@ -1,10 +1,10 @@
 import axios from 'axios';
 import getCurrentBearerToken from '../authentication/getCurrentBearerToken';
 import getAuthorizationHeaders from '../authentication/getAuthorizationHeaders';
-import { ApiContext, ProductVariant } from '../../types';
+import { AddToWishlistParams, ApiContext } from '../../types';
 import { serializeWishedProduct } from '../serializers/wishlist';
 
-export default async function addToWishlist({ client, config }: ApiContext, wishlistToken: string, product: ProductVariant): Promise<void> {
+export default async function addToWishlist({ client, config }: ApiContext, { wishlistToken, product }: AddToWishlistParams): Promise<void> {
   const bearerToken = await getCurrentBearerToken({ client, config });
   if (!bearerToken || !wishlistToken) return;
 

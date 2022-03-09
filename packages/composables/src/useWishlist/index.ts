@@ -14,7 +14,7 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistProduct | ProductVarian
 
   addItem: async (context: Context, { currentWishlist, product }) => {
     const wishlistToken = currentWishlist?.token;
-    await context.$spree.api.addToWishlist(wishlistToken, product);
+    await context.$spree.api.addToWishlist({ wishlistToken, product });
 
     const wishlist = await context.$spree.api.getWishlist();
     return wishlist;
@@ -28,14 +28,17 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistProduct | ProductVarian
       : currentWishlist.wishedProducts.find(e => e.variantId === product._variantId);
     const wishlistToken = currentWishlist?.token;
 
-    await context.$spree.api.removeFromWishlist(wishlistToken, wishedProduct.wishedProductId);
+    await context.$spree.api.removeFromWishlist({
+      wishlistToken,
+      wishedProductId: wishedProduct?.wishedProductId
+    });
 
     const wishlist = await context.$spree.api.getWishlist();
     return wishlist;
   },
 
   clear: async (context: Context, { currentWishlist }) => {
-    await context.$spree.api.deleteWishlist(currentWishlist.token);
+    await context.$spree.api.deleteWishlist({ wishlistToken: currentWishlist.token });
     const wishlist = await context.$spree.api.getWishlist();
     return wishlist;
   },

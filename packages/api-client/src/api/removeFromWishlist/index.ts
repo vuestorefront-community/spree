@@ -1,11 +1,11 @@
 import axios from 'axios';
 import getCurrentBearerToken from '../authentication/getCurrentBearerToken';
 import getAuthorizationHeaders from '../authentication/getAuthorizationHeaders';
-import { ApiContext } from '../../types';
+import { ApiContext, RemoveFromWishlistParams } from '../../types';
 
-export default async function removeFromWishlist({ client, config }: ApiContext, wishlistToken: string, wishedProductId: string): Promise<void> {
+export default async function removeFromWishlist({ client, config }: ApiContext, { wishlistToken, wishedProductId }: RemoveFromWishlistParams): Promise<void> {
   const bearerToken = await getCurrentBearerToken({ client, config });
-  if (!bearerToken || !wishlistToken) return;
+  if (!bearerToken || !wishlistToken || !wishedProductId) return;
 
   const url = config.backendUrl.concat(`/api/v2/storefront/wishlists/${wishlistToken}/wished_products/${wishedProductId}`);
 
