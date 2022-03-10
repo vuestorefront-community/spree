@@ -1,18 +1,15 @@
+import axios from 'axios';
+import getCurrentBearerToken from '../authentication/getCurrentBearerToken';
+import getAuthorizationHeaders from '../authentication/getAuthorizationHeaders';
 import { ApiContext, DeleteWishlistParams } from '../../types';
-import { wishlistFeatureState } from '../common/wishlist';
-import deleteWishlistV1 from './V1';
-import deleteWishlistV2 from './V2';
 
-export default async function deleteWishlist({ client, config }: ApiContext, params: DeleteWishlistParams): Promise<void> {
-  switch (config.spreeFeatures.wishlist) {
-    case wishlistFeatureState.legacy:
-      await deleteWishlistV1({ client, config }, params);
-      break;
-    case wishlistFeatureState.enabled:
-      await deleteWishlistV2({ client, config }, params);
-      break;
-    case wishlistFeatureState.disabled:
-    default:
-      break;
-  }
+export default async function deleteWishlist({ client, config }: ApiContext, { wishlistToken }: DeleteWishlistParams): Promise<void> {
+  const bearerToken = await getCurrentBearerToken({ client, config });
+  if (!bearerToken || !wishlistToken) return;
+
+  const url = config.backendUrl.concat(`/api/v2/storefront/wishlists/${wishlistToken}`);
+
+  await axios.delete(url, {
+    headers: getAuthorizationHeaders({ bearerToken })
+  });
 }
