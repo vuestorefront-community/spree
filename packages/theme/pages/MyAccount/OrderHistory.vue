@@ -137,7 +137,7 @@ export default {
 
     return {
       tableHeaders,
-      orders: computed(() => orders ? orders.value.results : []),
+      orders,
       totalOrders: computed(() => orderGetters.getOrdersTotal(orders.value)),
       getStatusTextClass,
       orderGetters,
