@@ -54,7 +54,7 @@ export const deserializeWishlist = (
   const deserializedWishedProducts = wishedProducts.map(e => deserializeWishedProduct(e, included, config));
 
   return {
-    token: data.attributes.access_hash,
+    token: data.attributes.access_hash || data.attributes.token,
     wishedProducts: deserializedWishedProducts
   };
 };
