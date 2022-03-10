@@ -9,7 +9,8 @@ const findAttachment = (attachments: any[], id: string, type: string) => {
   return attachments.find(e => e.id === id && e.type === type);
 };
 
-const formatImageUrl = (styles: any[], backendUrl: string): string => {
+const formatImageUrl = (styles: any[], config: any): string => {
+  const assetsUrl = config.assetsUrl || config.backendUrl;
   let coverImage = styles[0];
 
   styles.forEach(img => {
@@ -17,7 +18,7 @@ const formatImageUrl = (styles: any[], backendUrl: string): string => {
       coverImage = img;
   });
 
-  return backendUrl.concat(coverImage.url);
+  return assetsUrl.concat(coverImage.url);
 };
 
 const formatOptions = (optionsText: string) => {

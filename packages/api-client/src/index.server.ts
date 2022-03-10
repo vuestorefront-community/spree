@@ -45,6 +45,7 @@ import changeCurrency from './api/changeCurrency';
 
 const defaultSettings = {
   backendUrl: 'https://demo.spreecommerce.org',
+  assetsUrl: null,
   spreeFeatures: {
     associateGuestCart: true,
     fetchPrimaryVariant: true
