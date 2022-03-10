@@ -37,31 +37,27 @@ const deserializeWishedProduct = (
   };
 };
 
-const deserializeWishedProducts = (
-  data: JsonApiDocument,
-  included: JsonApiDocument[],
-  config: ApiConfig
-): WishedProduct[] => {
-  const wishedProducts = extractRelationships(
-    included,
-    'wished_product',
-    'wished_products',
-    data
-  );
-
-  return wishedProducts.map((wishedProduct) =>
-    deserializeWishedProduct(wishedProduct, included, config)
-  );
-};
-
 export const deserializeWishlist = (
   data: JsonApiDocument,
   included: JsonApiDocument[],
-  config: ApiConfig
-): Wishlist => ({
-  token: data.attributes.access_hash,
-  wishedProducts: deserializeWishedProducts(data, included, config)
-});
+  config: ApiConfig,
+  wishedProductDocumentType: string,
+  wishedProductsRelationshipName: string
+): Wishlist => {
+  const wishedProducts = extractRelationships(
+    included,
+    wishedProductDocumentType,
+    wishedProductsRelationshipName,
+    data
+  );
+
+  const deserializedWishedProducts = wishedProducts.map(e => deserializeWishedProduct(e, included, config));
+
+  return {
+    token: data.attributes.access_hash,
+    wishedProducts: deserializedWishedProducts
+  };
+};
 
 export const serializeWishedProduct = (
   product: ProductVariant
