@@ -1,26 +1,16 @@
-import axios from 'axios';
-import getCurrentBearerToken from '../authentication/getCurrentBearerToken';
-import getAuthorizationHeaders from '../authentication/getAuthorizationHeaders';
 import { ApiContext, Wishlist } from '../../types';
-import { deserializeWishlist } from '../serializers/wishlist';
-
-const getWishlistInclude = 'wished_products,wished_products.variant,wished_products.variant.images,wished_products.variant.product';
+import { wishlistFeatureState, emptyWishlist } from '../common/wishlist';
+import getWishlistV1 from './V1';
+import getWishlistV2 from './V2';
 
 export default async function getWishlist({ client, config }: ApiContext): Promise<Wishlist> {
-  const url = config.backendUrl.concat(`/api/v2/storefront/wishlists/default?include=${getWishlistInclude}`);
-  const bearerToken = await getCurrentBearerToken({ client, config });
-
-  if (!bearerToken) {
-    return {
-      token: undefined,
-      wishedProducts: []
-    };
+  switch (config.spreeFeatures.wishlist) {
+    case wishlistFeatureState.legacy:
+      return await getWishlistV1({ client, config });
+    case wishlistFeatureState.enabled:
+      return await getWishlistV2({ client, config });
+    case wishlistFeatureState.disabled:
+    default:
+      return emptyWishlist;
   }
-
-  const result = await axios.get(url, {
-    headers: getAuthorizationHeaders({ bearerToken })
-  });
-
-  const { data, included } = result.data;
-  return deserializeWishlist(data, included, config);
 }

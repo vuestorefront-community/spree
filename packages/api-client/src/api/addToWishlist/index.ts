@@ -1,18 +1,18 @@
-import axios from 'axios';
-import getCurrentBearerToken from '../authentication/getCurrentBearerToken';
-import getAuthorizationHeaders from '../authentication/getAuthorizationHeaders';
 import { AddToWishlistParams, ApiContext } from '../../types';
-import { serializeWishedProduct } from '../serializers/wishlist';
+import { wishlistFeatureState } from '../common/wishlist';
+import addToWishlistV1 from './V1';
+import addToWishlistV2 from './V2';
 
-export default async function addToWishlist({ client, config }: ApiContext, { wishlistToken, product }: AddToWishlistParams): Promise<void> {
-  const bearerToken = await getCurrentBearerToken({ client, config });
-  if (!bearerToken || !wishlistToken) return;
-
-  const url = config.backendUrl.concat(`/api/v2/storefront/wishlists/${wishlistToken}/wished_products`);
-  await axios.post(url, {
-    wished_product: serializeWishedProduct(product)
-  },
-  {
-    headers: getAuthorizationHeaders({ bearerToken })
-  });
+export default async function addToWishlist({ client, config }: ApiContext, params: AddToWishlistParams): Promise<void> {
+  switch (config.spreeFeatures.wishlist) {
+    case wishlistFeatureState.legacy:
+      await addToWishlistV1({ client, config }, params);
+      break;
+    case wishlistFeatureState.enabled:
+      await addToWishlistV2({ client, config }, params);
+      break;
+    case wishlistFeatureState.disabled:
+    default:
+      break;
+  }
 }
