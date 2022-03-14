@@ -2,15 +2,10 @@
   <div>
     <p><strong>{{ address.firstName }} {{ address.lastName }}</strong></p>
     <p v-if="address.company">{{ address.company }}</p>
-    <p>
-      {{ address.addressLine1 }}
-      <br />
-      {{ address.addressLine2 }}
-      <br />
-      {{ city }}
-      <br>
-      {{ address.countryName }}
-    </p>
+    <p>{{ address.addressLine1 }}</p>
+    <p v-if="address.addressLine2">{{ address.addressLine2 }}</p>
+    <p>{{ city }}</p>
+    <p>{{ address.countryName }}</p>
     <p>{{ address.phone }}</p>
   </div>
 </template>
