@@ -179,7 +179,7 @@ export default {
       tooltips: true,
       keyboardSupport: true,
       format: {to: function(value) {
-        return new Intl.NumberFormat('de-DE', {style: 'currency', currency: 'USD'}).format(value).replace(/[$]/g, '');
+        return new Intl.NumberFormat('de-DE', {style: 'currency', currency: 'USD', maximumSignificantDigits: 3}).format(value).replace(/[$]/g, '');
       },
       from: function(value) {
         return value;
