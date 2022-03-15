@@ -32,7 +32,8 @@ This is done to achieve backwards compatibility, as some of the features require
 ```js
 spreeFeatures: {
   associateGuestCart: true,
-  fetchPrimaryVariant: true
+  fetchPrimaryVariant: true,
+  wishlist: 'disabled'
 }
 ```
 
@@ -45,3 +46,11 @@ When disabled, after the user signs in, the guest cart will be dropped.
 
 Defines whether fetching product catalog/details should use `primary_variant` association for product information. This is available in Spree 4.3+.
 When disabled, the variant with `is_master == true` will be used.
+
+### wishlist
+
+Defines which api-client methods should be used in order to allow users using wishlist. V1 methods are integrated with `spree_wishlist` gem API, but V2 support Spree 4.4+ wishlist API.
+Accepted `wishlist` values:
+- `'enabled'` (Spree 4.4+)
+- `'legacy'` (Spree older than 4.4 with `spree_wishlist` gem installed)
+- `'disabled'` (Spree older than 4.4 without `spree_wishlist` gem)
