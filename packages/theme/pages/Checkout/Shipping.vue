@@ -460,6 +460,7 @@ export default {
   }
   &__save-address {
     margin: 0 0 var(--spacer-xs) 0;
+    --checkbox-font-family: var(--font-family--secondary);
   }
 }
 
