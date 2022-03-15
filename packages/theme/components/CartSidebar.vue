@@ -46,6 +46,7 @@
                     <SfQuantitySelector
                       :disabled="loading"
                       :qty="cartGetters.getItemQty(product)"
+                      :min="1"
                       class="sf-collected-product__quantity-selector"
                       @input="updateQuantity({ product: { id: product.id }, quantity: Number($event) })"
                     />
