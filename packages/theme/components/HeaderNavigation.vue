@@ -9,7 +9,7 @@
       :link="localePath(`/c/categories/${category}`)"
     />
   </div>
-  <SfModal v-else-if="isCategoryTreeAvailable()" :visible="isMobileMenuOpen">
+  <SfModal v-else-if="isCategoryTreeAvailable" :visible="isMobileMenuOpen">
     <SfAccordion open="" :multiple="false" transition="" showChevron>
       <SfAccordionItem
         v-for="(cat, i) in categoryTree && categoryTree.items"
