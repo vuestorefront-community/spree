@@ -24,9 +24,9 @@
       :open-tab="1"
       key="address-list"
       class="tab-orphan">
-      <SfTab title="Shipping details">
+      <SfTab title="Saved addresses">
         <p class="message">
-          {{ $t('Manage shipping addresses') }}
+          {{ $t('Manage saved addresses') }}
         </p>
         <transition-group tag="div" name="fade" class="shipping-list">
           <div
@@ -77,12 +77,12 @@ import {
 } from '@storefront-ui/vue';
 import UserShippingAddress from '~/components/UserShippingAddress';
 import ShippingAddressForm from '~/components/MyAccount/ShippingAddressForm';
-import { useUserShipping, userShippingGetters } from '<%= options.generate.replace.composables %>';
+import { useUserShipping, userShippingGetters } from '@vue-storefront/spree';
 import { ref, computed } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
 
 export default {
-  name: 'ShippingDetails',
+  name: 'SavedAddressesDetails',
   components: {
     SfTabs,
     SfButton,

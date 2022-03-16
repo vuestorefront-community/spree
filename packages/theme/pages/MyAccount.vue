@@ -16,8 +16,8 @@
           <MyProfile />
         </SfContentPage>
 
-        <SfContentPage title="Shipping details">
-          <ShippingDetails />
+        <SfContentPage title="Saved addresses">
+          <SavedAddressesDetails />
         </SfContentPage>
 
         <SfContentPage title="My newsletter">
@@ -38,9 +38,9 @@
 <script>
 import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
 import { computed, onBeforeUnmount, useRoute, useRouter } from '@nuxtjs/composition-api';
-import { useUser } from '<%= options.generate.replace.composables %>';
+import { useUser } from '@vue-storefront/spree';
 import MyProfile from './MyAccount/MyProfile';
-import ShippingDetails from './MyAccount/ShippingDetails';
+import SavedAddressesDetails from './MyAccount/SavedAddressesDetails';
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
 import {
@@ -54,7 +54,7 @@ export default {
     SfBreadcrumbs,
     SfContentPages,
     MyProfile,
-    ShippingDetails,
+    SavedAddressesDetails,
     MyNewsletter,
     OrderHistory
   },
