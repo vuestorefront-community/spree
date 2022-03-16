@@ -8,23 +8,24 @@
       <SfAddress
         class="shipping-addresses__address"
         v-for="shippingAddress in shippingAddresses"
-        :key="userShippingGetters.getId(shippingAddress)"
-        :name="String(userShippingGetters.getId(shippingAddress))"
+        :key="userSavedAddressesGetters.getId(shippingAddress)"
+        :name="String(userSavedAddressesGetters.getId(shippingAddress))"
       >
+        <h1>debug</h1>
         <span
-          >{{ userShippingGetters.getFirstName(shippingAddress) }} {{ userShippingGetters.getLastName(shippingAddress) }}</span
+          >{{ userSavedAddressesGetters.getFirstName(shippingAddress) }} {{ userSavedAddressesGetters.getLastName(shippingAddress) }}</span
         >
         <span
-          >{{ userShippingGetters.getStreetName(shippingAddress) }}
-          {{ userShippingGetters.getApartmentNumber(shippingAddress) }}</span
+          >{{ userSavedAddressesGetters.getStreetName(shippingAddress) }}
+          {{ userSavedAddressesGetters.getApartmentNumber(shippingAddress) }}</span
         >
-        <span>{{ userShippingGetters.getPostCode(shippingAddress) }}</span>
+        <span>{{ userSavedAddressesGetters.getPostCode(shippingAddress) }}</span>
         <span
-          >{{ userShippingGetters.getCity(shippingAddress)
-          }}{{ userShippingGetters.getProvince(shippingAddress) ? `, ${userShippingGetters.getProvince(shippingAddress)}` : '' }}</span
+          >{{ userSavedAddressesGetters.getCity(shippingAddress)
+          }}{{ userSavedAddressesGetters.getProvince(shippingAddress) ? `, ${userSavedAddressesGetters.getProvince(shippingAddress)}` : '' }}</span
         >
-        <span>{{ userShippingGetters.getCountry(shippingAddress)}}</span>
-        <span>{{ userShippingGetters.getPhone(shippingAddress) }}</span>
+        <span>{{ userSavedAddressesGetters.getCountry(shippingAddress)}}</span>
+        <span>{{ userSavedAddressesGetters.getPhone(shippingAddress) }}</span>
       </SfAddress>
     </SfAddressPicker>
     <SfCheckbox
@@ -43,10 +44,10 @@ import {
   SfCheckbox,
   SfAddressPicker
 } from '@storefront-ui/vue';
-import { userShippingGetters } from '@vue-storefront/spree';
+import { userSavedAddressesGetters } from '@vue-storefront/spree';
 
 export default {
-  name: 'UserShippingAddresses',
+  name: 'UserSavedAddresses',
   props: {
     currentAddressId: {
       type: Number,
@@ -70,7 +71,7 @@ export default {
 
     return {
       setCurrentAddress,
-      userShippingGetters
+      userSavedAddressesGetters
     };
   }
 };

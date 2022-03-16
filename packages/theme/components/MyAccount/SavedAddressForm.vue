@@ -201,7 +201,7 @@ extend('oneOf', {
 });
 
 export default {
-  name: 'ShippingAddressForm',
+  name: 'SavedAddressForm',
 
   components: {
     SfInput,

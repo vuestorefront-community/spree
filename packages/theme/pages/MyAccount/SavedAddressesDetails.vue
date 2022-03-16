@@ -31,11 +31,11 @@
         <transition-group tag="div" name="fade" class="shipping-list">
           <div
             v-for="address in addresses"
-            :key="userShippingGetters.getId(address)"
+            :key="userSavedAddressesGetters.getId(address)"
             class="shipping">
             <div class="shipping__content">
               <div class="shipping__address">
-                <UserShippingAddress :address="address" />
+                <UserSavedAddress :address="address" />
               </div>
             </div>
             <div class="shipping__actions">
@@ -75,9 +75,9 @@ import {
   SfButton,
   SfIcon
 } from '@storefront-ui/vue';
-import UserShippingAddress from '~/components/UserShippingAddress';
+import UserSavedAddress from '~/components/UserSavedAddress';
 import ShippingAddressForm from '~/components/MyAccount/ShippingAddressForm';
-import { useUserSavedAddresses, userShippingGetters } from '@vue-storefront/spree';
+import { useUserSavedAddresses, userSavedAddressesGetters } from '@vue-storefront/spree';
 import { ref, computed } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
 
@@ -87,12 +87,12 @@ export default {
     SfTabs,
     SfButton,
     SfIcon,
-    UserShippingAddress,
+    UserSavedAddress,
     ShippingAddressForm
   },
   setup() {
-    const { shipping, load: loadUserShipping, addAddress, deleteAddress, updateAddress } = useUserSavedAddresses();
-    const addresses = computed(() => userShippingGetters.getAddresses(shipping.value));
+    const { shipping, load: loadUserSavedAddresses, addAddress, deleteAddress, updateAddress } = useUserSavedAddresses();
+    const addresses = computed(() => userSavedAddressesGetters.getAddresses(shipping.value));
     const edittingAddress = ref(false);
     const activeAddress = ref(undefined);
     const isNewAddress = computed(() => !activeAddress.value);
@@ -117,7 +117,7 @@ export default {
     };
 
     onSSR(async () => {
-      await loadUserShipping();
+      await loadUserSavedAddresses();
     });
 
     return {
@@ -125,7 +125,7 @@ export default {
       updateAddress,
       removeAddress,
       saveAddress,
-      userShippingGetters,
+      userSavedAddressesGetters,
       addresses,
       edittingAddress,
       activeAddress,
