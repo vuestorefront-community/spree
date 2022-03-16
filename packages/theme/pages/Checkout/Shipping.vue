@@ -237,7 +237,7 @@ import {
 } from '@storefront-ui/vue';
 import { ref, watch, computed, onMounted, useRouter } from '@nuxtjs/composition-api';
 import { onSSR, useVSFContext } from '@vue-storefront/core';
-import { useShipping, useCountry, useUser, useUserShipping } from '@vue-storefront/spree';
+import { useShipping, useCountry, useUser, useUserSavedAddresses } from '@vue-storefront/spree';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import AddressPicker from '~/components/Checkout/AddressPicker';
@@ -275,7 +275,7 @@ export default {
     const isSaveAddressSelected = ref(false);
     const { countries, states, load: loadCountries, loadStates } = useCountry();
     const { shipping: checkoutShippingAddress, load, save, loading } = useShipping();
-    const { shipping: savedAddresses, load: loadSavedAddresses, addAddress } = useUserShipping();
+    const { shipping: savedAddresses, load: loadSavedAddresses, addAddress } = useUserSavedAddresses();
     const { isAuthenticated } = useUser();
     const { $spree } = useVSFContext();
 
