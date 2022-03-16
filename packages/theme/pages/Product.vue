@@ -298,6 +298,7 @@ export default {
     display: flex;
   }
   &__info {
+    width: 100%;
     margin: var(--spacer-sm) auto;
     @include for-desktop {
       max-width: 32.625rem;
