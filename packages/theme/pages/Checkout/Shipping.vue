@@ -184,12 +184,18 @@
             v-model="form.phone"
             label="Phone number"
             name="phone"
-            class="form__element form__element--half"
+            class="form__element"
             required
             :valid="!errors[0]"
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
+        <SfCheckbox
+          class="form__save-address"
+          v-if="isAuthenticated && !isFormSubmitted"
+          v-model="isSaveAddressSelected"
+          label="Save address"
+        />
       </div>
       <div class="form">
         <div class="form__action">
@@ -216,7 +222,8 @@ import {
   SfHeading,
   SfInput,
   SfButton,
-  SfSelect
+  SfSelect,
+  SfCheckbox
 } from '@storefront-ui/vue';
 import { ref, watch, computed, onMounted, useRouter } from '@nuxtjs/composition-api';
 import { onSSR, useVSFContext } from '@vue-storefront/core';
@@ -246,6 +253,7 @@ export default {
     SfInput,
     SfButton,
     SfSelect,
+    SfCheckbox,
     AddressPicker,
     ValidationProvider,
     ValidationObserver,
@@ -254,9 +262,10 @@ export default {
   setup () {
     const router = useRouter();
     const isFormSubmitted = ref(false);
+    const isSaveAddressSelected = ref(false);
     const { countries, states, load: loadCountries, loadStates } = useCountry();
     const { shipping: checkoutShippingAddress, load, save, loading } = useShipping();
-    const { shipping: savedAddresses, load: loadSavedAddresses } = useUserShipping();
+    const { shipping: savedAddresses, load: loadSavedAddresses, addAddress } = useUserShipping();
     const { isAuthenticated } = useUser();
     const { $spree } = useVSFContext();
 
@@ -288,10 +297,14 @@ export default {
         await $spree.api.saveGuestCheckoutEmail(form.value.email);
       }
 
-      if (isAuthenticated.value && selectedSavedAddress.value) {
-        await save({ shippingDetails: selectedSavedAddress.value });
-      } else {
-        await save({ shippingDetails: form.value });
+      const shippingAddress = isAuthenticated.value && selectedSavedAddress.value
+        ? selectedSavedAddress.value
+        : form.value;
+
+      await save({ shippingDetails: shippingAddress });
+
+      if (isSaveAddressSelected.value) {
+        await addAddress({ address: shippingAddress });
       }
 
       isFormSubmitted.value = true;
@@ -352,6 +365,7 @@ export default {
       router,
       loading,
       isFormSubmitted,
+      isSaveAddressSelected,
       isAuthenticated,
       isStateRequired,
       form,
@@ -433,6 +447,10 @@ export default {
     @include for-desktop {
       margin: 0 var(--spacer-xl) 0 0;
     }
+  }
+  &__save-address {
+    margin: 0 0 var(--spacer-xs) 0;
+    --checkbox-font-family: var(--font-family--secondary);
   }
 }
 

@@ -43,11 +43,8 @@ export default {
     const selectedShippingRates = ref({});
 
     const allShipmentsSelected = computed(() => {
-      if (!selectedShippingRates.value) {
-        return false;
-      }
-
-      return Object.values(selectedShippingRates.value)?.every(e => e !== null);
+      const shippingCodes = Object.values(selectedShippingRates.value);
+      return shippingCodes.length && shippingCodes.every(e => e !== null);
     });
 
     onMounted(async () => {

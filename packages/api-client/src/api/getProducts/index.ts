@@ -15,7 +15,14 @@ export default async function getProducts({ client, config }: ApiContext, params
     }
 
     const optionValueIds = optionTypeFilters?.map(filter => filter.optionValueId);
-    const properties = productPropertyFilters?.reduce((result, filter) => ({ ...result, [filter.productPropertyName]: filter.productPropertyValue }), {});
+    const properties = productPropertyFilters?.reduce((result, filter) => {
+      const separator = ',';
+      const resultedValues = result[filter.productPropertyName]?.split(separator) || [];
+      return {
+        ...result,
+        [filter.productPropertyName]: [...resultedValues, filter.productPropertyValue].join(separator)
+      };
+    }, {});
 
     const result = await client.products.list(
       undefined,
