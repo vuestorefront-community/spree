@@ -85,9 +85,7 @@ export default {
     const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
     const categories = ['women', 'men'];
 
-    const isCategoryTreeEmpty = () => {
-      return !(typeof categoryTree.value.items === 'undefined');
-    };
+    const isCategoryTreeAvailable = computed(() => categoryTree.value?.items?.length > 0);
 
     return {
       isCategoryTreeEmpty,
