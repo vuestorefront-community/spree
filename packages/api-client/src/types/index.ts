@@ -7,8 +7,7 @@ export * from './checkout';
 export * from './category';
 export * from './country';
 export * from './account';
-
-export type Wishlist = Record<string, unknown>;
+export * from './wishlist';
 
 export type CategoryFilter = Record<string, unknown>;
 export type ShippingMethod = Record<string, unknown>;
@@ -51,6 +50,7 @@ export type ApiConfig = {
   spreeFeatures: {
     associateGuestCart: boolean;
     fetchPrimaryVariant: boolean;
+    wishlist: string;
   }
 }
 

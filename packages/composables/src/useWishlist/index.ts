@@ -4,41 +4,48 @@ import {
   useWishlistFactory,
   UseWishlistFactoryParams
 } from '@vue-storefront/core';
-import { ref, Ref } from '@nuxtjs/composition-api';
 import { Wishlist, WishlistProduct, ProductVariant } from '../types';
 
-export const wishlist: Ref<Wishlist> = ref(null);
-
-const params: UseWishlistFactoryParams<Wishlist, WishlistProduct, ProductVariant> = {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+const params: UseWishlistFactoryParams<Wishlist, WishlistProduct | ProductVariant, ProductVariant> = {
   load: async (context: Context) => {
-    console.log('Mocked: loadWishlist');
-    return {};
+    const wishlist = await context.$spree.api.getWishlist();
+    return wishlist;
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addItem: async (context: Context, { currentWishlist, product }) => {
-    console.log('Mocked: addToWishlist');
-    return {};
+    const wishlistToken = currentWishlist?.token;
+    await context.$spree.api.addToWishlist({ wishlistToken, product });
+
+    const wishlist = await context.$spree.api.getWishlist();
+    return wishlist;
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeItem: async (context: Context, { currentWishlist, product }) => {
-    console.log('Mocked: removeFromWishlist');
-    return {};
+    // product param is either ProductVariant (which doesn't have wishedProductId property) or WishlistProduct
+    // (depends on where this method is called)
+    const wishedProduct: WishlistProduct = product.wishedProductId
+      ? product
+      : currentWishlist.wishedProducts.find(e => e.variantId === product._variantId);
+    const wishlistToken = currentWishlist?.token;
+
+    await context.$spree.api.removeFromWishlist({
+      wishlistToken,
+      wishedProductId: wishedProduct?.wishedProductId
+    });
+
+    const wishlist = await context.$spree.api.getWishlist();
+    return wishlist;
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   clear: async (context: Context, { currentWishlist }) => {
-    console.log('Mocked: clearWishlist');
-    return {};
+    await context.$spree.api.deleteWishlist({ wishlistToken: currentWishlist.token });
+    const wishlist = await context.$spree.api.getWishlist();
+    return wishlist;
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  isInWishlist: (context: Context, { currentWishlist }) => {
-    console.log('Mocked: isInWishlist');
-    return false;
+  isInWishlist: (context: Context, { currentWishlist, product }) => {
+    return currentWishlist?.wishedProducts.some(e => e.variantId === product._variantId);
   }
 };
 
-export default useWishlistFactory<Wishlist, WishlistProduct, ProductVariant>(params);
+export default useWishlistFactory<Wishlist, WishlistProduct | ProductVariant, ProductVariant>(params);

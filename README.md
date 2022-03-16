@@ -66,7 +66,10 @@ module.exports = {
           // Associate guest cart after the customer logs in. Requires Spree 4.3+
           associateGuestCart: false,
           // Fetch basic information about products from the `primary_variant` relationship. Requires Spree 4.3+
-          fetchPrimaryVariant: false
+          fetchPrimaryVariant: false,
+          // Wishlist for authenticated users.
+          // Accepted values: 'enabled' (Spree 4.4+), 'legacy' (Spree with `spree_wishlist` gem), 'disabled'.
+          wishlist:  'disabled'
         }
       }
     }
@@ -99,7 +102,7 @@ For more details, refer to the official [architecture diagram](https://docs.vues
 | Checkout | Available | |
 | Checkout - Shipping methods | Available | |
 | Checkout - Payment methods | Available | Cash and Stripe Elements gateways supported out of the box. |
-| Wishlists | Coming soon | This will be integrated with the API provided by the latest version of spree_wishlist |
+| Wishlists | Available | Available only for logged in users. By default, this feature is disabled and can be enabled in `middleware.config.js` |
 | Multi-currency support | Available | Requires Spree 4.2 or spree_multi_currency extension |
 
 ## Caching and performance concerns
