@@ -12,7 +12,7 @@
           {{ $t('Contact details updated') }}
         </p>
 
-        <ShippingAddressForm
+        <SavedAddressForm
           :address="activeAddress"
           :isNew="isNewAddress"
           @submit="saveAddress" />
@@ -76,7 +76,7 @@ import {
   SfIcon
 } from '@storefront-ui/vue';
 import UserSavedAddress from '~/components/UserSavedAddress';
-import ShippingAddressForm from '~/components/MyAccount/ShippingAddressForm';
+import SavedAddressForm from '~/components/MyAccount/SavedAddressForm';
 import { useUserSavedAddresses, userSavedAddressesGetters } from '@vue-storefront/spree';
 import { ref, computed } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
@@ -88,7 +88,7 @@ export default {
     SfButton,
     SfIcon,
     UserSavedAddress,
-    ShippingAddressForm
+    SavedAddressForm
   },
   setup() {
     const { shipping, load: loadUserSavedAddresses, addAddress, deleteAddress, updateAddress } = useUserSavedAddresses();

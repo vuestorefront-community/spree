@@ -7,7 +7,6 @@ import productGetters from './productGetters';
 import reviewGetters from './reviewGetters';
 import userGetters from './userGetters';
 import userSavedAddressesGetters from './userSavedAddressesGetters';
-import userBillingGetters from './userBillingGetters';
 import orderGetters from './orderGetters';
 import wishlistGetters from './wishlistGetters';
 import forgotPasswordGetters from './forgotPasswordGetters';
@@ -21,7 +20,6 @@ export {
   reviewGetters,
   userGetters,
   userSavedAddressesGetters,
-  userBillingGetters,
   orderGetters,
   wishlistGetters,
   forgotPasswordGetters
