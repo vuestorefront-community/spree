@@ -9,6 +9,37 @@
       :link="localePath(`/c/categories/${category}`)"
     />
   </div>
+  <SfModal v-else-if="isCategoryTreeEmpty()" :visible="isMobileMenuOpen">
+    <SfAccordion open="" :multiple="false" transition="" showChevron>
+      <SfAccordionItem
+        v-for="(cat, i) in categoryTree && categoryTree.items"
+        :key="i"
+        class="nav-item"
+        :header="cat.label"
+      >
+        <SfList>
+          <SfListItem>
+            <SfMenuItem
+              label="All"
+              class="sf-header-navigation-item__menu-item"
+              :link="localePath(`/c/categories/${cat.label.replace(/\s+/g, '-').toLowerCase()}`)"
+              @click.native="toggleMobileMenu"
+            />
+          </SfListItem>
+          <SfListItem
+            v-for="(subCat, j) in cat.items"
+            :key="j">
+            <SfMenuItem
+              :label="subCat.label"
+              class="sf-header-navigation-item__menu-item"
+              :link="localePath(`/c/categories/${cat.label.replace(/\s+/g, '-').toLowerCase()}/${subCat.label.replace(/\s+/g, '-').toLowerCase()}`)"
+              @click.native="toggleMobileMenu"
+            />
+          </SfListItem>
+        </SfList>
+      </SfAccordionItem>
+    </SfAccordion>
+  </SfModal>
   <SfModal v-else :visible="isMobileMenuOpen">
     <SfHeaderNavigationItem
       v-for="(category, index) in categories"
@@ -29,14 +60,18 @@
 </template>
 
 <script>
-import { SfMenuItem, SfModal } from '@storefront-ui/vue';
+import { SfMenuItem, SfModal, SfAccordion, SfList } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
+import { computed } from '@nuxtjs/composition-api';
+import { facetGetters, useFacet } from '@vue-storefront/spree';
 
 export default {
   name: 'HeaderNavigation',
   components: {
     SfMenuItem,
-    SfModal
+    SfModal,
+    SfAccordion,
+    SfList
   },
   props: {
     isMobile: {
@@ -45,10 +80,18 @@ export default {
     }
   },
   setup() {
+    const { result } = useFacet();
     const { isMobileMenuOpen, toggleMobileMenu } = useUiState();
+    const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
     const categories = ['women', 'men'];
 
+    const isCategoryTreeEmpty = () => {
+      return !(typeof categoryTree.value.items === 'undefined');
+    };
+
     return {
+      isCategoryTreeEmpty,
+      categoryTree,
       categories,
       isMobileMenuOpen,
       toggleMobileMenu

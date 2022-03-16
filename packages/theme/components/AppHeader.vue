@@ -107,7 +107,7 @@
 import { SfHeader, SfImage, SfIcon, SfButton, SfBadge, SfSearchBar, SfOverlay } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
 import { useCart, useFacet, useUser, cartGetters } from '@vue-storefront/spree';
-import { computed, ref, watch, onBeforeUnmount, useRouter } from '@nuxtjs/composition-api';
+import { computed, ref, watch, onBeforeUnmount, useRouter, onUpdated } from '@nuxtjs/composition-api';
 import { useUiHelpers } from '~/composables';
 import LocaleSelector from './LocaleSelector';
 import SearchResults from '~/components/SearchResults';
@@ -198,6 +198,10 @@ export default {
     });
 
     const removeSearchResults = () => {};
+
+    onUpdated(() => {
+      mapMobileObserver();
+    });
 
     onBeforeUnmount(() => {
       unMapMobileObserver();
