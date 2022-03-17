@@ -75,29 +75,19 @@
             v-model="form.addressLine1"
             label="Street name"
             name="streetName"
-            class="form__element form__element--half"
+            class="form__element"
             required
             :valid="!errors[0]"
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
-        <ValidationProvider
+        <SfInput
+          v-e2e="'shipping-apartment'"
+          v-model="form.addressLine2"
+          label="House/Apartment number"
           name="apartment"
-          rules="required|min:2"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-apartment'"
-            v-model="form.addressLine2"
-            label="House/Apartment number"
-            name="apartment"
-            class="form__element form__element--half form__element--half-even"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
+          class="form__element"
+        />
         <ValidationProvider
           name="city"
           rules="required|min:2"

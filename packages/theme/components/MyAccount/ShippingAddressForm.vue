@@ -38,7 +38,7 @@
         </ValidationProvider>
       </div>
       <ValidationProvider
-        rules="required|min:5"
+        rules="required|min:2"
         v-slot="{ errors }"
         class="form__element"
       >
@@ -57,7 +57,6 @@
         v-model="form.addressLine2"
         name="apartment"
         label="House/Apartment number"
-        required
         class="form__element"
       />
       <div class="form__horizontal">
