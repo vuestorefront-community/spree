@@ -92,7 +92,7 @@ export default {
         newPassword: '',
         newPasswordConfirmation: ''
       })
-    },
+    }
   },
 
   setup(props, { emit }) {
