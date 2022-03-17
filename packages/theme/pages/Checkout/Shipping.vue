@@ -327,10 +327,6 @@ export default {
       await loadSavedAddresses();
       await loadCountries();
 
-      if (form.value.country) {
-        await loadStates(form.value.country);
-      }
-
       if (checkoutShippingAddress.value) {
         form.value = _.omit(checkoutShippingAddress.value, ['_id']);
       }
@@ -343,10 +339,6 @@ export default {
       await loadSavedAddresses();
       await loadCountries();
 
-      if (form.value.country) {
-        await loadStates(form.value.country);
-      }
-
       if (checkoutShippingAddress.value) {
         form.value = _.omit(checkoutShippingAddress.value, ['_id']);
       }
@@ -354,11 +346,24 @@ export default {
       populateSelectedAddressId();
     });
 
-    watch(() => form.value.country, async (newValue, oldValue) => {
-      if (newValue !== oldValue) {
-        form.value.state = null;
-        await loadStates(newValue);
+    watch(() => form.value.country, async (newCountryValue, oldCountryValue) => {
+      if (newCountryValue === oldCountryValue) return;
+      form.value.state = null;
+      await loadStates(newCountryValue);
+    }, {
+      immediate: true
+    });
+
+    watch(() => isAuthenticated.value, async (isAuthenticatedNow) => {
+      if (!isAuthenticatedNow) return;
+      await load();
+      await loadSavedAddresses();
+
+      if (checkoutShippingAddress.value) {
+        form.value = _.omit({...form.value, ...checkoutShippingAddress.value}, ['_id']);
       }
+
+      populateSelectedAddressId();
     });
 
     return {
