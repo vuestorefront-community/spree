@@ -18,7 +18,7 @@
             :is-added-to-cart="isInCart({ product })"
             :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
             class="product-card"
-            @click:wishlist="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeProductFromWishlist(product)"
+            @click:wishlist="handleWishlistClick(product)"
             @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
           />
         </SfCarouselItem>
@@ -27,15 +27,15 @@
   </SfSection>
 </template>
 
-<script lang="ts">
+<script>
 import {
   SfCarousel,
   SfProductCard,
   SfSection,
   SfLoader
 } from '@storefront-ui/vue';
-import { productGetters, useWishlist, wishlistGetters, useCart } from '@vue-storefront/spree';
-import { computed } from '@vue/composition-api';
+import { productGetters, useWishlist, useCart, useUser } from '@vue-storefront/spree';
+import { useUiState } from '~/composables';
 
 export default {
   name: 'RelatedProducts',
@@ -52,19 +52,26 @@ export default {
   },
   setup() {
     const { addItem: addItemToCart, isInCart } = useCart();
-    const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist, wishlist } = useWishlist();
-    const removeProductFromWishlist = (productItem) => {
-      const productsInWhishlist = computed(() => wishlistGetters.getItems(wishlist.value));
-      const product = productsInWhishlist.value.find(wishlistProduct => wishlistProduct.variant.sku === productItem.sku);
-      removeItemFromWishlist({ product });
+    const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist } = useWishlist();
+    const { isAuthenticated } = useUser();
+    const { toggleLoginModal } = useUiState();
+
+    const handleWishlistClick = async (product) => {
+      if (!isAuthenticated.value) {
+        toggleLoginModal();
+      } else if (!isInWishlist({ product })) {
+        await addItemToWishlist({ product });
+      } else {
+        await removeItemFromWishlist({ product });
+      }
     };
+
     return {
       productGetters,
-      addItemToWishlist,
       isInWishlist,
-      removeProductFromWishlist,
       addItemToCart,
-      isInCart
+      isInCart,
+      handleWishlistClick
     };
   }
 };
