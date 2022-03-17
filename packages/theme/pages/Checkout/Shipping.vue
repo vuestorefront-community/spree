@@ -211,14 +211,14 @@
         <div class="form__action">
           <SfCheckbox
             name="shippingToBilling"
-            label="Copy shipment details to billing"
+            label="Use the same details for billing"
             hintMessage=""
             :required="false"
             infoMessage=""
             errorMessage=""
             valid
             :disabled="false"
-            v-model="isShipmentToBillingSelected"
+            v-model="isCopyToBillingSelected"
           />
         </div>
         <div class="form__action">
@@ -286,13 +286,13 @@ export default {
     const router = useRouter();
     const isFormSubmitted = ref(false);
     const isSaveAddressSelected = ref(false);
-    const isShipmentToBillingSelected = ref(true);
+    const isCopyToBillingSelected = ref(true);
     const { countries, states, load: loadCountries, loadStates } = useCountry();
     const { shipping: checkoutShippingAddress, load, save, loading } = useShipping();
     const { shipping: savedAddresses, load: loadSavedAddresses, addAddress } = useUserShipping();
     const { isAuthenticated } = useUser();
     const { $spree } = useVSFContext();
-    const biling = useBilling();
+    const billing = useBilling();
 
     const selectedSavedAddressId = ref(undefined);
     const form = ref({
@@ -327,7 +327,9 @@ export default {
         : form.value;
 
       await save({ shippingDetails: shippingAddress });
-      if (isShipmentToBillingSelected.value) await biling.save({ billingDetails: shippingAddress });
+      if (isCopyToBillingSelected.value) {
+        await billing.save({ billingDetails: shippingAddress });
+      }
 
       if (isSaveAddressSelected.value) {
         await addAddress({ address: shippingAddress });
@@ -401,7 +403,7 @@ export default {
       selectedSavedAddressId,
       checkoutShippingAddress,
       handleFormSubmit,
-      isShipmentToBillingSelected
+      isCopyToBillingSelected
     };
   }
 };
