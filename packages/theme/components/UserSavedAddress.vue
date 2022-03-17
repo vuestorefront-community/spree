@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  name: 'UserShipping',
+  name: 'UserSavedAddress',
 
   props: {
     address: {

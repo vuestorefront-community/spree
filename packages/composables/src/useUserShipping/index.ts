@@ -12,7 +12,7 @@ const params: UseUserShippingFactoryParams<any, any> = {
   },
 
   deleteAddress: async (context: Context) => {
-    console.log('Not implemented: Delete saved address');
+    console.log('Not implemented: Delete shipping address');
     const addresses = await context.$spree.api.getAddresses();
     return { addresses };
   },
@@ -29,7 +29,7 @@ const params: UseUserShippingFactoryParams<any, any> = {
   },
 
   setDefaultAddress: async (context: Context) => {
-    console.log('Not implemented: Set default saved address');
+    console.log('Not implemented: Set default shipping address');
     const addresses = await context.$spree.api.getAddresses();
     return { addresses };
   }
