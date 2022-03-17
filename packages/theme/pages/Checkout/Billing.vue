@@ -217,7 +217,7 @@ import {
 } from '@storefront-ui/vue';
 import { ref, watch, computed, onMounted, useRouter } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
-import { useBilling, useCountry, useUser, useUserSavedAddresses } from '@vue-storefront/spree';
+import { useBilling, useCountry, useUser, useUserShipping } from '@vue-storefront/spree';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import AddressPicker from '~/components/Checkout/AddressPicker';
@@ -253,8 +253,7 @@ export default {
     const { billing: checkoutBillingAddress, load, save } = useBilling();
     const { countries, states, load: loadCountries, loadStates } = useCountry();
     const { isAuthenticated } = useUser();
-    // todo: feat/#139 - update field names after interface change
-    const { shipping: savedAddresses, load: loadSavedAddresses } = useUserSavedAddresses();
+    const { shipping: savedAddresses, load: loadSavedAddresses } = useUserShipping();
     const router = useRouter();
 
     const selectedSavedAddressId = ref(undefined);

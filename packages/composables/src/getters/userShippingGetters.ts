@@ -1,7 +1,6 @@
 import { UserShippingGetters } from '@vue-storefront/core';
 
-// TODO: feat/#139 - change interfaces
-const userSavedAddressesGetters: UserShippingGetters<any, any> = {
+const UserShippingGetters: UserShippingGetters<any, any> = {
   getAddresses: (shipping, criteria?: Record<string, any>) => {
     const { addresses } = shipping;
     if (!criteria || !Object.keys(criteria).length) {
@@ -32,4 +31,4 @@ const userSavedAddressesGetters: UserShippingGetters<any, any> = {
   isDefault: (address) => address?.isDefault ?? false
 };
 
-export default userSavedAddressesGetters;
+export default UserShippingGetters;

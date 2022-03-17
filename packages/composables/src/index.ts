@@ -12,7 +12,7 @@ export { default as useShipping } from './useShipping';
 export { default as useShippingProvider } from './useShippingProvider';
 export { default as useUser } from './useUser';
 export { default as useUserOrder } from './useUserOrder';
-export { default as useUserSavedAddresses } from './useUserSavedAddresses';
+export { default as useUserShipping } from './useUserShipping';
 export { default as useWishlist } from './useWishlist';
 export { default as useForgotPassword } from './useForgotPassword';
 export { default as useCountry } from './useCountry';
