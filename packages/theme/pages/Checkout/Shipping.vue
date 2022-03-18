@@ -199,6 +199,19 @@
       </div>
       <div class="form">
         <div class="form__action">
+          <SfCheckbox
+            name="shippingToBilling"
+            label="Use the same details for billing"
+            hintMessage=""
+            :required="false"
+            infoMessage=""
+            errorMessage=""
+            valid
+            :disabled="false"
+            v-model="isCopyToBillingSelected"
+          />
+        </div>
+        <div class="form__action">
           <SfButton
             v-if="!isFormSubmitted"
             :disabled="loading"
@@ -227,7 +240,7 @@ import {
 } from '@storefront-ui/vue';
 import { ref, watch, computed, onMounted, useRouter } from '@nuxtjs/composition-api';
 import { onSSR, useVSFContext } from '@vue-storefront/core';
-import { useShipping, useCountry, useUser, useUserShipping } from '@vue-storefront/spree';
+import { useBilling, useShipping, useCountry, useUser, useUserShipping } from '@vue-storefront/spree';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import AddressPicker from '~/components/Checkout/AddressPicker';
@@ -263,11 +276,13 @@ export default {
     const router = useRouter();
     const isFormSubmitted = ref(false);
     const isSaveAddressSelected = ref(false);
+    const isCopyToBillingSelected = ref(true);
     const { countries, states, load: loadCountries, loadStates } = useCountry();
     const { shipping: checkoutShippingAddress, load, save, loading } = useShipping();
     const { shipping: savedAddresses, load: loadSavedAddresses, addAddress } = useUserShipping();
     const { isAuthenticated } = useUser();
     const { $spree } = useVSFContext();
+    const billing = useBilling();
 
     const selectedSavedAddressId = ref(undefined);
     const form = ref({
@@ -302,6 +317,9 @@ export default {
         : form.value;
 
       await save({ shippingDetails: shippingAddress });
+      if (isCopyToBillingSelected.value) {
+        await billing.save({ billingDetails: shippingAddress });
+      }
 
       if (isSaveAddressSelected.value) {
         await addAddress({ address: shippingAddress });
@@ -374,7 +392,8 @@ export default {
       savedAddresses,
       selectedSavedAddressId,
       checkoutShippingAddress,
-      handleFormSubmit
+      handleFormSubmit,
+      isCopyToBillingSelected
     };
   }
 };
