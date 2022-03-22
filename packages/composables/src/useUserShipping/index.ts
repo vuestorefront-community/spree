@@ -11,8 +11,8 @@ const params: UseUserShippingFactoryParams<any, any> = {
     return { addresses };
   },
 
-  deleteAddress: async (context: Context) => {
-    console.log('Not implemented: Delete shipping address');
+  deleteAddress: async (context: Context, { address }) => {
+    await context.$spree.api.deleteAddress(address?._id);
     const addresses = await context.$spree.api.getAddresses();
     return { addresses };
   },

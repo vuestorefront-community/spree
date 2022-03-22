@@ -101,7 +101,7 @@
               :is-added-to-cart="isInCart({ product })"
               :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
               class="products__product-card"
-              @click:wishlist="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeItemFromWishlist({ product })"
+              @click:wishlist="handleWishlistClick(product)"
               @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
             />
           </transition-group>
@@ -127,7 +127,7 @@
               :score-rating="3"
               :is-in-wishlist="isInWishlist({ product })"
               :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
-              @click:wishlist="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeItemFromWishlist({ product })"
+              @click:wishlist="handleWishlistClick(product)"
               @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
             >
               <template #configuration>
@@ -210,7 +210,7 @@ import {
   SfProperty
 } from '@storefront-ui/vue';
 import { computed } from '@nuxtjs/composition-api';
-import { useCart, useWishlist, productGetters, useFacet, facetGetters } from '@vue-storefront/spree';
+import { useCart, useWishlist, productGetters, useFacet, facetGetters, useUser } from '@vue-storefront/spree';
 import { useUiHelpers, useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
@@ -230,6 +230,7 @@ export default {
     const { addItem: addItemToCart, isInCart } = useCart();
     const { result, search, loading, error } = useFacet();
     const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist } = useWishlist();
+    const { isAuthenticated } = useUser();
     const products = computed(() => facetGetters.getProducts(result.value));
     const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
     const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(result.value));
@@ -244,6 +245,16 @@ export default {
       const category = items.find(({ isCurrent, items }) => isCurrent || items.find(({ isCurrent }) => isCurrent));
       return category?.label || items[0]?.label;
     });
+
+    const handleWishlistClick = async (product) => {
+      if (!isAuthenticated.value) {
+        uiState.toggleLoginModal();
+      } else if (!isInWishlist({ product })) {
+        await addItemToWishlist({ product });
+      } else {
+        await removeItemFromWishlist({ product });
+      }
+    };
 
     onSSR(async () => {
       await search(th.getFacetsFromURL());
@@ -260,11 +271,10 @@ export default {
       pagination,
       activeCategory,
       breadcrumbs,
-      addItemToWishlist,
       addItemToCart,
-      removeItemFromWishlist,
       isInWishlist,
-      isInCart
+      isInCart,
+      handleWishlistClick
     };
   },
   components: {

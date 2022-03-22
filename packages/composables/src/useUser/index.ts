@@ -7,12 +7,14 @@ import {
 } from '@vue-storefront/core';
 import { User } from '../types';
 import useCart from '../useCart';
+import useWishlist from '../useWishlist';
 import { handleApiErrorResponse, extractApiErrorSummary } from '../utils/error';
 
 const params: UseUserFactoryParams<User, any, any> = {
-  provide() {
-    return useCart();
-  },
+  provide: () => ({
+    useCart: useCart(),
+    useWishlist: useWishlist()
+  }),
 
   load: async (context: Context) => {
     if (await context.$spree.api.isGuest()) {
@@ -24,7 +26,8 @@ const params: UseUserFactoryParams<User, any, any> = {
 
   logOut: async (context: Context) => {
     await context.$spree.api.logOut();
-    context.setCart({_id: 0, lineItems: []});
+    context.useCart.setCart({ _id: 0, lineItems: [] });
+    context.useWishlist.setWishlist({ token: undefined, wishedProducts: [] });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -35,9 +38,12 @@ const params: UseUserFactoryParams<User, any, any> = {
 
   register: async (context: Context, { email, password, firstName, lastName }) => {
     try {
-      const guestCartToken = context.cart?.value?.token;
+      const guestCartToken = context.useCart.cart?.value?.token;
       await context.$spree.api.registerUser({ email, password, firstName, lastName });
       await context.$spree.api.logIn({ username: email, password, guestCartToken });
+
+      const wishlist = await context.$spree.api.getWishlist();
+      context.useWishlist.setWishlist(wishlist);
 
       return {};
     } catch (e) {
@@ -47,11 +53,14 @@ const params: UseUserFactoryParams<User, any, any> = {
 
   logIn: async (context: Context, { username, password }) => {
     try {
-      const guestCartToken = context.cart?.value?.token;
+      const guestCartToken = context.useCart.cart?.value?.token;
       await context.$spree.api.logIn({ username, password, guestCartToken });
 
       const cart = await context.$spree.api.getCart();
-      context.setCart(cart);
+      context.useCart.setCart(cart);
+
+      const wishlist = await context.$spree.api.getWishlist();
+      context.useWishlist.setWishlist(wishlist);
 
       return {};
     } catch (e) {
