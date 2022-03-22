@@ -7,7 +7,7 @@
       class="sf-heading--left sf-heading--no-underline title"
     />
     <AddressPicker
-      v-if="isAuthenticated && savedAddresses"
+      v-if="isAuthenticated && savedAddresses && !isFormSubmitted"
       v-model="selectedSavedAddressId"
       :addresses="savedAddresses.addresses"
       :saved-address="checkoutShippingAddress"
@@ -28,6 +28,7 @@
             class="form__element"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
+            :disabled="isFormSubmitted"
           />
         </ValidationProvider>
         <ValidationProvider
@@ -45,6 +46,7 @@
             required
             :valid="!errors[0]"
             :errorMessage="errors[0]"
+            :disabled="isFormSubmitted"
           />
         </ValidationProvider>
         <ValidationProvider
@@ -62,6 +64,7 @@
             required
             :valid="!errors[0]"
             :errorMessage="errors[0]"
+            :disabled="isFormSubmitted"
           />
         </ValidationProvider>
         <ValidationProvider
@@ -79,6 +82,7 @@
             required
             :valid="!errors[0]"
             :errorMessage="errors[0]"
+            :disabled="isFormSubmitted"
           />
         </ValidationProvider>
         <SfInput
@@ -87,6 +91,7 @@
           label="House/Apartment number"
           name="apartment"
           class="form__element"
+          :disabled="isFormSubmitted"
         />
         <ValidationProvider
           name="city"
@@ -103,6 +108,7 @@
             required
             :valid="!errors[0]"
             :errorMessage="errors[0]"
+            :disabled="isFormSubmitted"
           />
         </ValidationProvider>
         <ValidationProvider
@@ -121,6 +127,7 @@
             :required="isStateRequired"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
+            :disabled="isFormSubmitted"
           >
             <SfSelectOption
               v-for="{ code, name } in states"
@@ -146,6 +153,7 @@
             required
             :valid="!errors[0]"
             :errorMessage="errors[0]"
+            :disabled="isFormSubmitted"
           >
             <SfSelectOption
               v-for="countryOption in countries"
@@ -171,6 +179,7 @@
             required
             :valid="!errors[0]"
             :errorMessage="errors[0]"
+            :disabled="isFormSubmitted"
           />
         </ValidationProvider>
         <ValidationProvider
@@ -188,6 +197,7 @@
             required
             :valid="!errors[0]"
             :errorMessage="errors[0]"
+            :disabled="isFormSubmitted"
           />
         </ValidationProvider>
         <SfCheckbox
@@ -409,7 +419,6 @@ export default {
     ::v-deep .sf-select__dropdown {
       font-size: var(--font-size--lg);
       margin: 0;
-      color: var(--c-text);
       font-family: var(--font-family--secondary);
       font-weight: var(--font-weight--normal);
     }

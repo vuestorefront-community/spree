@@ -12,15 +12,26 @@
     <SfButton
       v-e2e="'continue-to-billing'"
       :disabled="!allShipmentsSelected"
+      class="checkout__button"
       type="button"
       @click="save"
     >
       {{ $t('Continue to billing') }}
     </SfButton>
+
+    <SfButton
+      v-e2e="'get-back-to-shipping'"
+      class="checkout__button"
+      type="button"
+      @click="getBackToShippingDetails()"
+    >
+      {{ $t('Change shipping details') }}
+    </SfButton>
   </div>
 </template>
 
 <script>
+
 import { SfButton } from '@storefront-ui/vue';
 import { computed, ref, onMounted } from '@nuxtjs/composition-api';
 import { Logger, useVSFContext } from '@vue-storefront/core';
@@ -39,6 +50,7 @@ export default {
     const { $spree } = useVSFContext();
     const { setCart } = useCart();
     const { state: shipments, save: saveShipments, load: loadShipments } = useShippingProvider();
+    const getBackToShippingDetails = () => location.reload();
 
     const selectedShippingRates = ref({});
 
@@ -72,7 +84,8 @@ export default {
       shipments,
       allShipmentsSelected,
       selectShippingRate,
-      save
+      save,
+      getBackToShippingDetails
     };
   }
 };
@@ -81,5 +94,9 @@ export default {
 <style lang="scss" scoped>
 .vsf-shipping-provider__rate-picker {
   margin-bottom: var(--spacer-base);
+}
+.checkout__button{
+  --button-width: 50%;
+  margin: var(--spacer-sm) 0;
 }
 </style>
