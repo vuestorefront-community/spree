@@ -90,7 +90,12 @@ const useUiHelpers = () => {
 
   const isFacetPrice = (facet: AgnosticGroupedFacet): boolean => facet.label === 'Price';
 
-  const getSearchPriceFromUrl = () => getFacetsFromURL().priceFilter;
+  const getSearchPriceFromUrl = () => {
+    const urlPriceRange = getFacetsFromURL().priceFilter;
+    if (typeof urlPriceRange !== 'undefined') {
+      urlPriceRange.split(',');
+    }
+  };
 
   const isFacetCheckbox = (facet: AgnosticGroupedFacet): boolean => !isFacetColor(facet);
 

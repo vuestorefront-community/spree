@@ -64,7 +64,7 @@
               v-if="isFacetPrice(facet)"
             >
               <SfRange
-                :value="setStartingRange()"
+                :value="setStartingRange"
                 :disabled="false"
                 :config="priceRangeConfig"
                 class="filters__smartphone-slider"
@@ -138,12 +138,12 @@ export default {
     const { toggleFilterSidebar, isFilterSidebarOpen } = useUiState();
     const { result } = useFacet();
     const selectedPrice = ref({});
-
+    const localCurrency = ref(context.root.$cookies.get('vsf-spree-currency'));
+    const locale = ref(context.root.$cookies.get('vsf-locale'));
     let range = [0, 300];
     const urlPriceRange = getSearchPriceFromUrl();
     if (typeof urlPriceRange !== 'undefined') {
-      range = urlPriceRange.split(',');
-      selectedPrice.value = ([range[0], range[1]].map(String)).join(',');
+      range = urlPriceRange;
     }
     selectedPrice.value = ([range[0], range[1]].map(String)).join(',');
 
@@ -159,14 +159,14 @@ export default {
       }), {});
     };
 
-    const setStartingRange = () => {
+    const setStartingRange = ref(() => {
       if (typeof selectedPrice.value !== 'string') {
         [0, 300];
       } else {
         const splittedPriceString = selectedPrice.value.split(',');
         [splittedPriceString[0], splittedPriceString[1]];
       }
-    };
+    });
 
     const priceRangeConfig = ref({
       start: range,
@@ -179,19 +179,16 @@ export default {
       tooltips: true,
       keyboardSupport: true,
       format: {to: function(value) {
-        return new Intl.NumberFormat('de-DE', {style: 'currency', currency: 'USD', maximumSignificantDigits: 3}).format(value).replace(/[$]/g, '');
+        return new Intl.NumberFormat([locale.value, locale.value.toUpperCase()].join('-'), {style: 'currency', currency: localCurrency.value}).format(value);
       },
-      from: function(value) {
-        return value;
-      }},
-      ariaFormat: {to: function (value) {
+      from: function(value){
         return value;
       }}
     });
 
     const onPriceChanged = (facet, value) => {
-      const minChosenPrice = value[0].slice(0, -4);
-      const maxChosenPrice = value[1].slice(0, -4);
+      const minChosenPrice = value[0].replace(/[^\d.-]/g, '').slice(0, -3);
+      const maxChosenPrice = value[1].replace(/[^\d.-]/g, '').slice(0, -3);
       selectedPrice.value = ([minChosenPrice, maxChosenPrice].map(String)).join(',');
     };
 
