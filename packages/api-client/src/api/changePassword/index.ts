@@ -5,10 +5,10 @@ export default async function changePassword({ client, config }: ApiContext, par
   const { newPassword } = params;
   const bearerToken = await getCurrentBearerToken({ client, config });
 
-  const passwordData = {
+  const passwordData = {user: {
     password: newPassword,
     password_confirmation: newPassword
-  };
+  }};
 
   await client.account.update({ bearerToken }, passwordData);
 }
