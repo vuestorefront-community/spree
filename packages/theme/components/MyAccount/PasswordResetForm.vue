@@ -58,6 +58,7 @@ import {
 import {required, confirmed} from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { reactive} from '@nuxtjs/composition-api';
+import { useUser } from '@vue-storefront/spree';
 
 extend('required', {
   ...required,
@@ -85,29 +86,23 @@ export default {
     ValidationObserver
   },
 
-  props: {
-    password: {
-      type: Object,
-      default: () => ({
-        newPassword: '',
-        newPasswordConfirmation: ''
-      })
-    }
+  password: {
+    type: Object,
+    default: () => ({
+      newPassword: '',
+      newPasswordConfirmation: ''
+    })
   },
 
-  setup(props, { emit }) {
+  setup(password) {
+    const { changePassword} = useUser();
     const form = reactive({
-      newPassword: props.password.newPassword,
-      newPasswordConfirmation: props.password.newPasswordConfirmation
+      newPassword: password.newPassword,
+      newPasswordConfirmation: password.newPasswordConfirmation
     });
 
     const submitForm = () => {
-      emit('submit', {
-        form,
-        onComplete: () => {},
-        // TODO: Handle Error
-        onError: () => {}
-      });
+      changePassword({current: '', new: form.newPassword });
     };
 
     return {

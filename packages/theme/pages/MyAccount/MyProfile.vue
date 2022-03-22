@@ -19,7 +19,7 @@
       <p class="message">
         {{ $t('Change password your account') }}:<br />
       </p>
-      <PasswordResetForm @submit="updatePassword" />
+      <PasswordResetForm/>
     </SfTab>
   </SfTabs>
 </template>
@@ -42,7 +42,7 @@ export default {
   },
 
   setup() {
-    const { updateUser, changePassword} = useUser();
+    const { updateUser} = useUser();
 
     const formHandler = async (fn, onComplete, onError) => {
       try {
@@ -54,13 +54,9 @@ export default {
     };
 
     const updatePersonalData = ({ form, onComplete, onError }) => formHandler(() => updateUser({ user: form.value }), onComplete, onError);
-    const updatePassword = ({ form, onComplete, onError }) => {
-      formHandler(() => changePassword({current: '', new: form.newPassword }), onComplete, onError);
-    };
 
     return {
-      updatePersonalData,
-      updatePassword
+      updatePersonalData
     };
   }
 };
