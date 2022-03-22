@@ -16,14 +16,9 @@
           <MyProfile />
         </SfContentPage>
 
-        <SfContentPage title="Shipping details">
-          <ShippingDetails />
+        <SfContentPage title="Saved addresses">
+          <SavedAddressesDetails />
         </SfContentPage>
-
-        <SfContentPage title="Billing details">
-          <BillingDetails />
-        </SfContentPage>
-
       </SfContentCategory>
 
       <SfContentCategory title="Order details">
@@ -41,8 +36,7 @@ import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
 import { computed, onBeforeUnmount, useRoute, useRouter } from '@nuxtjs/composition-api';
 import { useUser } from '@vue-storefront/spree';
 import MyProfile from './MyAccount/MyProfile';
-import ShippingDetails from './MyAccount/ShippingDetails';
-import BillingDetails from './MyAccount/BillingDetails';
+import SavedAddressesDetails from './MyAccount/SavedAddressesDetails';
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
 import {
@@ -56,8 +50,7 @@ export default {
     SfBreadcrumbs,
     SfContentPages,
     MyProfile,
-    ShippingDetails,
-    BillingDetails,
+    SavedAddressesDetails,
     MyNewsletter,
     OrderHistory
   },
@@ -131,7 +124,7 @@ export default {
 .my-account {
   @include for-mobile {
     --content-pages-sidebar-category-title-font-weight: var(
-        --font-weight--normal
+      --font-weight--normal
     );
     --content-pages-sidebar-category-title-margin: var(--spacer-sm)
     var(--spacer-sm) var(--spacer-sm) var(--spacer-base);

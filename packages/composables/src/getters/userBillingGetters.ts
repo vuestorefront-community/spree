@@ -1,6 +1,6 @@
 import { UserBillingGetters } from '@vue-storefront/core';
 
-const userGetters: UserBillingGetters<any, any> = {
+const userBillingGetters: UserBillingGetters<any, any> = {
   getAddresses: (billing, criteria?: Record<string, any>) => {
     const { addresses } = billing;
     if (!criteria || !Object.keys(criteria).length) {
@@ -30,4 +30,4 @@ const userGetters: UserBillingGetters<any, any> = {
   isDefault: address => address ? address.isDefault : false
 };
 
-export default userGetters;
+export default userBillingGetters;
