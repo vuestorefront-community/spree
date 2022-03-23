@@ -8,6 +8,7 @@ export * from './category';
 export * from './country';
 export * from './account';
 export * from './wishlist';
+export * from './user';
 
 export type CategoryFilter = Record<string, unknown>;
 export type ShippingMethod = Record<string, unknown>;
