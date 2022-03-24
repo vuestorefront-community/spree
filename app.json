@@ -2,7 +2,7 @@
   "name": "Vue Storefront 2 Spree Commerce integration",
   "description": "A Spree Commerce api integration with Vue Storefront 2",
   "repository": "https://github.com/vuestorefront/spree",
-  "logo": "https://drive.google.com/file/d/1nZrGuW-jOlSy29McQu8l2djAtkmLYX2x/view",
+  "logo": "https://drive.google.com/file/d/1nZrGuW-jOlSy29McQu8l2djAtkmLYX2x/preview",
   "keywords": ["upside", "vuestorefront", "commerce", "ecommerce", "spree", "spree commerce"],
   "website": "https://www.upsidelab.io",
   "env": {
