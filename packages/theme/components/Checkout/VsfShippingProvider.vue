@@ -50,7 +50,7 @@ export default {
     const { $spree } = useVSFContext();
     const { setCart } = useCart();
     const { state: shipments, save: saveShipments, load: loadShipments } = useShippingProvider();
-    const getBackToShippingDetails = () => location.reload();
+    const getBackToShippingDetails = () => emit('back');
 
     const selectedShippingRates = ref({});
 

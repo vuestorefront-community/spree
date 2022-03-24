@@ -235,6 +235,7 @@
       <VsfShippingProvider
         v-if="isFormSubmitted"
         @submit="router.push(localePath({ name: 'billing' }))"
+        @back="() => isFormSubmitted = !isFormSubmitted"
       />
     </form>
   </ValidationObserver>
@@ -403,7 +404,7 @@ export default {
       selectedSavedAddressId,
       checkoutShippingAddress,
       handleFormSubmit,
-      isCopyToBillingSelected
+      isCopyToBillingSelected,
     };
   }
 };
