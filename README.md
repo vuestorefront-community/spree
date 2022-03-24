@@ -20,6 +20,9 @@ This integration is being developed and maintained by [Upside](https://upsidelab
 - Node 14.15+
 - Spree-based store with V2 API available. Some API endpoints used by the integration are only available in Spree 4.2+, so you may need to either upgrade the store or backport these features to your backend.
 
+## Deploy in the cloud
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 ## Getting Started
 
 1. Clone this repository

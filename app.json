@@ -1,0 +1,23 @@
+{
+  "name": "Vue Storefront 2 Spree Commerce integration",
+  "description": "A Spree Commerce api integration with Vue Storefront 2",
+  "repository": "https://github.com/vuestorefront/spree",
+  "logo": "https://user-images.githubusercontent.com/6420475/141106487-333774a5-04b2-46a4-8367-7cb11e46906e.png",
+  "keywords": ["upside", "vuestorefront", "commerce", "ecommerce", "spree", "spree commerce"],
+  "website": "https://www.upsidelab.io",
+  "env": {
+    "BACKEND_URL": {
+      "description": "Spree commerce API backend url",
+      "value": "https://demo.spreecommerce.org"
+    },
+    "SPREE_VERSION": {
+      "description": "Spree version of the backend. Either \"spree42\" or \"spree43\".",
+      "value": "spree42"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
