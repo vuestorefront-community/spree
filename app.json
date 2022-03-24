@@ -7,7 +7,7 @@
   "website": "https://www.upsidelab.io",
   "env": {
     "BACKEND_URL": {
-      "description": "Spree commerce API backend url",
+      "description": "Spree backend URL (without the /api suffix)",
       "value": "https://demo.spreecommerce.org"
     },
     "SPREE_VERSION": {
