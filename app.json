@@ -2,7 +2,7 @@
   "name": "Vue Storefront for Spree Commerce",
   "description": "Modern PWA storefront for Spree Commerce",
   "repository": "https://github.com/vuestorefront/spree",
-  "logo": "https://drive.google.com/file/d/1nZrGuW-jOlSy29McQu8l2djAtkmLYX2x/preview",
+  "logo": "https://raw.githubusercontent.com/upsidelab/vsf-spree-test-repo/0ed5ba0f062ee3354fc5d64879d7877f62dfa733/Upside%20Logo%20Short%20White%20on%20Black.png",
   "keywords": ["upside", "vuestorefront", "commerce", "ecommerce", "spree", "spree commerce"],
   "website": "https://www.upsidelab.io",
   "env": {
