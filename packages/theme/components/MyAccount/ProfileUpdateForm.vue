@@ -10,7 +10,7 @@
         <SfTableData class="right-column">{{ userGetters.getStoreCredits(user) }}</SfTableData>
       </SfTableRow>
       <SfTableRow>
-        <SfTableData>{{ addresses && addresses[0] ? `Shipping to ${userShippingGetters.getFirstName(addresses[0])} ${userShippingGetters.getLastName(addresses[0])}` : 'Shipping' }}</SfTableData>
+        <SfTableData>{{ mainAddress ? `Shipping to ${userShippingGetters.getFirstName(mainAddress)} ${userShippingGetters.getLastName(mainAddress)}` : 'Shipping' }}</SfTableData>
         <SfTableData class="right-column">
           <SfButton class="color-primary redirect-button" :aria-disabled="false" :link="localePath(`/my-account/saved-addresses`)" type="button" >Manage saved addresses</SfButton>
         </SfTableData>
@@ -46,6 +46,7 @@ export default {
     } = useUser();
     const { shipping, load: loadUserShipping } = useUserShipping();
     const addresses = computed(() => userShippingGetters.getAddresses(shipping.value));
+    const mainAddress = computed(() => addresses.value ? addresses.value[0] : null);
     onMounted(async () => {
       await loadUserShipping();
       await loadUser();
@@ -53,7 +54,7 @@ export default {
     return {
       userGetters,
       user,
-      addresses,
+      mainAddress,
       shipping,
       userShippingGetters,
       isAuthenticated

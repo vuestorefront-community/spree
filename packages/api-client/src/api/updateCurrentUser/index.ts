@@ -7,7 +7,8 @@ export default async function updateUser({ client, config }: ApiContext, { email
     user: {
       email,
       first_name: firstName,
-      last_name: lastName}
+      last_name: lastName
+    }
   };
   const result = await client.account.update({ bearerToken }, updateData);
   if (result.isFail()) {
