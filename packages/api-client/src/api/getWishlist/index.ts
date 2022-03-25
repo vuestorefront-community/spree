@@ -11,6 +11,6 @@ export default async function getWishlist({ client, config }: ApiContext): Promi
       return await getWishlistV2({ client, config });
     case wishlistFeatureState.disabled:
     default:
-      return emptyWishlist;
+      return { ...emptyWishlist, isDisabled: true };
   }
 }

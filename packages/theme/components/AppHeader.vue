@@ -30,6 +30,7 @@
             />
           </SfButton>
           <SfButton
+            v-if="!isWishlistDisabled"
             class="sf-button--pure sf-header__action"
             aria-label="Toggle wishlist sidebar"
             @click="toggleWishlistSidebar"
@@ -106,7 +107,7 @@
 <script>
 import { SfHeader, SfImage, SfIcon, SfButton, SfBadge, SfSearchBar, SfOverlay } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
-import { useCart, useFacet, useUser, cartGetters } from '@vue-storefront/spree';
+import { useCart, useFacet, useUser, cartGetters, useWishlist, wishlistGetters } from '@vue-storefront/spree';
 import { computed, ref, watch, onBeforeUnmount, useRouter } from '@nuxtjs/composition-api';
 import { useUiHelpers } from '~/composables';
 import LocaleSelector from './LocaleSelector';
@@ -140,6 +141,7 @@ export default {
     const { isAuthenticated } = useUser();
     const { result: searchResult, search } = useFacet('searchResults');
     const { cart } = useCart();
+    const { wishlist } = useWishlist();
     const term = ref(getFacetsFromURL().phrase);
     const isSearchOpen = ref(false);
     const searchBarRef = ref(null);
@@ -152,6 +154,7 @@ export default {
     });
 
     const accountIcon = computed(() => isAuthenticated.value ? 'profile_fill' : 'profile');
+    const isWishlistDisabled = computed(() => wishlistGetters.isWishlistDisabled(wishlist.value));
 
     // TODO: https://github.com/DivanteLtd/vue-storefront/issues/4927
     const handleAccountClick = async () => {
@@ -219,7 +222,8 @@ export default {
       searchBarRef,
       isMobile,
       isMobileMenuOpen,
-      removeSearchResults
+      removeSearchResults,
+      isWishlistDisabled
     };
   }
 };

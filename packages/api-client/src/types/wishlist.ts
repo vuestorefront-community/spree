@@ -13,6 +13,7 @@ export type WishedProduct = {
 export type Wishlist = {
   token: string;
   wishedProducts: WishedProduct[];
+  isDisabled?: boolean;
 };
 
 export type AddToWishlistParams = {

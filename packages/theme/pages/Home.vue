@@ -66,6 +66,7 @@
             :show-add-to-cart-button="false"
             :is-in-wishlist="isInWishlist({ product })"
             :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
+            :wishlist-icon="isWishlistDisabled ? false : undefined"
             class="carousel__item__product"
             @click:wishlist="handleWishlistClick(product)"
           />
@@ -118,7 +119,7 @@ import {
   SfButton
 } from '@storefront-ui/vue';
 import { computed, onMounted, useContext } from '@nuxtjs/composition-api';
-import { useFacet, facetGetters, productGetters, useUser, useWishlist } from '@vue-storefront/spree';
+import { useFacet, facetGetters, productGetters, useUser, useWishlist, wishlistGetters } from '@vue-storefront/spree';
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import NewsletterModal from '~/components/NewsletterModal.vue';
 import LazyHydrate from 'vue-lazy-hydration';
@@ -152,9 +153,10 @@ export default {
     const { toggleNewsletterModal, toggleLoginModal } = useUiState();
     const { search, result } = useFacet('home');
     const { isAuthenticated } = useUser();
-    const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist } = useWishlist();
+    const { wishlist, addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist } = useWishlist();
 
     const products = computed(() => facetGetters.getProducts(result.value));
+    const isWishlistDisabled = computed(() => wishlistGetters.isWishlistDisabled(wishlist.value));
 
     onMounted(async () => {
       await search({ categorySlug: 'categories/women' });
@@ -250,7 +252,8 @@ export default {
       products,
       productGetters,
       isInWishlist,
-      handleWishlistClick
+      handleWishlistClick,
+      isWishlistDisabled
     };
   }
 };

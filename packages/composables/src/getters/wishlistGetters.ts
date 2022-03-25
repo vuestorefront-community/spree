@@ -40,6 +40,8 @@ export const getWishlistTotalItems = (wishlist: Wishlist): number => wishlist?.w
 
 export const getFormattedPrice = (price: number): string => String(price);
 
+export const isWishlistDisabled = (wishlist: Wishlist): boolean => wishlist?.isDisabled;
+
 const wishlistGetters: WishlistGetters<Wishlist, WishlistProduct> = {
   getTotals: getWishlistTotals,
   getShippingPrice: getWishlistShippingPrice,
@@ -51,7 +53,8 @@ const wishlistGetters: WishlistGetters<Wishlist, WishlistProduct> = {
   getItemAttributes: getWishlistItemAttributes,
   getItemSku: getWishlistItemSku,
   getTotalItems: getWishlistTotalItems,
-  getFormattedPrice
+  getFormattedPrice,
+  isWishlistDisabled
 };
 
 export default wishlistGetters;
