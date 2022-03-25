@@ -96,16 +96,16 @@ export default {
     return { changeActivePage, activePage };
   },
 
-  data() {
+  data(root) {
     return {
       breadcrumbs: [
         {
           text: 'Home',
-          link: '/'
+          link: root.localePath('/')
         },
         {
           text: 'My Account',
-          link: '/my-account'
+          link: root.localePath('/my-account')
         }
       ]
     };
