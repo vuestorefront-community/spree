@@ -7,7 +7,7 @@
       @click="handleHomeClick"
     />
     <SfBottomNavigationItem icon="menu" size="20px" label="Menu" @click="toggleMobileMenu"/>
-    <SfBottomNavigationItem icon="heart" size="20px" label="Wishlist" @click="toggleWishlistSidebar"/>
+    <SfBottomNavigationItem v-if="!isWishlistDisabled" icon="heart" size="20px" label="Wishlist" @click="toggleWishlistSidebar"/>
     <SfBottomNavigationItem icon="profile" size="20px" label="Account" @click="handleAccountClick"/>
     <!-- TODO: add logic for label - if on Home then Basket, if on PDC then AddToCart etc. -->
     <SfBottomNavigationItem
@@ -33,7 +33,7 @@
 <script>
 import { SfBottomNavigation, SfIcon, SfCircleIcon, SfBadge } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
-import { useUser, useCart, cartGetters } from '@vue-storefront/spree';
+import { useUser, useCart, cartGetters, useWishlist, wishlistGetters } from '@vue-storefront/spree';
 import { computed, useRoute, useRouter } from '@nuxtjs/composition-api';
 
 export default {
@@ -49,6 +49,9 @@ export default {
     const { toggleCartSidebar, toggleWishlistSidebar, toggleLoginModal, toggleMobileMenu, isMobileMenuOpen } = useUiState();
     const { isAuthenticated } = useUser();
     const { cart } = useCart();
+    const { wishlist } = useWishlist();
+
+    const isWishlistDisabled = computed(() => wishlistGetters.isWishlistDisabled(wishlist.value));
 
     const handleAccountClick = async () => {
       if (isAuthenticated.value) {
@@ -76,7 +79,8 @@ export default {
       toggleMobileMenu,
       cartTotalItems,
       handleAccountClick,
-      handleHomeClick
+      handleHomeClick,
+      isWishlistDisabled
     };
   }
 };
