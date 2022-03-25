@@ -101,11 +101,11 @@ export default {
       breadcrumbs: [
         {
           text: 'Home',
-          route: { link: '#' }
+          link: '/'
         },
         {
           text: 'My Account',
-          route: { link: '#' }
+          link: '/my-account'
         }
       ]
     };
