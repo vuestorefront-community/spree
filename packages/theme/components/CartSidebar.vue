@@ -28,6 +28,7 @@
                 :regular-price="$n(cartGetters.getItemPrice(product).regular, 'currency')"
                 :special-price="cartGetters.getItemPrice(product).special && $n(cartGetters.getItemPrice(product).special, 'currency')"
                 :stock="99999"
+                :link="localePath(`/p/${cartGetters.getItemId(product)}/${cartGetters.getItemSku(product)}`)"
                 @click:remove="removeItem({ product: { id: product.id } })"
                 class="collected-product"
               >

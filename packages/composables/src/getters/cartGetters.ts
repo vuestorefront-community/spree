@@ -3,6 +3,8 @@ import { Cart, LineItem } from '@vue-storefront/spree-api/src/types';
 
 export const getCartItems = (cart: Cart): LineItem[] => cart?.lineItems || [];
 
+export const getCartItemId = (lineItem: LineItem): number => lineItem?._variantId;
+
 export const getCartItemName = (lineItem: LineItem): string => lineItem.name;
 
 export const getCartItemImage = (lineItem: LineItem): string => lineItem.image;
@@ -51,6 +53,7 @@ const cartGetters: CartGetters<Cart, LineItem> = {
   getTotals: getCartTotals,
   getShippingPrice: getCartShippingPrice,
   getItems: getCartItems,
+  getItemId: getCartItemId,
   getItemName: getCartItemName,
   getItemImage: getCartItemImage,
   getItemPrice: getCartItemPrice,
