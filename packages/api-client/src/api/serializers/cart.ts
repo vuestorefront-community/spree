@@ -39,7 +39,7 @@ const deserializeLineItem = (lineItem: any, attachments: JsonApiDocument[], conf
   const imagesData = variantImagesData.length > 0 ? variantImagesData : productImagesData;
   const image = findAttachment(attachments, imagesData[0]?.id, 'image');
 
-  const imageUrl = image ? formatImageUrl(image.attributes.styles, config.backendUrl) : '';
+  const imageUrl = image ? formatImageUrl(image.attributes.styles, config) : '';
 
   return {
     id: parseInt(lineItem.id, 10),
