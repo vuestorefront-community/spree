@@ -22,7 +22,7 @@
             <SfMenuItem
               label="All"
               class="sf-header-navigation-item__menu-item"
-              :link="localePath(`/c/categories/${cat.label.replace(/\s+/g, '-').toLowerCase()}`)"
+              :link="localePath(`/c/${cat.slug}`)"
               @click.native="toggleMobileMenu"
             />
           </SfListItem>
@@ -32,7 +32,7 @@
             <SfMenuItem
               :label="subCat.label"
               class="sf-header-navigation-item__menu-item"
-              :link="localePath(`/c/categories/${cat.label.replace(/\s+/g, '-').toLowerCase()}/${subCat.label.replace(/\s+/g, '-').toLowerCase()}`)"
+              :link="localePath(`/c/${subCat.slug}`)"
               @click.native="toggleMobileMenu"
             />
           </SfListItem>
