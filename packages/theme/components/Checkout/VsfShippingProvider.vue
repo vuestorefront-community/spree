@@ -8,25 +8,25 @@
       class="vsf-shipping-provider__rate-picker"
       @change="shippingRateId => selectShippingRate(shipment.id, shippingRateId)"
     />
+      <div class="form__action">
+        <SfButton
+          v-e2e="'get-back-to-shipping'"
+          class="sf-button color-secondary checkout__button"
+          type="button"
+          @click="getBackToShippingDetails()"
+        >
+          {{ $t('Change shipping details') }}
+        </SfButton>
 
-    <SfButton
-      v-e2e="'continue-to-billing'"
-      :disabled="!allShipmentsSelected"
-      class="checkout__button"
-      type="button"
-      @click="save"
-    >
-      {{ $t('Continue to billing') }}
-    </SfButton>
-
-    <SfButton
-      v-e2e="'get-back-to-shipping'"
-      class="checkout__button"
-      type="button"
-      @click="getBackToShippingDetails()"
-    >
-      {{ $t('Change shipping details') }}
-    </SfButton>
+        <SfButton
+          v-e2e="'continue-to-billing'"
+          class="checkout__button"
+          type="button"
+          @click="save"
+        >
+          {{ $t('Continue to billing') }}
+        </SfButton>
+      </div>
   </div>
 </template>
 
@@ -95,8 +95,22 @@ export default {
 .vsf-shipping-provider__rate-picker {
   margin-bottom: var(--spacer-base);
 }
+.form {
+  &__action {
+    @include for-desktop {
+      flex: 0 0 100%;
+      display: flex;
+    }
+  }
+}
+
 .checkout__button{
-  --button-width: 50%;
-  margin: var(--spacer-sm) 0;
+  margin: var(--spacer-xl) 0 var(--spacer-sm);
+  &:hover {
+    color:  white;
+  }
+  @include for-desktop {
+    margin: 0 var(--spacer-xl) 0 0;
+  }
 }
 </style>
