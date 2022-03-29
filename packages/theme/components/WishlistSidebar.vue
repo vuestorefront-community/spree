@@ -38,6 +38,7 @@
                     <SfProperty v-for="(attribute, key) in wishlistGetters.getItemAttributes(product, ['color', 'size'])" :key="key" :name="key" :value="attribute"/>
                   </div>
                 </template>
+                <template #actions>{{ }}</template>
                 <template #input="{}">&nbsp;</template>
               </SfCollectedProduct>
             </transition-group>

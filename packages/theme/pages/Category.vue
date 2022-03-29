@@ -142,11 +142,20 @@
               </template>
               <template #actions>
                 <SfButton
+                  v-if="!isInWishlist({ product })"
                   class="sf-button--text desktop-only"
                   style="margin: 0 0 1rem auto; display: block;"
-                  @click="() => {}"
+                  @click="handleWishlistClick(product)"
                 >
                   {{ $t('Save for later') }}
+                </SfButton>
+                <SfButton
+                  v-else
+                  class="sf-button--text desktop-only"
+                  style="margin: 0 0 1rem auto; display: block;"
+                  @click="handleWishlistClick(product)"
+                >
+                  {{ $t('Remove from wishlist') }}
                 </SfButton>
               </template>
             </SfProductCardHorizontal>
