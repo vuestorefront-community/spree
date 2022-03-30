@@ -132,9 +132,8 @@ export default {
             currencyDefault: 'EUR'
           }
         }
-      },
-    },
-    detectBrowserLanguage: false
+      }
+    }
   },
   pwa: {
     meta: {
@@ -172,13 +171,19 @@ export default {
     ]
   },
   router: {
-    middleware: ['checkout'],
+    middleware: ['checkout', 'order-details'],
     scrollBehavior (_to, _from, savedPosition) {
       if (savedPosition) {
         return savedPosition;
       } else {
         return { x: 0, y: 0 };
       }
+    },
+    extendRoutes(routes, resolve) {
+      routes.push({
+        path: '/my-account/:pageName/:id?',
+        component: resolve(__dirname, 'pages/MyAccount.vue')
+      });
     }
   },
   publicRuntimeConfig: {

@@ -38,9 +38,11 @@ export type ProductsResponse = {
   total: number;
 };
 
-export type OrderSearchParams = Record<string, any>;
+export type OrderSearchParams = {
+  orderId?: string
+};
 
-export type OrdersResponse = Order[];
+export type OrdersResponse = Order[] | Order;
 
 export type PriceRange = {
   min: number;
