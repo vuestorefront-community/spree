@@ -11,11 +11,17 @@ export const getUserFullName = (user: User): string => user ? `${user.firstName}
 
 export const getUserEmailAddress = (user: User): string => user?.email || '';
 
+export const getUserCompletedOrders = (user: User): number => user?.completedOrders || 0;
+
+export const getUserStoreCredits = (user: User): number => user?.storeCredits || 0;
+
 const userGetters: UserGetters<User> = {
   getFirstName: getUserFirstName,
   getLastName: getUserLastName,
   getFullName: getUserFullName,
-  getEmailAddress: getUserEmailAddress
+  getEmailAddress: getUserEmailAddress,
+  getCompletedOrders: getUserCompletedOrders,
+  getStoreCredits: getUserStoreCredits
 };
 
 export default userGetters;

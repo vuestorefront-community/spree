@@ -32,7 +32,7 @@ const params: UseUserFactoryParams<User, any, any> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateUser: async (context: Context, { currentUser, updatedUserData }) => {
-    console.log('Mocked: updateUser');
+    await context.$spree.api.updateCurrentUser(updatedUserData);
     return {};
   },
 

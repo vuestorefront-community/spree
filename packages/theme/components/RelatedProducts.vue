@@ -17,6 +17,7 @@
             :is-in-wishlist="isInWishlist({ product })"
             :is-added-to-cart="isInCart({ product })"
             :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
+            :wishlist-icon="isWishlistDisabled ? false : undefined"
             class="product-card"
             @click:wishlist="handleWishlistClick(product)"
             @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
@@ -34,7 +35,8 @@ import {
   SfSection,
   SfLoader
 } from '@storefront-ui/vue';
-import { productGetters, useWishlist, useCart, useUser } from '@vue-storefront/spree';
+import { productGetters, useWishlist, useCart, useUser, wishlistGetters } from '@vue-storefront/spree';
+import { computed } from '@nuxtjs/composition-api';
 import { useUiState } from '~/composables';
 
 export default {
@@ -52,9 +54,11 @@ export default {
   },
   setup() {
     const { addItem: addItemToCart, isInCart } = useCart();
-    const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist } = useWishlist();
+    const { wishlist, addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist } = useWishlist();
     const { isAuthenticated } = useUser();
     const { toggleLoginModal } = useUiState();
+
+    const isWishlistDisabled = computed(() => wishlistGetters.isWishlistDisabled(wishlist.value));
 
     const handleWishlistClick = async (product) => {
       if (!isAuthenticated.value) {
@@ -71,7 +75,8 @@ export default {
       isInWishlist,
       addItemToCart,
       isInCart,
-      handleWishlistClick
+      handleWishlistClick,
+      isWishlistDisabled
     };
   }
 };

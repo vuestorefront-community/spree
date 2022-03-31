@@ -100,6 +100,7 @@
               :is-in-wishlist="isInWishlist({ product })"
               :is-added-to-cart="isInCart({ product })"
               :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
+              :wishlist-icon="isWishlistDisabled ? false : undefined"
               class="products__product-card"
               @click:wishlist="handleWishlistClick(product)"
               @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
@@ -210,7 +211,7 @@ import {
   SfProperty
 } from '@storefront-ui/vue';
 import { computed } from '@nuxtjs/composition-api';
-import { useCart, useWishlist, productGetters, useFacet, facetGetters, useUser } from '@vue-storefront/spree';
+import { useCart, useWishlist, productGetters, useFacet, facetGetters, useUser, wishlistGetters } from '@vue-storefront/spree';
 import { useUiHelpers, useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
@@ -229,7 +230,7 @@ export default {
     const uiState = useUiState();
     const { addItem: addItemToCart, isInCart } = useCart();
     const { result, search, loading, error } = useFacet();
-    const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist } = useWishlist();
+    const { wishlist, addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist } = useWishlist();
     const { isAuthenticated } = useUser();
     const products = computed(() => facetGetters.getProducts(result.value));
     const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
@@ -245,6 +246,8 @@ export default {
       const category = items.find(({ isCurrent, items }) => isCurrent || items.find(({ isCurrent }) => isCurrent));
       return category?.label || items[0]?.label;
     });
+
+    const isWishlistDisabled = computed(() => wishlistGetters.isWishlistDisabled(wishlist.value));
 
     const handleWishlistClick = async (product) => {
       if (!isAuthenticated.value) {
@@ -274,7 +277,8 @@ export default {
       addItemToCart,
       isInWishlist,
       isInCart,
-      handleWishlistClick
+      handleWishlistClick,
+      isWishlistDisabled
     };
   },
   components: {

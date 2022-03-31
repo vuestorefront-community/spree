@@ -1,0 +1,23 @@
+{
+  "name": "Vue Storefront for Spree Commerce",
+  "description": "Modern PWA storefront for Spree Commerce",
+  "repository": "https://github.com/vuestorefront/spree",
+  "logo": "https://raw.githubusercontent.com/upsidelab/vsf-spree-test-repo/0ed5ba0f062ee3354fc5d64879d7877f62dfa733/Upside%20Logo%20Short%20White%20on%20Black.png",
+  "keywords": ["upside", "vuestorefront", "commerce", "ecommerce", "spree", "spree commerce"],
+  "website": "https://www.upsidelab.io",
+  "env": {
+    "BACKEND_URL": {
+      "description": "Spree backend URL (without the /api suffix)",
+      "value": "https://demo.spreecommerce.org"
+    },
+    "SPREE_VERSION": {
+      "description": "Spree version of the backend. Either \"spree42\" or \"spree43\".",
+      "value": "spree42"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}

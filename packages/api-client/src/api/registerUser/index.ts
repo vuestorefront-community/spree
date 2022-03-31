@@ -1,9 +1,11 @@
 import { ApiContext } from '../../types';
 
-export default async function registerUser({ client }: ApiContext, { email, password }): Promise<void> {
+export default async function registerUser({ client }: ApiContext, { email, password, firstName, lastName }): Promise<void> {
   const userData = {
     email,
     password,
+    first_name: firstName,
+    last_name: lastName,
     passwordConfirmation: password
   };
 
