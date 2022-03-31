@@ -200,7 +200,6 @@ export default {
       await search({ slug });
       await searchRelatedProducts({ categoryId: [categories.value[0]], limit: 8 });
       await searchReviews({ productId: id });
-      console.log(options.value);
     });
 
     const updateFilter = (filter) => {
@@ -213,13 +212,7 @@ export default {
       });
     };
 
-    const beautifyColorName = (colorName) => {
-      const spacedName = colorName.replace('_', ' ');
-      return spacedName.charAt(0).toUpperCase() + spacedName.slice(1);
-    };
-
     return {
-      beautifyColorName,
       updateFilter,
       configuration,
       product,
@@ -362,7 +355,7 @@ export default {
     );
     display: flex;
     align-items: center;
-    margin-top: var(--spacer-s);
+    margin-top: var(--spacer-sm);
   }
   &__color-label {
     margin: 0 var(--spacer-sm) 0 0;
