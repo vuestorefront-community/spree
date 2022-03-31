@@ -29,6 +29,8 @@ export const getCartItemAttributes = (lineItem: LineItem, filters?: Array<string
 
 export const getCartItemSku = (lineItem: LineItem): string => lineItem.sku;
 
+export const getCartItemSlug = (lineItem: LineItem): string => lineItem.slug;
+
 export const getCartTotals = (cart: Cart): AgnosticTotals => {
   return {
     total: cart?.totalAmount || 0,
@@ -61,6 +63,7 @@ const cartGetters: CartGetters<Cart, LineItem> = {
   getItemQty: getCartItemQty,
   getItemAttributes: getCartItemAttributes,
   getItemSku: getCartItemSku,
+  getItemSlug: getCartItemSlug,
   getFormattedPrice: getFormattedPrice,
   getTotalItems: getCartTotalItems,
   getCoupons,

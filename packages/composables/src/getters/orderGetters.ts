@@ -17,6 +17,8 @@ export const getItemId = (item: OrderItem): string => item?._variantId || 0;
 
 export const getItemSku = (item: OrderItem): string => item?.sku || '';
 
+export const getItemSlug = (item: OrderItem): string => item?.slug || '';
+
 export const getItemName = (item: OrderItem): string => item?.name || '';
 
 export const getItemQty = (item: OrderItem): number => item?.qty || 0;
@@ -35,6 +37,7 @@ const orderGetters: UserOrderGetters<Order, OrderItem> = {
   getItems,
   getItemId,
   getItemSku,
+  getItemSlug,
   getItemName,
   getItemQty,
   getItemPrice,
