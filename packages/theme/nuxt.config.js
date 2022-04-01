@@ -132,9 +132,8 @@ export default {
             currencyDefault: 'EUR'
           }
         }
-      },
-    },
-    detectBrowserLanguage: false
+      }
+    }
   },
   pwa: {
     meta: {
