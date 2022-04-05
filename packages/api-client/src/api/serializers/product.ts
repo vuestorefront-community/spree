@@ -131,7 +131,7 @@ const partialDeserializeProductVariant = (
   _id: variant.id,
   _productId: product.id,
   _variantId: variant.id,
-  _description: variant.attributes.description || product.attributes.description,
+  description: variant.attributes.description || product.attributes.description,
   _categoriesRef: product.relationships.taxons.data.map((taxon) => taxon.id),
   name: product.attributes.name,
   slug: product.attributes.slug,

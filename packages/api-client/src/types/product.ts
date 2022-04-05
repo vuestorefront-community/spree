@@ -37,7 +37,7 @@ export type ProductVariant = {
   _id: number;
   _productId: number;
   _variantId: number;
-  _description: string;
+  description: string;
   _categoriesRef: string[];
   name: string;
   slug: string;
