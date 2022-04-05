@@ -29,14 +29,26 @@
             />
           </div>
           <div v-else>
-            <SfFilter
-              v-for="option in facet.options"
-              :key="`${facet.id}-${option.value}`"
-              :label="option.value + `${option.count ? ` (${option.count})` : ''}`"
-              :selected="isFilterSelected(facet, option)"
-              class="filters__item"
-              @change="() => selectFilter(facet, option)"
-            />
+            <div
+              v-if="isFacetPrice(facet)"
+            >
+              <SfRange
+                :disabled="false"
+                :config="priceRangeConfig"
+                class="filters__item"
+                @change="(value) => onPriceChanged(facet,value)"
+              />
+            </div>
+            <div v-else>
+              <SfFilter
+                v-for="option in facet.options"
+                :key="`${facet.id}-${option.value}`"
+                :label="option.value + `${option.count ? ` (${option.count})` : ''}`"
+                :selected="isFilterSelected(facet, option)"
+                class="filters__item"
+                @change="() => selectFilter(facet, option)"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -47,14 +59,26 @@
             :header="facet.label"
             class="filters__accordion-item"
           >
-            <SfFilter
-              v-for="option in facet.options"
-              :key="`${facet.id}-${option.id}`"
-              :label="option.value"
-              :selected="isFilterSelected(facet, option)"
-              class="filters__item"
-              @change="() => selectFilter(facet, option)"
-            />
+            <div
+              v-if="isFacetPrice(facet)"
+            >
+              <SfRange
+                :disabled="false"
+                :config="priceRangeConfig"
+                class="filters__smartphone-slider"
+                @change="(value) => onPriceChanged(facet,value)"
+              />
+            </div>
+            <div v-else>
+              <SfFilter
+                v-for="option in facet.options"
+                :key="`${facet.id}-${option.value}`"
+                :label="option.value + `${option.count ? ` (${option.count})` : ''}`"
+                :selected="isFilterSelected(facet, option)"
+                class="filters__item"
+                @change="() => selectFilter(facet, option)"
+              />
+            </div>
           </SfAccordionItem>
         </div>
       </SfAccordion>
@@ -87,7 +111,8 @@ import {
   SfHeading,
   SfFilter,
   SfAccordion,
-  SfColor
+  SfColor,
+  SfRange
 } from '@storefront-ui/vue';
 
 import { ref, computed, watch, onMounted } from '@nuxtjs/composition-api';
@@ -103,16 +128,27 @@ export default {
     SfFilter,
     SfAccordion,
     SfColor,
-    SfHeading
+    SfHeading,
+    SfRange
   },
   setup(props, context) {
-    const { changeFilters, isFacetColor } = useUiHelpers();
+    const { changeFilters, isFacetColor, isFacetPrice, getSearchPriceFromUrl} = useUiHelpers();
     const { toggleFilterSidebar, isFilterSidebarOpen } = useUiState();
     const { result } = useFacet();
+    const selectedPrice = ref({});
+    const localCurrency = ref(context.root.$cookies.get('vsf-spree-currency'));
+    const locale = ref(context.root.$cookies.get('vsf-locale'));
+    let range = [0, 300];
+    let isPriceDefaultValue = true;
+    const urlPriceRange = getSearchPriceFromUrl();
+    if (typeof urlPriceRange !== 'undefined') {
+      range = urlPriceRange;
+      isPriceDefaultValue = false;
+    }
+    selectedPrice.value = ([range[0], range[1]].map(String)).join(',');
 
     const facets = computed(() => facetGetters.getGrouped(result.value, ['color', 'size']));
     const selectedFilters = ref({});
-
     const setSelectedFilters = () => {
       if (!facets.value.length || Object.keys(selectedFilters.value).length) return;
       selectedFilters.value = facets.value.reduce((prev, curr) => ({
@@ -121,6 +157,32 @@ export default {
           .filter(o => o.selected)
           .map(o => o.id)
       }), {});
+    };
+
+    const priceRangeConfig = ref({
+      start: range,
+      range: {min: 0, max: 300},
+      step: 1,
+      connect: true,
+      direction: 'ltr',
+      orientation: 'horizontal',
+      behaviour: 'tap-drag',
+      tooltips: true,
+      keyboardSupport: true,
+      format: {
+        to: (value) => {
+          return new Intl.NumberFormat([locale.value, locale.value.toUpperCase()].join('-'), {style: 'currency', currency: localCurrency.value, maximumFractionDigits: 0}).format(value);
+        },
+        from: (value) => {
+          return value;
+        }}
+    });
+
+    const onPriceChanged = (facet, value) => {
+      const minChosenPrice = value[0].replace(/[^\d.-]/g, '');
+      const maxChosenPrice = value[1].replace(/[^\d.-]/g, '');
+      selectedPrice.value = ([minChosenPrice, maxChosenPrice].map(String)).join(',');
+      isPriceDefaultValue = false;
     };
 
     const isFilterSelected = (facet, option) => (selectedFilters.value[facet.id] || []).includes(option.id);
@@ -145,6 +207,10 @@ export default {
     };
 
     const applyFilters = () => {
+      if (!isPriceDefaultValue) {
+        Vue.set(selectedFilters.value, 'price', []);
+        selectedFilters.value.price.push(selectedPrice.value);
+      }
       toggleFilterSidebar();
       changeFilters(selectedFilters.value);
     };
@@ -167,12 +233,15 @@ export default {
     return {
       facets,
       isFacetColor,
+      isFacetPrice,
       selectFilter,
       isFilterSelected,
       isFilterSidebarOpen,
       toggleFilterSidebar,
       clearFilters,
-      applyFilters
+      applyFilters,
+      onPriceChanged,
+      priceRangeConfig
     };
   }
 };
@@ -220,6 +289,7 @@ export default {
     --checkbox-padding: 0 var(--spacer-sm) 0 var(--spacer-xl);
     padding: var(--spacer-sm) 0;
     border-bottom: 1px solid var(--c-light);
+
     &:last-child {
       border-bottom: 0;
     }
@@ -229,6 +299,15 @@ export default {
       border: 0;
       padding: 0;
     }
+  }
+  &__smartphone-slider{
+    --radio-container-padding: 0 var(--spacer-sm)  var(--spacer-xl);
+    --radio-background: transparent;
+    --filter-label-color: var(--c-secondary-variant);
+    --filter-count-color: var(--c-secondary-variant);
+    border-bottom: 1px solid var(--c-light);
+    border-right: 70px solid var(--c-white);
+
   }
   &__accordion-item {
     --accordion-item-content-padding: 0;
