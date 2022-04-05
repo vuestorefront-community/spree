@@ -33,7 +33,6 @@
               v-if="isFacetPrice(facet)"
             >
               <SfRange
-                :value="setStartingRange()"
                 :disabled="false"
                 :config="priceRangeConfig"
                 class="filters__item"
@@ -64,7 +63,6 @@
               v-if="isFacetPrice(facet)"
             >
               <SfRange
-                :value="setStartingRange"
                 :disabled="false"
                 :config="priceRangeConfig"
                 class="filters__smartphone-slider"
@@ -141,9 +139,11 @@ export default {
     const localCurrency = ref(context.root.$cookies.get('vsf-spree-currency'));
     const locale = ref(context.root.$cookies.get('vsf-locale'));
     let range = [0, 300];
+    let isPriceDefaultValue = true;
     const urlPriceRange = getSearchPriceFromUrl();
     if (typeof urlPriceRange !== 'undefined') {
       range = urlPriceRange;
+      isPriceDefaultValue = false;
     }
     selectedPrice.value = ([range[0], range[1]].map(String)).join(',');
 
@@ -159,15 +159,6 @@ export default {
       }), {});
     };
 
-    const setStartingRange = ref(() => {
-      if (typeof selectedPrice.value !== 'string') {
-        [0, 300];
-      } else {
-        const splittedPriceString = selectedPrice.value.split(',');
-        [splittedPriceString[0], splittedPriceString[1]];
-      }
-    });
-
     const priceRangeConfig = ref({
       start: range,
       range: {min: 0, max: 300},
@@ -178,18 +169,20 @@ export default {
       behaviour: 'tap-drag',
       tooltips: true,
       keyboardSupport: true,
-      format: {to: function(value) {
-        return new Intl.NumberFormat([locale.value, locale.value.toUpperCase()].join('-'), {style: 'currency', currency: localCurrency.value}).format(value);
-      },
-      from: function(value){
-        return value;
-      }}
+      format: {
+        to: (value) => {
+          return new Intl.NumberFormat([locale.value, locale.value.toUpperCase()].join('-'), {style: 'currency', currency: localCurrency.value, maximumFractionDigits: 0}).format(value);
+        },
+        from: (value) => {
+          return value;
+        }}
     });
 
     const onPriceChanged = (facet, value) => {
-      const minChosenPrice = value[0].replace(/[^\d.-]/g, '').slice(0, -3);
-      const maxChosenPrice = value[1].replace(/[^\d.-]/g, '').slice(0, -3);
+      const minChosenPrice = value[0].replace(/[^\d.-]/g, '');
+      const maxChosenPrice = value[1].replace(/[^\d.-]/g, '');
       selectedPrice.value = ([minChosenPrice, maxChosenPrice].map(String)).join(',');
+      isPriceDefaultValue = false;
     };
 
     const isFilterSelected = (facet, option) => (selectedFilters.value[facet.id] || []).includes(option.id);
@@ -214,8 +207,10 @@ export default {
     };
 
     const applyFilters = () => {
-      Vue.set(selectedFilters.value, 'price', []);
-      selectedFilters.value.price.push(selectedPrice.value);
+      if (!isPriceDefaultValue) {
+        Vue.set(selectedFilters.value, 'price', []);
+        selectedFilters.value.price.push(selectedPrice.value);
+      }
       toggleFilterSidebar();
       changeFilters(selectedFilters.value);
     };
@@ -246,7 +241,6 @@ export default {
       clearFilters,
       applyFilters,
       onPriceChanged,
-      setStartingRange,
       priceRangeConfig
     };
   }

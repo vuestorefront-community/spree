@@ -93,7 +93,7 @@ const useUiHelpers = () => {
   const getSearchPriceFromUrl = () => {
     const urlPriceRange = getFacetsFromURL().priceFilter;
     if (typeof urlPriceRange !== 'undefined') {
-      urlPriceRange.split(',');
+      return urlPriceRange.split(',');
     }
   };
 
