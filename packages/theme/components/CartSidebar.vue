@@ -54,11 +54,22 @@
                 </template>
                 <template #actions>
                     <SfButton
+                      v-if="!isInWishlist({ product }) && !isWishlistDisabled"
                       class="sf-button--text desktop-only"
                       @click="handleSaveForLaterClick(product)"
                     >
                       Save for later
                     </SfButton>
+                  <p
+                    v-else-if="!isWishlistDisabled"
+                    class="wishlist__text desktop-only"
+                  >
+                    {{ $t('Product already in your wishlist') }}
+                  </p>
+                  <p
+                    v-else
+                    >{{ }}</p>
+
                 </template>
                 <!-- @TODO: remove if https://github.com/vuestorefront/storefront-ui/issues/2022 is done -->
                 <template #more-actions>{{  }}</template>
@@ -129,6 +140,7 @@ import { computed } from '@nuxtjs/composition-api';
 import { useCart, cartGetters, useWishlist } from '@vue-storefront/spree';
 import { useUiState } from '~/composables';
 import debounce from 'lodash.debounce';
+import {wishlistGetters} from '@vue-storefront/spree';
 
 export default {
   name: 'Cart',
@@ -149,7 +161,8 @@ export default {
     const products = computed(() => cartGetters.getItems(cart.value));
     const totals = computed(() => cartGetters.getTotals(cart.value));
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
-    const { addItem: addItemToWishlist, isInWishlist } = useWishlist();
+    const { wishlist, addItem: addItemToWishlist, isInWishlist } = useWishlist();
+    const isWishlistDisabled = computed(() => wishlistGetters.isWishlistDisabled(wishlist.value));
     const updateQuantity = debounce(async ({ product, quantity }) => {
       console.log('debug:updateQuantity', product, quantity);
       await updateItemQty({ product, quantity });
@@ -172,7 +185,9 @@ export default {
       totals,
       totalItems,
       cartGetters,
-      handleSaveForLaterClick
+      handleSaveForLaterClick,
+      isWishlistDisabled,
+      isInWishlist
     };
   }
 };
@@ -276,4 +291,13 @@ export default {
     }
   }
 }
+
+.wishlist__text {
+  text-decoration: underline;
+  color: gray;
+  //font: var(--button-font, var(--button-font-size, var(--font-size--sm))/var(--button-font-line-height, 1.2) var(--button-font-family, var(--font-family--secondary)));
+  font-family: var(--font-family--secondary);
+  font-size: var(--font-size--sm);
+}
+
 </style>
