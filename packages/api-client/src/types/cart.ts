@@ -7,6 +7,7 @@ export type LineItem = {
   _categoriesRef: string[];
   name: string;
   sku: string;
+  slug: string;
   image: string;
   price: {
     original: number;

@@ -33,7 +33,7 @@
           </SfTableHeading>
           <SfTableRow v-for="(item, i) in orderGetters.getItems(currentOrder)" :key="i">
             <SfTableData class="products__name">
-              <nuxt-link :to="'/p/'+orderGetters.getItemSku(item)+'/'+orderGetters.getItemSku(item)">
+              <nuxt-link :to="localePath(`/p/${orderGetters.getItemVariantId(item)}/${orderGetters.getItemSlug(item)}`)">
                 {{orderGetters.getItemName(item)}}
               </nuxt-link>
             </SfTableData>

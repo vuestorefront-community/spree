@@ -3,6 +3,8 @@ import { Cart, LineItem } from '@vue-storefront/spree-api/src/types';
 
 export const getCartItems = (cart: Cart): LineItem[] => cart?.lineItems || [];
 
+export const getCartItemVariantId = (lineItem: LineItem): number => lineItem?._variantId;
+
 export const getCartItemName = (lineItem: LineItem): string => lineItem.name;
 
 export const getCartItemImage = (lineItem: LineItem): string => lineItem.image;
@@ -26,6 +28,8 @@ export const getCartItemAttributes = (lineItem: LineItem, filters?: Array<string
 };
 
 export const getCartItemSku = (lineItem: LineItem): string => lineItem.sku;
+
+export const getCartItemSlug = (lineItem: LineItem): string => lineItem.slug;
 
 export const getCartTotals = (cart: Cart): AgnosticTotals => {
   return {
@@ -51,6 +55,7 @@ const cartGetters: CartGetters<Cart, LineItem> = {
   getTotals: getCartTotals,
   getShippingPrice: getCartShippingPrice,
   getItems: getCartItems,
+  getItemVariantId: getCartItemVariantId,
   getItemName: getCartItemName,
   getItemImage: getCartItemImage,
   getItemPrice: getCartItemPrice,
@@ -58,6 +63,7 @@ const cartGetters: CartGetters<Cart, LineItem> = {
   getItemQty: getCartItemQty,
   getItemAttributes: getCartItemAttributes,
   getItemSku: getCartItemSku,
+  getItemSlug: getCartItemSlug,
   getFormattedPrice: getFormattedPrice,
   getTotalItems: getCartTotalItems,
   getCoupons,

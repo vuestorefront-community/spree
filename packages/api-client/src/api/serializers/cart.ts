@@ -48,6 +48,7 @@ const deserializeLineItem = (lineItem: any, attachments: JsonApiDocument[], conf
     _categoriesRef: [],
     name: lineItem.attributes.name,
     sku: '',
+    slug: lineItem.attributes.slug,
     image: imageUrl,
     price: {
       original: lineItem.attributes.price,
