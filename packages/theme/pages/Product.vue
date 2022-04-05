@@ -364,7 +364,7 @@ export default {
     margin: 0 var(--spacer-2xs);
   }
   &__add-to-cart {
-    margin: var(--spacer-base) var(--spacer-sm) 0;
+    margin: var(--spacer-2xl) 0 var(--spacer-sm);
   }
   &__guide{
     display: block;
