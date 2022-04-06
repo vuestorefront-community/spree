@@ -143,16 +143,14 @@
               <template #actions>
                 <SfButton
                   v-if="!isInWishlist({ product })"
-                  class="sf-button--text desktop-only"
-                  style="margin: 0 0 1rem auto; display: block;"
+                  class="sf-button--text wishlist__button desktop-only"
                   @click="handleWishlistClick(product)"
                 >
                   {{ $t('Save for later') }}
                 </SfButton>
                 <SfButton
                   v-else
-                  class="sf-button--text desktop-only"
-                  style="margin: 0 0 1rem auto; display: block;"
+                  class="sf-button--text wishlist__button desktop-only"
                   @click="handleWishlistClick(product)"
                 >
                   {{ $t('Remove from wishlist') }}
@@ -462,5 +460,9 @@ export default {
       margin-top: 3.75rem;
     }
   }
+}
+.wishlist__button{
+  margin: 0 0 1rem auto;
+  display: block;
 }
 </style>

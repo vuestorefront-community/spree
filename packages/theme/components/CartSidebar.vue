@@ -164,14 +164,12 @@ export default {
     const { wishlist, addItem: addItemToWishlist, isInWishlist } = useWishlist();
     const isWishlistDisabled = computed(() => wishlistGetters.isWishlistDisabled(wishlist.value));
     const updateQuantity = debounce(async ({ product, quantity }) => {
-      console.log('debug:updateQuantity', product, quantity);
       await updateItemQty({ product, quantity });
     }, 500);
 
     const handleSaveForLaterClick = async(product) => {
       if (!isInWishlist({product})) {
-        await addItemToWishlist({product});
-        await removeItem({product});
+        await Promise.all([addItemToWishlist({product}), removeItem({product})]);
       }
     };
 
@@ -295,7 +293,6 @@ export default {
 .wishlist__text {
   text-decoration: underline;
   color: gray;
-  //font: var(--button-font, var(--button-font-size, var(--font-size--sm))/var(--button-font-line-height, 1.2) var(--button-font-family, var(--font-family--secondary)));
   font-family: var(--font-family--secondary);
   font-size: var(--font-size--sm);
 }
