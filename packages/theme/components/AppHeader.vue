@@ -7,9 +7,9 @@
     >
       <!-- TODO: add mobile view buttons after SFUI team PR -->
       <template #logo>
-        <nuxt-link :to="localePath({ name: 'home' })" class="sf-header__logo">
+        <a :href="localePath('/')" class="sf-header__logo">
           <SfImage src="/icons/logo.svg" alt="Vue Storefront Next" class="sf-header__logo-image"/>
-        </nuxt-link>
+        </a>
       </template>
       <template #navigation>
         <HeaderNavigation :isMobile="isMobile" />
