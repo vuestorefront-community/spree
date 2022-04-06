@@ -1,5 +1,4 @@
 <template>
-  <!-- TODO: create logic with isActive prop for BottomNavigationItems -->
   <SfBottomNavigation class="navigation-bottom smartphone-only">
     <a :href="localePath('/')" class="home-button">
     <SfBottomNavigationItem
