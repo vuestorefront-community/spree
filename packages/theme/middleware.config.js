@@ -24,7 +24,7 @@ module.exports = {
           // 'enabled' (Spree 4.4+)
           // 'legacy' (Spree older than 4.4 with spree_wishlist gem installed)
           // 'disabled' (Spree older than 4.4 without spree_wishlist gem)
-          wishlist: 'disabled'
+          wishlist: 'legacy'
         }
       }
     }

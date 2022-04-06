@@ -3,12 +3,12 @@
   <SfBottomNavigation class="navigation-bottom smartphone-only">
     <a :href="localePath('/')" class="home-button">
     <SfBottomNavigationItem
-      :is-active="route.path === '/'"
+      :is-active="route.path === '/' && !isMobileMenuOpen"
       icon="home" size="20px" label="Home"
     /></a>
-    <SfBottomNavigationItem icon="menu" size="20px" label="Menu" @click="toggleMobileMenu"/>
+    <SfBottomNavigationItem icon="menu" size="20px" label="Menu" @click="toggleMobileMenu" :is-active="isMobileMenuOpen"/>
     <SfBottomNavigationItem v-if="!isWishlistDisabled" icon="heart" size="20px" label="Wishlist" @click="toggleWishlistSidebar"/>
-    <SfBottomNavigationItem icon="profile" size="20px" label="Account" @click="handleAccountClick" :is-active="route.path === '/my-account'"/>
+    <SfBottomNavigationItem icon="profile" size="20px" label="Account" @click="handleAccountClick" :is-active="route.path === '/my-account' && !isMobileMenuOpen"/>
     <!-- TODO: add logic for label - if on Home then Basket, if on PDC then AddToCart etc. -->
     <SfBottomNavigationItem
       label="Basket"
@@ -46,7 +46,7 @@ export default {
   setup() {
     const route = useRoute();
     const router = useRouter();
-    const { toggleCartSidebar, toggleWishlistSidebar, toggleLoginModal, toggleMobileMenu, isMobileMenuOpen } = useUiState();
+    const { toggleCartSidebar, toggleWishlistSidebar, toggleLoginModal, toggleMobileMenu, isMobileMenuOpen, isCartSidebarOpen, isWishlistSidebarOpen } = useUiState();
     const { isAuthenticated } = useUser();
     const { cart } = useCart();
     const { wishlist } = useWishlist();
@@ -54,6 +54,9 @@ export default {
     const isWishlistDisabled = computed(() => wishlistGetters.isWishlistDisabled(wishlist.value));
 
     const handleAccountClick = async () => {
+      if (isMobileMenuOpen.value) {
+        toggleMobileMenu();
+      }
       if (isAuthenticated.value) {
         return router.push('/my-account');
       }
