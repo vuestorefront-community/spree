@@ -45,7 +45,7 @@ export default {
   setup() {
     const route = useRoute();
     const router = useRouter();
-    const { toggleCartSidebar, toggleWishlistSidebar, toggleLoginModal, toggleMobileMenu, isMobileMenuOpen, isCartSidebarOpen, isWishlistSidebarOpen } = useUiState();
+    const { toggleCartSidebar, toggleWishlistSidebar, toggleLoginModal, toggleMobileMenu, isMobileMenuOpen } = useUiState();
     const { isAuthenticated } = useUser();
     const { cart } = useCart();
     const { wishlist } = useWishlist();
