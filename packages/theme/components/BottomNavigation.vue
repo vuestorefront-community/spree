@@ -1,14 +1,14 @@
 <template>
   <!-- TODO: create logic with isActive prop for BottomNavigationItems -->
   <SfBottomNavigation class="navigation-bottom smartphone-only">
+    <a :href="localePath('/')" class="home-button">
     <SfBottomNavigationItem
-      :class="route.path == '/' ? 'sf-bottom-navigation__item--active' : ''"
+      :is-active="route.path === '/'"
       icon="home" size="20px" label="Home"
-      @click="handleHomeClick"
-    />
+    /></a>
     <SfBottomNavigationItem icon="menu" size="20px" label="Menu" @click="toggleMobileMenu"/>
     <SfBottomNavigationItem v-if="!isWishlistDisabled" icon="heart" size="20px" label="Wishlist" @click="toggleWishlistSidebar"/>
-    <SfBottomNavigationItem icon="profile" size="20px" label="Account" @click="handleAccountClick"/>
+    <SfBottomNavigationItem icon="profile" size="20px" label="Account" @click="handleAccountClick" :is-active="route.path === '/my-account'"/>
     <!-- TODO: add logic for label - if on Home then Basket, if on PDC then AddToCart etc. -->
     <SfBottomNavigationItem
       label="Basket"
@@ -60,11 +60,6 @@ export default {
       toggleLoginModal();
     };
 
-    const handleHomeClick = () => {
-      isMobileMenuOpen.value ? toggleMobileMenu() : false;
-      router.push('/');
-    };
-
     const cartTotalItems = computed(() => {
       const count = cartGetters.getTotalItems(cart.value);
 
@@ -79,7 +74,6 @@ export default {
       toggleMobileMenu,
       cartTotalItems,
       handleAccountClick,
-      handleHomeClick,
       isWishlistDisabled
     };
   }
@@ -88,6 +82,21 @@ export default {
 <style lang="scss" scoped>
 .navigation-bottom {
   --bottom-navigation-z-index: 3;
+}
+.home-button {
+  --icon-color: var(--c-link);
+  background: transparent;
+  border: 0;
+  flex: 1;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--c-link);
+  font-weight: var(--font-weight--light);
+  font-size: var(--font-size--xs);
+  font-family: var(--font-family--primary);
+  cursor: pointer;
 }
 .cart-button {
   position: relative;
