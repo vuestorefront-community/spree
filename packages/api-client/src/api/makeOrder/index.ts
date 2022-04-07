@@ -1,3 +1,4 @@
+import { Logger } from '@vue-storefront/core';
 import { ApiContext } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 
@@ -9,7 +10,7 @@ export default async function makeOrder({ client, config }: ApiContext) {
     await client.checkout.complete(token, { currency });
     await config.auth.removeCartToken();
   } catch (e) {
-    console.error(e);
+    Logger.error(e);
     throw e;
   }
 }

@@ -3,6 +3,7 @@ import { ApiContext } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializePaymentMethods } from '../serializers/payment';
 import getAuthorizationHeaders from '../authentication/getAuthorizationHeaders';
+import { Logger } from '@vue-storefront/core';
 
 export default async function getPaymentMethods({ client, config }: ApiContext) {
   try {
@@ -21,7 +22,7 @@ export default async function getPaymentMethods({ client, config }: ApiContext) 
     );
     return response.data.data.map(deserializePaymentMethods);
   } catch (e) {
-    console.error(e);
+    Logger.error(e);
     throw e;
   }
 }

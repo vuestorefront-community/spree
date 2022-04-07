@@ -2,6 +2,7 @@ import axios from 'axios';
 import { ApiContext } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import getAuthorizationHeaders from '../authentication/getAuthorizationHeaders';
+import { Logger } from '@vue-storefront/core';
 
 export default async function handlePaymentConfirmationResponse({ client, config }: ApiContext, { confirmationResponse }) {
   try {
@@ -17,7 +18,7 @@ export default async function handlePaymentConfirmationResponse({ client, config
 
     return response.data;
   } catch (e) {
-    console.error(e);
+    Logger.error(e);
     throw e;
   }
 }

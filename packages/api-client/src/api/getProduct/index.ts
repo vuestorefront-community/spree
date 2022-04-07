@@ -1,3 +1,4 @@
+import { Logger } from '@vue-storefront/core';
 import { ApiContext, GetProductParams, ProductVariant } from '../../types';
 import { addHostToProductImages, deserializeSingleProductVariants } from '../serializers/product';
 
@@ -32,10 +33,10 @@ export default async function getProduct({ client, config }: ApiContext, { slug 
       const deserializedVariants = deserializeSingleProductVariants(productsData);
       return deserializedVariants;
     } catch (e) {
-      console.log(e);
+      Logger.error(e);
     }
   } else {
-    console.log(result.fail());
+    Logger.error(result.fail());
     throw result.fail();
   }
 }

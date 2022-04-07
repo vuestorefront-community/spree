@@ -1,3 +1,4 @@
+import { Logger } from '@vue-storefront/core';
 import { ApiContext } from '../../types';
 
 export default async function getCurrentBearerToken({ client, config }: ApiContext): Promise<string> {
@@ -17,7 +18,7 @@ export default async function getCurrentBearerToken({ client, config }: ApiConte
   if (result.isFail()) {
     await config.auth.removeOAuthToken();
     await config.auth.removeCartToken();
-    console.error(result.fail());
+    Logger.error(result.fail());
 
     return;
   }
