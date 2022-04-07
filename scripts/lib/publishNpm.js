@@ -1,26 +1,27 @@
 /* eslint-disable unicorn/no-process-exit, unicorn/prefer-module */
 const { exec } = require("child_process");
+const { Logger } = require('@vue-storefront/core');
 
 const publishPackages = (pkgPath, labels) => {
   return new Promise((_res, _rej) => {
     try {
       const command = `npm publish ${pkgPath} --access public --tag ${labels}`;
 
-      console.log(command)
+      Logger.debug(command)
 
       exec(command, (error, stdout, stderr) => {
         if (error) {
-          console.log(`error: ${error.message}`);
+          Logger.error(`error: ${error.message}`);
           return;
         }
         if (stderr) {
-          console.log(`stderr: ${stderr}`);
+          Logger.error(`stderr: ${stderr}`);
           return;
         }
-        console.log(`stdout: ${stdout}`);
+        Logger.debug(`stdout: ${stdout}`);
       });
     } catch (e) {
-      console.error(e);
+      Logger.error(e);
     }
   });
 }
