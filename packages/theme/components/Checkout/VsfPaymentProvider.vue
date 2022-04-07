@@ -29,6 +29,7 @@ import { ref, onMounted, computed } from '@nuxtjs/composition-api';
 import { useVSFContext } from '@vue-storefront/core';
 import Stripe from '~/components/Checkout/PaymentMethod/Stripe';
 import Check from '~/components/Checkout/PaymentMethod/Check';
+import { Logger } from '@vue-storefront/core';
 
 export default {
   name: 'VsfPaymentProvider',
@@ -67,7 +68,7 @@ export default {
       try {
         paymentMethods.value = await $spree.api.getPaymentMethods();
       } catch (e) {
-        console.error(e);
+        Logger.error(e);
       }
     });
 

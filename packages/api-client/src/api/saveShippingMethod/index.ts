@@ -1,3 +1,4 @@
+import { Logger } from '@vue-storefront/core';
 import { ApiContext } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializeCartShipments } from '../serializers/shipping';
@@ -29,7 +30,7 @@ export default async ({ client, config }: ApiContext, { selectedShippingRates })
 
     return deserializeCartShipments(result.success().included);
   } catch (e) {
-    console.error(e);
+    Logger.error(e);
     throw e;
   }
 };

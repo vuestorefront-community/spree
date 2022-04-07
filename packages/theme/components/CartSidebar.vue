@@ -145,7 +145,6 @@ export default {
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
 
     const updateQuantity = debounce(async ({ product, quantity }) => {
-      console.log('debug:updateQuantity', product, quantity);
       await updateItemQty({ product, quantity });
     }, 500);
 

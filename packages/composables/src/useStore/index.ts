@@ -1,11 +1,11 @@
-import { useStoreFactory, UseStoreFactoryParams } from '@vue-storefront/core';
+import { Logger, useStoreFactory, UseStoreFactoryParams } from '@vue-storefront/core';
 
 const params: UseStoreFactoryParams<any> = {
   async load() {
-    console.log('Mocked: loadStore');
+    Logger.debug('Mocked: loadStore');
   },
   async change() {
-    console.log('Mocked: changeStore');
+    Logger.debug('Mocked: changeStore');
   }
 };
 

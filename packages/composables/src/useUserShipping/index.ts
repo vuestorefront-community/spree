@@ -1,5 +1,6 @@
 import {
   Context,
+  Logger,
   useUserShippingFactory,
   UseUserShippingFactoryParams
 } from '@vue-storefront/core';
@@ -29,7 +30,7 @@ const params: UseUserShippingFactoryParams<any, any> = {
   },
 
   setDefaultAddress: async (context: Context) => {
-    console.log('Not implemented: Set default shipping address');
+    Logger.debug('Not implemented: Set default shipping address');
     const addresses = await context.$spree.api.getAddresses();
     return { addresses };
   }

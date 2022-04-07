@@ -1,3 +1,4 @@
+import { Logger } from '@vue-storefront/core';
 import { ApiContext } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 
@@ -17,7 +18,7 @@ export default async function saveGuestCheckoutEmail({ client, config }: ApiCont
     }
     return result.success().data;
   } catch (e) {
-    console.error(e);
+    Logger.error(e);
     throw e;
   }
 }

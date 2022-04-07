@@ -1,3 +1,4 @@
+import { Logger } from '@vue-storefront/core';
 import { ApiContext, Cart } from '../../types';
 import { cartParams } from '../common/cart';
 import { deserializeCart } from '../serializers/cart';
@@ -27,7 +28,7 @@ export default async function updateItemQuantity({ client, config }: ApiContext,
       throw result.fail();
     }
   } catch (e) {
-    console.error(e);
+    Logger.error(e);
     throw e;
   }
 }

@@ -108,7 +108,7 @@ import {
   SfAccordion,
   SfLink
 } from '@storefront-ui/vue';
-import { onSSR } from '@vue-storefront/core';
+import { onSSR, Logger } from '@vue-storefront/core';
 import { ref, computed, useRouter } from '@nuxtjs/composition-api';
 import { useMakeOrder, useCart, cartGetters } from '@vue-storefront/spree';
 
@@ -150,13 +150,13 @@ export default {
       try {
         await savePayment.value();
       } catch (e) {
-        console.error(e);
+        Logger.error(e);
         return;
       }
 
       await make();
       if (makeError.value.make) {
-        console.error(makeError.value.make);
+        Logger.error(makeError.value.make);
         return;
       }
 

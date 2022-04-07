@@ -2,6 +2,7 @@ import axios from 'axios';
 import { ApiContext } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import getAuthorizationHeaders from '../authentication/getAuthorizationHeaders';
+import { Logger } from '@vue-storefront/core';
 
 export default async function getPaymentConfirmationData({ client, config }: ApiContext) {
   try {
@@ -20,7 +21,7 @@ export default async function getPaymentConfirmationData({ client, config }: Api
 
     return { clientSecret: response.data.client_secret };
   } catch (e) {
-    console.error(e);
+    Logger.error(e);
     throw e;
   }
 }

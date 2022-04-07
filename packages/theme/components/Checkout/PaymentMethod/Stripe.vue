@@ -4,7 +4,7 @@
 
 <script>
 import { onMounted, ref, computed } from '@nuxtjs/composition-api';
-import { useVSFContext } from '@vue-storefront/core';
+import { useVSFContext, Logger } from '@vue-storefront/core';
 import { loadStripe } from '@stripe/stripe-js';
 
 export default {
@@ -51,7 +51,7 @@ export default {
           }
         }
       } catch (e) {
-        console.error(e);
+        Logger.error(e);
       }
     };
 
@@ -68,7 +68,7 @@ export default {
         card.value.on('change', handleCardChange);
         card.value.mount(cardRef.value);
       } catch (e) {
-        console.error(e);
+        Logger.error(e);
       }
     });
 
