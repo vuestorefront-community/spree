@@ -85,7 +85,7 @@
         <LazyHydrate when-idle>
           <SfTabs :open-tab="1" class="product__tabs">
             <SfTab title="Description" style="padding: 0; margin: 0">
-              <p class="product__description" style="padding: 0; margin: 0">{{ productGetters.getDescription(product) }}</p>
+              <div v-html="productGetters.getDescription(product)" class="product__description" ></div>
             </SfTab>
             <SfTab title="Read reviews">
               <SfReview
@@ -338,6 +338,8 @@ export default {
       1.6,
       var(--font-family--secondary)
     );
+    padding: 0;
+    margin: 0;
   }
   &__select-size {
     margin: 0 var(--spacer-sm);
