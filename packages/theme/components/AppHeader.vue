@@ -51,7 +51,7 @@
               icon="empty_cart"
               size="1.25rem"
             />
-            <SfBadge v-if="cartTotalItems" class="sf-badge--number cart-badge">{{cartTotalItems}}</SfBadge>
+            <SfBadge v-if="cartTotalItems > 0" class="sf-badge--number">{{cartTotalItems}}</SfBadge>
           </SfButton>
         </div>
       </template>
@@ -148,10 +148,7 @@ export default {
     const isMobile = ref(mapMobileObserver().isMobile.get());
 
     const result = computed(() => searchResult.value?.data);
-    const cartTotalItems = computed(() => {
-      const count = cartGetters.getTotalItems(cart.value);
-      return count ? count.toString() : null;
-    });
+    const cartTotalItems = computed(() => cartGetters.getTotalItems(cart.value));
 
     const accountIcon = computed(() => isAuthenticated.value ? 'profile_fill' : 'profile');
     const isWishlistDisabled = computed(() => wishlistGetters.isWishlistDisabled(wishlist.value));
