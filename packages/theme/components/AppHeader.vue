@@ -40,6 +40,7 @@
               icon="heart"
               size="1.25rem"
             />
+            <SfBadge v-if="wishlistTotalItems > 0" class="sf-badge--number">{{wishlistTotalItems}}</SfBadge>
           </SfButton>
           <SfButton
             class="sf-button--pure sf-header__action"
@@ -149,6 +150,7 @@ export default {
 
     const result = computed(() => searchResult.value?.data);
     const cartTotalItems = computed(() => cartGetters.getTotalItems(cart.value));
+    const wishlistTotalItems = computed(() => wishlistGetters.getTotalItems(wishlist.value));
 
     const accountIcon = computed(() => isAuthenticated.value ? 'profile_fill' : 'profile');
     const isWishlistDisabled = computed(() => wishlistGetters.isWishlistDisabled(wishlist.value));
@@ -210,6 +212,7 @@ export default {
     return {
       accountIcon,
       cartTotalItems,
+      wishlistTotalItems,
       handleAccountClick,
       toggleCartSidebar,
       toggleWishlistSidebar,
@@ -250,7 +253,7 @@ export default {
   }
 }
 
-.cart-badge {
+.sf-badge {
   position: absolute;
   bottom: 40%;
   left: 40%;
