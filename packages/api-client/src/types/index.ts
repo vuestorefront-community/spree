@@ -51,6 +51,7 @@ export type ApiConfig = {
   spreeFeatures: {
     associateGuestCart: boolean;
     fetchPrimaryVariant: boolean;
+    useMenuApi: boolean;
     wishlist: string;
   }
 }

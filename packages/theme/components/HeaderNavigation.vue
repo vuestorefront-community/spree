@@ -9,20 +9,20 @@
       :link="localePath(`/c/categories/${category}`)"
     />
   </div>
-  <SfModal v-else-if="isCategoryTreeAvailable" :visible="isMobileMenuOpen">
+  <SfModal v-else-if="isCategoryTreeOrMenuAvailable" :visible="isMobileMenuOpen">
     <SfAccordion open="" :multiple="false" transition="" showChevron>
       <SfAccordionItem
-        v-for="(cat, i) in categoryTree && categoryTree.items"
+        v-for="(cat, i) in ((menu && menu.items) || (categoryTree && categoryTree.items))"
         :key="i"
         class="nav-item"
-        :header="cat.label"
+        :header="cat.name || cat.label"
       >
         <SfList>
           <SfListItem>
             <SfMenuItem
               label="All"
               class="sf-header-navigation-item__menu-item"
-              :link="localePath(`/c/${cat.slug}`)"
+              :link="localePath(getRoute(cat))"
               @click.native="toggleMobileMenu"
             />
           </SfListItem>
@@ -30,9 +30,9 @@
             v-for="(subCat, j) in cat.items"
             :key="j">
             <SfMenuItem
-              :label="subCat.label"
+              :label="subCat.name || subCat.label"
               class="sf-header-navigation-item__menu-item"
-              :link="localePath(`/c/${subCat.slug}`)"
+              :link="localePath(getRoute(subCat))"
               @click.native="toggleMobileMenu"
             />
           </SfListItem>
@@ -62,8 +62,9 @@
 <script>
 import { SfMenuItem, SfModal, SfAccordion, SfList } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
-import { computed } from '@nuxtjs/composition-api';
+import { computed, onMounted, ref } from '@nuxtjs/composition-api';
 import { facetGetters, useFacet } from '@vue-storefront/spree';
+import { useVSFContext } from '@vue-storefront/core';
 
 export default {
   name: 'HeaderNavigation',
@@ -79,20 +80,39 @@ export default {
       default: false
     }
   },
-  setup() {
+  setup(props, context) {
+    const { $spree } = useVSFContext();
     const { result } = useFacet();
     const { isMobileMenuOpen, toggleMobileMenu } = useUiState();
+    const menu = ref({});
     const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
     const categories = ['women', 'men'];
+    const isCategoryTreeOrMenuAvailable = computed(() => categoryTree.value?.items?.length > 0 || !menu.value.isDisabled);
+    const locale = ref(context.root.$cookies.get('vsf-locale'));
 
-    const isCategoryTreeAvailable = computed(() => categoryTree.value?.items?.length > 0);
+    const getRoute = (category) => {
+      if (menu.value.isDisabled) {
+        return '/c/' + category.slug;
+      }
+      return category.link;
+    };
+
+    onMounted(async () => {
+      try {
+        menu.value = await $spree.api.getMenus({menuType: 'header', menuName: 'Main menu', locale: locale.value});
+      } catch (e) {
+        console.error(e);
+      }
+    });
 
     return {
-      isCategoryTreeAvailable,
+      isCategoryTreeOrMenuAvailable,
       categoryTree,
       categories,
       isMobileMenuOpen,
-      toggleMobileMenu
+      toggleMobileMenu,
+      menu,
+      getRoute
     };
   }
 };
