@@ -157,6 +157,9 @@ export default {
     },
     display: 'swap'
   },
+  css: [
+    '~/assets/styles.scss'
+  ],
   styleResources: {
     scss: [require.resolve('@storefront-ui/shared/styles/_helpers.scss', { paths: [process.cwd()] })]
   },
