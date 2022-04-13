@@ -27,6 +27,7 @@ import saveCheckoutBillingAddress from './api/saveCheckoutBillingAddress';
 import createAuthIntegration from './api/authentication/integration';
 import createInternationalizationIntegration from './api/internationalization/integration';
 import getOrCreateCart from './api/getOrCreateCart';
+import getOrder from './api/getOrder';
 import getOrders from './api/getOrders';
 import saveGuestCheckoutEmail from './api/saveGuestCheckoutEmail';
 import getShipments from './api/getShipments';
@@ -108,6 +109,7 @@ const { createApiClient } = apiClientFactory<any, any>({
     saveCheckoutShippingAddress,
     saveCheckoutBillingAddress,
     getOrCreateCart,
+    getOrder,
     getOrders,
     saveGuestCheckoutEmail,
     getShipments,

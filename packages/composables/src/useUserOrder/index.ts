@@ -8,10 +8,12 @@ import {
 import { OrdersResponse, OrderSearchParams } from '../types';
 
 const params: UseUserOrderFactoryParams<OrdersResponse, OrderSearchParams> = {
-  searchOrders: async (context: Context): Promise<OrdersResponse> => {
-    const orders = await context.$spree.api.getOrders();
-
-    return orders;
+  searchOrders: async (context: Context, params: OrderSearchParams): Promise<OrdersResponse> => {
+    const { orderId } = params || {};
+    if (orderId) {
+      return await context.$spree.api.getOrder({ orderId });
+    }
+    return await context.$spree.api.getOrders();
   }
 };
 
