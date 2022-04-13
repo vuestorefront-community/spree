@@ -10,7 +10,7 @@
     <SfBottomModal :is-open="isLangModalOpen" title="Choose language" @click:close="isLangModalOpen = !isLangModalOpen">
       <SfList>
         <SfListItem v-for="lang in availableLocales" :key="lang.code">
-          <a href="javascript:void(0)" @click="changeLocale(lang.code)">
+          <nuxt-link :to="switchLocalePath(lang.code)">
             <SfCharacteristic class="language">
               <template #title>
                 <span>{{ lang.label }}</span>
@@ -19,7 +19,7 @@
                 <img :src="`https://cdn.shopify.com/s/files/1/0407/1902/4288/files/${lang.code}_20x20.jpg`" width="20" height="20"/>
               </template>
             </SfCharacteristic>
-          </a>
+          </nuxt-link>
         </SfListItem>
       </SfList>
     </SfBottomModal>
@@ -33,7 +33,7 @@
     <SfBottomModal :is-open="isCurrencyModalOpen" title="Choose currency" @click:close="isCurrencyModalOpen = !isCurrencyModalOpen">
       <SfList>
         <SfListItem v-for="currency in availableCurrencies" :key="currency.code">
-          <span @click="cartChangeCurrency(currency.code, currency.locale)">
+          <span @click="handleChangeCurrencyClick(currency.code, currency.locale)">
             <SfCharacteristic class="currency">
               <template #title>
                 {{ currency.code }}
@@ -67,53 +67,33 @@ export default {
     SfBottomModal,
     SfCharacteristic
   },
-  setup(props, {root}) {
+  setup(props, { root }) {
     const { $spree } = useVSFContext();
     const { locales, locale, numberFormats } = root.$i18n;
     const isLangModalOpen = ref(false);
     const isCurrencyModalOpen = ref(false);
-    const availableLocales = computed(() => locales.filter(i => i.code !== locale));
-    const availableCurrencies = [];
     const currency = root.$cookies.get('vsf-spree-currency');
+    const availableLocales = computed(() => locales.filter((i) => i.code !== locale));
+    const availableCurrencies = computed(() =>
+      Object.keys(numberFormats)
+        .map((locale) => ({ locale, code: numberFormats[locale].currency.currencyDefault }))
+        .filter(({ code }) => code !== currency)
+    );
 
-    const cartChangeCurrency = async (code, locale) => {
-      const token = root.$cookies.get('spree-cart-token');
-
-      if (token) {
-        const response = await $spree.api.changeCurrency({
-          currency: currency,
-          newCurrency: code
-        });
-
-        if (response) {
-          updateLocaleCookies(code, locale);
-        }
-      } else {
-        updateLocaleCookies(code, locale);
-      }
-
-      window.location.reload();
+    const setCurrencyCookie = (currencyValue) => {
+      root.$cookies.set('vsf-spree-currency', currencyValue);
     };
 
-    function updateLocaleCookies(code) {
-      root.$cookies.set('vsf-spree-currency', code);
-    }
-
-    function changeLocale(code) {
-      root.$cookies.set('vsf-locale', code);
-      window.location.reload();
-    }
-
-    Object.entries(numberFormats).forEach(([country]) => {
-      const countryCurrency = numberFormats[country].currency.currencyDefault;
-
-      if (countryCurrency !== currency) {
-        availableCurrencies.push({
-          locale: country,
-          code: countryCurrency
-        });
+    const handleChangeCurrencyClick = async (newCurrency) => {
+      const token = root.$cookies.get('spree-cart-token');
+      if (token) {
+        const response = await $spree.api.changeCurrency({ currency, newCurrency });
+        if (response) setCurrencyCookie(newCurrency);
+      } else {
+        setCurrencyCookie(newCurrency);
       }
-    });
+      window.location.reload();
+    };
 
     return {
       availableLocales,
@@ -122,8 +102,7 @@ export default {
       currency,
       isLangModalOpen,
       isCurrencyModalOpen,
-      cartChangeCurrency,
-      changeLocale
+      handleChangeCurrencyClick
     };
   }
 };

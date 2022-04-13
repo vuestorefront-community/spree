@@ -48,7 +48,7 @@ const useUiHelpers = () => {
   const { query, path } = instance.$router.history.current;
 
   const getFacetsFromURL = (): SearchParams => {
-    const categorySlug = path.substring(3);
+    const categorySlug = path.split('/c/')[1];
 
     return {
       categorySlug,

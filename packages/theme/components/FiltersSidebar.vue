@@ -137,7 +137,6 @@ export default {
     const { result } = useFacet();
     const selectedPrice = ref({});
     const localCurrency = ref(context.root.$cookies.get('vsf-spree-currency'));
-    const locale = ref(context.root.$cookies.get('vsf-locale'));
     let range = [0, 300];
     let isPriceDefaultValue = true;
     const urlPriceRange = getSearchPriceFromUrl();
@@ -171,7 +170,8 @@ export default {
       keyboardSupport: true,
       format: {
         to: (value) => {
-          return new Intl.NumberFormat([locale.value, locale.value.toUpperCase()].join('-'), {style: 'currency', currency: localCurrency.value, maximumFractionDigits: 0}).format(value);
+          const { locale } = context.root.$i18n;
+          return new Intl.NumberFormat(`${locale}-${locale.toUpperCase()}`, {style: 'currency', currency: localCurrency.value, maximumFractionDigits: 0}).format(value);
         },
         from: (value) => {
           return value;
