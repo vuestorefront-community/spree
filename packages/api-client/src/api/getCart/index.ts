@@ -2,6 +2,7 @@ import { ApiContext, Cart } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializeCart } from '../serializers/cart';
 import { cartParams } from '../common/cart';
+import { Logger } from '@vue-storefront/core';
 
 const emptyCart: Cart = {
   _id: 0,
@@ -53,7 +54,7 @@ export default async function getCart({ client, config }: ApiContext): Promise<C
       throw result.fail();
     }
   } catch (e) {
-    console.error(e);
+    Logger.error(e);
     return emptyCart;
   }
 }

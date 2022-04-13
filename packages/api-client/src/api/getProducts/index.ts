@@ -1,3 +1,4 @@
+import { Logger } from '@vue-storefront/core';
 import type { ApiContext, GetProductsParams, ProductSearchResult } from '../../types';
 import { addHostToProductImages, deserializeLimitedVariants } from '../serializers/product';
 import { deserializeSearchMetadata } from '../serializers/search';
@@ -59,7 +60,7 @@ export default async function getProducts({ client, config }: ApiContext, params
       throw result.fail();
     }
   } catch (e) {
-    console.error(e);
+    Logger.error(e);
     throw e;
   }
 }

@@ -7,9 +7,9 @@
     >
       <!-- TODO: add mobile view buttons after SFUI team PR -->
       <template #logo>
-        <nuxt-link :to="localePath({ name: 'home' })" class="sf-header__logo">
+        <a :href="localePath('/')" class="sf-header__logo">
           <SfImage src="/icons/logo.svg" alt="Vue Storefront Next" class="sf-header__logo-image"/>
-        </nuxt-link>
+        </a>
       </template>
       <template #navigation>
         <HeaderNavigation :isMobile="isMobile" />
@@ -40,6 +40,7 @@
               icon="heart"
               size="1.25rem"
             />
+            <SfBadge v-if="wishlistTotalItems > 0" class="sf-badge--number">{{wishlistTotalItems}}</SfBadge>
           </SfButton>
           <SfButton
             class="sf-button--pure sf-header__action"
@@ -51,7 +52,7 @@
               icon="empty_cart"
               size="1.25rem"
             />
-            <SfBadge v-if="cartTotalItems" class="sf-badge--number cart-badge">{{cartTotalItems}}</SfBadge>
+            <SfBadge v-if="cartTotalItems > 0" class="sf-badge--number">{{cartTotalItems}}</SfBadge>
           </SfButton>
         </div>
       </template>
@@ -108,7 +109,7 @@
 import { SfHeader, SfImage, SfIcon, SfButton, SfBadge, SfSearchBar, SfOverlay } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
 import { useCart, useFacet, useUser, cartGetters, useWishlist, wishlistGetters } from '@vue-storefront/spree';
-import { computed, ref, watch, onBeforeUnmount, useRouter } from '@nuxtjs/composition-api';
+import { computed, ref, watch, onBeforeUnmount, useRouter, onUpdated } from '@nuxtjs/composition-api';
 import { useUiHelpers } from '~/composables';
 import LocaleSelector from './LocaleSelector';
 import SearchResults from '~/components/SearchResults';
@@ -148,10 +149,8 @@ export default {
     const isMobile = ref(mapMobileObserver().isMobile.get());
 
     const result = computed(() => searchResult.value?.data);
-    const cartTotalItems = computed(() => {
-      const count = cartGetters.getTotalItems(cart.value);
-      return count ? count.toString() : null;
-    });
+    const cartTotalItems = computed(() => cartGetters.getTotalItems(cart.value));
+    const wishlistTotalItems = computed(() => wishlistGetters.getTotalItems(wishlist.value));
 
     const accountIcon = computed(() => isAuthenticated.value ? 'profile_fill' : 'profile');
     const isWishlistDisabled = computed(() => wishlistGetters.isWishlistDisabled(wishlist.value));
@@ -202,6 +201,10 @@ export default {
 
     const removeSearchResults = () => {};
 
+    onUpdated(() => {
+      mapMobileObserver();
+    });
+
     onBeforeUnmount(() => {
       unMapMobileObserver();
     });
@@ -209,6 +212,7 @@ export default {
     return {
       accountIcon,
       cartTotalItems,
+      wishlistTotalItems,
       handleAccountClick,
       toggleCartSidebar,
       toggleWishlistSidebar,
@@ -249,7 +253,7 @@ export default {
   }
 }
 
-.cart-badge {
+.sf-badge {
   position: absolute;
   bottom: 40%;
   left: 40%;

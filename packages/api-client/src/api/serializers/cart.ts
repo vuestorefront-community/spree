@@ -44,10 +44,11 @@ const deserializeLineItem = (lineItem: any, attachments: JsonApiDocument[], conf
   return {
     id: parseInt(lineItem.id, 10),
     _variantId: parseInt(variant.id, 10),
-    _description: '',
+    description: lineItem.attributes.description,
     _categoriesRef: [],
     name: lineItem.attributes.name,
     sku: '',
+    slug: lineItem.attributes.slug,
     image: imageUrl,
     price: {
       original: lineItem.attributes.price,

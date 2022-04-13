@@ -3,10 +3,11 @@ import { Address } from './checkout';
 export type LineItem = {
   id: number;
   _variantId: number;
-  _description: string;
+  description: string;
   _categoriesRef: string[];
   name: string;
   sku: string;
+  slug: string;
   image: string;
   price: {
     original: number;

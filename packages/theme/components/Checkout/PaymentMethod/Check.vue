@@ -4,7 +4,7 @@
 
 <script>
 import { onMounted } from '@nuxtjs/composition-api';
-import { useVSFContext } from '@vue-storefront/core';
+import { useVSFContext, Logger } from '@vue-storefront/core';
 
 export default {
   props: {
@@ -24,7 +24,7 @@ export default {
 
         await $spree.api.savePaymentMethod(methodId, payload);
       } catch (e) {
-        console.error(e);
+        Logger.error(e);
       }
     };
 

@@ -1,3 +1,4 @@
+import { Logger } from '@vue-storefront/core';
 import { ApiContext, Category, CategorySearchResult, GetCategoryParams } from '../../types';
 import { deserializeCategories } from '../serializers/category';
 
@@ -16,11 +17,11 @@ export default async function getCategory({ client }: ApiContext, { categorySlug
         current: findCategory(categories, categorySlug)
       };
     } catch (e) {
-      console.log(e);
+      Logger.error(e);
       throw e;
     }
   } else {
-    console.log(result.fail());
+    Logger.error(result.fail());
     throw result.fail();
   }
 }

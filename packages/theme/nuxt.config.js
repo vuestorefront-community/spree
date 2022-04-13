@@ -66,6 +66,9 @@ export default {
           '@vue-storefront/spree',
           '@vue-storefront/core'
         ]
+      },
+      logger: {
+        verbosity: process.env.NODE_ENV === 'development' ? 'debug' : 'error'
       }
     }],
     // @core-development-only-start

@@ -119,7 +119,7 @@ export const getProductAttributes = (products: ProductVariant[] | ProductVariant
     return {
       name: currOptionTypeName,
       value: currOptionValue.presentation,
-      label: currOptionValue.presentation
+      label: currOptionValue.name
     };
   }).filter((option) => filterByAttributeName ? filterByAttributeName.includes(option.name) : true);
 
@@ -133,7 +133,7 @@ export const getProductOptionTypeNames = (product: ProductVariant): string[] => 
   ? product.optionTypes.map((optionType) => optionType.name)
   : [];
 
-export const getProductDescription = (product: ProductVariant): any => (product as any)?.shortDescription || '';
+export const getProductDescription = (product: ProductVariant): any => (product as any)?.description || '';
 
 export const getProductCategoryIds = (product: ProductVariant): string[] => (product as any)?._categoriesRef || '';
 

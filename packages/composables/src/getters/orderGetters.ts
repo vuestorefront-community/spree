@@ -13,7 +13,11 @@ export const getPrice = (order: Order): number | null => order?.totalAmount || 0
 
 export const getItems = (order: Order): any[] => order?.lineItems || [];
 
+export const getItemVariantId = (item: OrderItem): string => item?._variantId || 0;
+
 export const getItemSku = (item: OrderItem): string => item?.sku || '';
+
+export const getItemSlug = (item: OrderItem): string => item?.slug || '';
 
 export const getItemName = (item: OrderItem): string => item?.name || '';
 
@@ -31,7 +35,9 @@ const orderGetters: UserOrderGetters<Order, OrderItem> = {
   getStatus,
   getPrice,
   getItems,
+  getItemVariantId,
   getItemSku,
+  getItemSlug,
   getItemName,
   getItemQty,
   getItemPrice,

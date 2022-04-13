@@ -42,12 +42,6 @@
           </div>
         </div>
         <div>
-          <p class="product__description desktop-only">
-            {{ productGetters.getDescription(product) }}
-          </p>
-          <SfButton class="sf-button--text desktop-only product__guide">
-            {{ $t('Size guide') }}
-          </SfButton>
           <SfSelect
             v-e2e="'size-select'"
             v-if="options.size"
@@ -62,9 +56,12 @@
               :key="size.value"
               :value="size.value"
             >
-              {{size.label}}
+              {{size.value}}
             </SfSelectOption>
           </SfSelect>
+          <SfButton v-if="options.size" class="sf-button--text desktop-only product__guide">
+            {{ $t('Size guide') }}
+          </SfButton>
           <div v-if="options.color && options.color.length > 1" class="product__colors desktop-only">
             <p class="product__color-label">{{ $t('Color') }}:</p>
             <SfColor
@@ -87,23 +84,8 @@
 
         <LazyHydrate when-idle>
           <SfTabs :open-tab="1" class="product__tabs">
-            <SfTab title="Description">
-              <div class="product__description">
-                  {{ $t('Product description') }}
-              </div>
-              <SfProperty
-                v-for="(property, i) in properties"
-                :key="i"
-                :name="property.name"
-                :value="property.value"
-                class="product__property"
-              >
-                <template v-if="property.name === 'Category'" #value>
-                  <SfButton class="product__property__button sf-button--text">
-                    {{ property.value }}
-                  </SfButton>
-                </template>
-              </SfProperty>
+            <SfTab title="Description" style="padding: 0; margin: 0">
+              <div v-html="productGetters.getDescription(product)" class="product__description" ></div>
             </SfTab>
             <SfTab title="Read reviews">
               <SfReview
@@ -121,21 +103,22 @@
               />
             </SfTab>
             <SfTab
-              title="Additional Information"
-              class="product__additional-info"
+              title="Properties"
+              class="product__tab"
             >
-            <div class="product__additional-info">
-              <p class="product__additional-info__title">{{ $t('Brand') }}</p>
-              <p>{{ brand }}</p>
-              <p class="product__additional-info__title">{{ $t('Instruction1') }}</p>
-              <p class="product__additional-info__paragraph">
-                {{ $t('Instruction2') }}
-              </p>
-              <p class="product__additional-info__paragraph">
-                {{ $t('Instruction3') }}
-              </p>
-              <p>{{ careInstructions }}</p>
-            </div>
+              <SfProperty
+                v-for="(property, i) in properties"
+                :key="i"
+                :name="property.name"
+                :value="property.value"
+                class="sf-property--full-width product__property"
+              >
+                <template v-if="property.name === 'Category'" #value>
+                  <SfButton class="product__property__button sf-button--text">
+                    {{ property.value }}
+                  </SfButton>
+                </template>
+              </SfProperty>
             </SfTab>
           </SfTabs>
         </LazyHydrate>
@@ -353,8 +336,10 @@ export default {
       var(--font-weight--light),
       var(--font-size--base),
       1.6,
-      var(--font-family--primary)
+      var(--font-family--secondary)
     );
+    padding: 0;
+    margin: 0;
   }
   &__select-size {
     margin: 0 var(--spacer-sm);
@@ -372,21 +357,21 @@ export default {
     );
     display: flex;
     align-items: center;
-    margin-top: var(--spacer-xl);
+    margin-top: var(--spacer-sm);
   }
   &__color-label {
-    margin: 0 var(--spacer-lg) 0 0;
+    margin: 0 var(--spacer-sm) 0 0;
   }
   &__color {
     margin: 0 var(--spacer-2xs);
   }
   &__add-to-cart {
-    margin: var(--spacer-base) var(--spacer-sm) 0;
-    @include for-desktop {
-      margin-top: var(--spacer-2xl);
-    }
+    margin: var(--spacer-2xl) 0 var(--spacer-sm);
   }
-  &__guide,
+  &__guide{
+    display: block;
+    margin: 0 0 var(--spacer-sm) auto;
+  }
   &__compare,
   &__save {
     display: block;
@@ -399,12 +384,9 @@ export default {
     --tabs-title-z-index: 0;
     margin: var(--spacer-lg) auto var(--spacer-2xl);
     --tabs-title-font-size: var(--font-size--lg);
-    @include for-desktop {
-      margin-top: var(--spacer-2xl);
-    }
   }
   &__property {
-    margin: var(--spacer-base) 0;
+    margin: var(--spacer-sm) 0;
     &__button {
       --button-font-size: var(--font-size--base);
     }

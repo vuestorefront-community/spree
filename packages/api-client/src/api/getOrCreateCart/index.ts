@@ -4,6 +4,7 @@ import { ApiContext, Cart } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializeCart } from '../serializers/cart';
 import { cartParams } from '../common/cart';
+import { Logger } from '@vue-storefront/core';
 
 async function createCart({ client, config }: ApiContext, token: IToken): Promise<Cart> {
   const currency = await config.internationalization.getCurrency();
@@ -46,7 +47,7 @@ export default async function getOrCreateCart({ client, config }: ApiContext): P
       }
     }
   } catch (e) {
-    console.error(e);
+    Logger.error(e);
     throw e;
   }
 }
