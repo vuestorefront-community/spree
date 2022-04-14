@@ -48,7 +48,7 @@ export default {
   },
   data() {
     return {
-      selectedAddressId: this.value,
+      selectedAddressId: this.value
     };
   },
   methods: {
