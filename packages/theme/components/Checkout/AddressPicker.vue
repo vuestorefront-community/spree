@@ -2,7 +2,7 @@
   <SfAddressPicker
     class="address-picker"
     v-if="addresses && addresses.length > 0"
-    v-bind:class="{'disable-input': isFormSubmitted}"
+    :class="{'disable-input': isFormSubmitted}"
     :selected="selectedAddressId"
     @change="onSelectAddress"
   >
@@ -40,12 +40,15 @@ export default {
     value: {
       type: String,
       default: ''
+    },
+    isFormSubmitted: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
       selectedAddressId: this.value,
-      isFormSubmitted: this.$attrs.isFormSubmitted
     };
   },
   methods: {

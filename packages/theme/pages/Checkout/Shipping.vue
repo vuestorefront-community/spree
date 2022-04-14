@@ -27,7 +27,7 @@
         >
           <SfInput
             v-on:click="getBackToShippingDetails()"
-            v-bind:class="{'disbale-input': isFormSubmitted}"
+            :class="{'disable-input': isFormSubmitted}"
             v-model="form.email"
             label="Email"
             name="email"
@@ -44,7 +44,7 @@
         >
           <SfInput
             v-on:click="getBackToShippingDetails()"
-            v-bind:class="{'disable-input': isFormSubmitted}"
+            :class="{'disable-input': isFormSubmitted}"
             v-e2e="'shipping-firstName'"
             v-model="form.firstName"
             label="First name"
@@ -63,7 +63,7 @@
         >
           <SfInput
             v-on:click="getBackToShippingDetails()"
-            v-bind:class="{'disable-input': isFormSubmitted}"
+            :class="{'disable-input': isFormSubmitted}"
             v-e2e="'shipping-lastName'"
             v-model="form.lastName"
             label="Last name"
@@ -82,7 +82,7 @@
         >
           <SfInput
             v-on:click="getBackToShippingDetails()"
-            v-bind:class="{'disable-input': isFormSubmitted}"
+            :class="{'disable-input': isFormSubmitted}"
             v-e2e="'shipping-streetName'"
             v-model="form.addressLine1"
             label="Street name"
@@ -95,7 +95,7 @@
         </ValidationProvider>
         <SfInput
           v-on:click="getBackToShippingDetails()"
-          v-bind:class="{'disable-input': isFormSubmitted}"
+          :class="{'disable-input': isFormSubmitted}"
           v-e2e="'shipping-apartment'"
           v-model="form.addressLine2"
           label="House/Apartment number"
@@ -110,7 +110,7 @@
         >
           <SfInput
             v-on:click="getBackToShippingDetails()"
-            v-bind:class="{'disable-input': isFormSubmitted}"
+            :class="{'disable-input': isFormSubmitted}"
             v-e2e="'shipping-city'"
             v-model="form.city"
             label="City"
@@ -129,7 +129,7 @@
           slim
         >
           <SfSelect
-            v-bind:class="{'disable-dropdown': isFormSubmitted}"
+            :class="{'disable-dropdown': isFormSubmitted}"
             data-cy="shipping-details-input_state"
             class="form__element form form__select sf-select--underlined"
             v-model="form.state"
@@ -156,7 +156,7 @@
           slim
         >
           <SfSelect
-            v-bind:class="{'disable-dropdown': isFormSubmitted}"
+            :class="{'disable-dropdown': isFormSubmitted}"
             v-e2e="'shipping-country'"
             v-model="form.country"
             label="Country"
@@ -184,7 +184,7 @@
         >
           <SfInput
             v-on:click="getBackToShippingDetails()"
-            v-bind:class="{'disable-input': isFormSubmitted}"
+            :class="{'disable-input': isFormSubmitted}"
             v-e2e="'shipping-zipcode'"
             v-model="form.postalCode"
             label="Zip-code"
@@ -203,7 +203,7 @@
         >
           <SfInput
             v-on:click="getBackToShippingDetails()"
-            v-bind:class="{'disable-input': isFormSubmitted}"
+            :class="{'disable-input': isFormSubmitted}"
             v-e2e="'shipping-phone'"
             v-model="form.phone"
             label="Phone number"
