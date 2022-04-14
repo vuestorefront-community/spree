@@ -62,9 +62,9 @@
 <script>
 import { SfMenuItem, SfModal, SfAccordion, SfList } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
-import { computed, onMounted, ref } from '@nuxtjs/composition-api';
-import { facetGetters, useFacet } from '@vue-storefront/spree';
-import { useVSFContext } from '@vue-storefront/core';
+import { computed } from '@nuxtjs/composition-api';
+import {facetGetters, useFacet, useMenus} from '@vue-storefront/spree';
+import { onSSR } from '@vue-storefront/core';
 
 export default {
   name: 'HeaderNavigation',
@@ -81,14 +81,13 @@ export default {
     }
   },
   setup(props, context) {
-    const { $spree } = useVSFContext();
     const { result } = useFacet();
     const { isMobileMenuOpen, toggleMobileMenu } = useUiState();
-    const menu = ref({});
+    const { menu, loadMenu } = useMenus('header');
     const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
     const categories = ['women', 'men'];
     const isCategoryTreeOrMenuAvailable = computed(() => categoryTree.value?.items?.length > 0 || !menu.value.isDisabled);
-    const locale = ref(context.root.$cookies.get('vsf-locale'));
+    const { locale } = context.root.$i18n;
 
     const getRoute = (category) => {
       if (menu.value.isDisabled) {
@@ -97,12 +96,9 @@ export default {
       return category.link;
     };
 
-    onMounted(async () => {
-      try {
-        menu.value = await $spree.api.getMenus({menuType: 'header', menuName: 'Main menu', locale: locale.value});
-      } catch (e) {
-        console.error(e);
-      }
+    onSSR(async () => {
+      await loadMenu({menuType: 'header', menuName: 'Main menu', locale: locale});
+
     });
 
     return {

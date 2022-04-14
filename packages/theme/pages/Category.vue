@@ -210,10 +210,10 @@ import {
   SfColor,
   SfProperty
 } from '@storefront-ui/vue';
-import { computed, onMounted, ref } from '@nuxtjs/composition-api';
-import { useCart, useWishlist, productGetters, useFacet, facetGetters, useUser, wishlistGetters } from '@vue-storefront/spree';
+import { computed, onMounted } from '@nuxtjs/composition-api';
+import { useCart, useWishlist, productGetters, useFacet, facetGetters, useUser, wishlistGetters, useMenus } from '@vue-storefront/spree';
 import { useUiHelpers, useUiState } from '~/composables';
-import { onSSR, useVSFContext } from '@vue-storefront/core';
+import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import cacheControl from './../helpers/cacheControl';
 import CategoryPageHeader from '~/components/CategoryPageHeader';
@@ -226,19 +226,18 @@ export default {
     'stale-when-revalidate': 5
   }),
   setup(props, context) {
-    const { $spree } = useVSFContext();
     const th = useUiHelpers();
     const uiState = useUiState();
     const { addItem: addItemToCart, isInCart } = useCart();
     const { result, search, loading, error } = useFacet();
     const { wishlist, addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist } = useWishlist();
     const { isAuthenticated } = useUser();
-    const menu = ref({});
+    const { menu, loadMenu } = useMenus('header');
     const products = computed(() => facetGetters.getProducts(result.value));
     const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(result.value));
     const pagination = computed(() => facetGetters.getPagination(result.value));
     const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
-    const locale = ref(context.root.$cookies.get('vsf-locale'));
+    const { locale } = context.root.$i18n;
 
     const getRoute = (category) => {
       if (menu.value.isDisabled) {
@@ -271,11 +270,7 @@ export default {
     };
 
     onMounted(async () => {
-      try {
-        menu.value = await $spree.api.getMenus({menuType: 'header', menuName: 'Main menu', locale: locale.value});
-      } catch (e) {
-        console.error(e);
-      }
+      await loadMenu({menuType: 'header', menuName: 'Main menu', locale: locale});
     });
 
     onSSR(async () => {

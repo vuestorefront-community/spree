@@ -76,8 +76,9 @@
 
 <script>
 import { SfFooter, SfList, SfImage, SfMenuItem } from '@storefront-ui/vue';
-import { useVSFContext } from '@vue-storefront/core';
 import { onMounted, ref} from '@nuxtjs/composition-api';
+import { useMenus } from '@vue-storefront/spree';
+import { onSSR } from '@vue-storefront/core';
 
 export default {
   components: {
@@ -98,18 +99,14 @@ export default {
     };
   },
   setup(props, context) {
-    const { $spree } = useVSFContext();
-    const menu = ref({});
+    const { menu, loadMenu } = useMenus('footer');
     const menuSize = ref({});
-    const locale = ref(context.root.$cookies.get('vsf-locale'));
+    const { locale } = context.root.$i18n;
 
-    onMounted(async () => {
-      try {
-        menu.value = await $spree.api.getMenus({menuType: 'footer', menuName: 'Footer menu', locale: locale.value});
-        menuSize.value = menu.value.items.length;
-      } catch (e) {
-        console.error(e);
-      }
+    onMounted(() => menuSize.value = menu.value.items.length);
+
+    onSSR(async () => {
+      await loadMenu({menuType: 'footer', menuName: 'Footer menu', locale: locale});
     });
 
     return {
