@@ -156,6 +156,6 @@ export default {
   'Change to grid view': 'Zur Rasteransicht wechseln',
   'Change to list view': 'Zur Listenansicht wechseln',
   'Select sorting': 'Sortierung auswählen',
-  'Choose language': 'Sprache wählen',
-  'Choose currency': 'Währung wählen',
+  'Change locale': 'Sprache ändern',
+  'Change currency': 'Währung ändern',
 };
