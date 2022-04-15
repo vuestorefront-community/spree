@@ -57,7 +57,7 @@ import {
 } from '@storefront-ui/vue';
 import { ref, computed } from '@nuxtjs/composition-api';
 import { useVSFContext } from '@vue-storefront/core';
-
+import { VSF_SPREE_CURRENCY_COOKIE } from '@vue-storefront/spree-api';
 export default {
   components: {
     SfImage,
@@ -72,7 +72,7 @@ export default {
     const { locales, locale, numberFormats } = root.$i18n;
     const isLangModalOpen = ref(false);
     const isCurrencyModalOpen = ref(false);
-    const currency = root.$cookies.get('vsf-spree-currency');
+    const currency = root.$cookies.get(VSF_SPREE_CURRENCY_COOKIE);
     const availableLocales = computed(() => locales.filter((i) => i.code !== locale));
     const availableCurrencies = computed(() =>
       Object.keys(numberFormats)
@@ -81,7 +81,7 @@ export default {
     );
 
     const setCurrencyCookie = (currencyValue) => {
-      root.$cookies.set('vsf-spree-currency', currencyValue);
+      root.$cookies.set(VSF_SPREE_CURRENCY_COOKIE, currencyValue);
     };
 
     const handleChangeCurrencyClick = async (newCurrency) => {

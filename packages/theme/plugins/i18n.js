@@ -1,13 +1,14 @@
 import { VSF_LOCALE_COOKIE } from '@vue-storefront/core';
+import { VSF_SPREE_CURRENCY_COOKIE } from '@vue-storefront/spree-api';
 
 export default ({ app, $config }) => {
   const defaultCurrency = $config.theme.defaultCurrency || 'USD';
 
   const localeCookie = app.$cookies.get(VSF_LOCALE_COOKIE);
-  const currencyCookie = app.$cookies.get('vsf-spree-currency');
+  const currencyCookie = app.$cookies.get(VSF_SPREE_CURRENCY_COOKIE);
 
   if (!currencyCookie) {
-    app.$cookies.set('vsf-spree-currency', defaultCurrency);
+    app.$cookies.set(VSF_SPREE_CURRENCY_COOKIE, defaultCurrency);
   }
 
   const currency = currencyCookie || defaultCurrency;
