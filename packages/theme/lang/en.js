@@ -155,5 +155,7 @@ export default {
   'hide': 'hide',
   'Change to grid view': 'Change to grid view',
   'Change to list view': 'Change to list view',
-  'Select sorting': 'Select sorting'
+  'Select sorting': 'Select sorting',
+  'Choose language': 'Choose language',
+  'Choose currency': 'Choose currency',
 };

@@ -155,5 +155,7 @@ export default {
   'hide': 'ausblenden',
   'Change to grid view': 'Zur Rasteransicht wechseln',
   'Change to list view': 'Zur Listenansicht wechseln',
-  'Select sorting': 'Sortierung auswählen'
+  'Select sorting': 'Sortierung auswählen',
+  'Choose language': 'Sprache wählen',
+  'Choose currency': 'Währung wählen',
 };
