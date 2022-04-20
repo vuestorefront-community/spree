@@ -1,51 +1,53 @@
-import { apiClientFactory, ApiClientExtension } from '@vue-storefront/core';
-import { makeClient } from '@spree/storefront-api-v2-sdk';
-import getProduct from './api/getProduct';
-import getProducts from './api/getProducts';
-import getCategory from './api/getCategory';
-import logIn from './api/logIn';
-import logOut from './api/logOut';
-import getCurrentUser from './api/getCurrentUser';
-import updateCurrentUser from './api/updateCurrentUser';
-import isGuest from './api/isGuest';
-import changePassword from './api/changePassword';
-import registerUser from './api/registerUser';
+import { ApiClientExtension, apiClientFactory } from '@vue-storefront/core';
+
 import addAddress from './api/addAddress';
-import getAddresses from './api/getAddresses';
-import getAvailableCountries from './api/getAvailableCountries';
-import getCountryDetails from './api/getCountryDetails';
-import updateAddress from './api/updateAddress';
-import getCart from './api/getCart';
 import addToCart from './api/addToCart';
-import updateItemQuantity from './api/updateItemQuantity';
-import removeFromCart from './api/removeFromCart';
-import clearCart from './api/clearCart';
+import addToWishlist from './api/addToWishlist';
 import applyCoupon from './api/applyCoupon';
-import removeCoupon from './api/removeCoupon';
-import saveCheckoutShippingAddress from './api/saveCheckoutShippingAddress';
-import saveCheckoutBillingAddress from './api/saveCheckoutBillingAddress';
+import changeCurrency from './api/changeCurrency';
+import changePassword from './api/changePassword';
+import clearCart from './api/clearCart';
 import createAuthIntegration from './api/authentication/integration';
 import createInternationalizationIntegration from './api/internationalization/integration';
+import deleteAddress from './api/deleteAddress';
+import deleteWishlist from './api/deleteWishlist';
+import forgotPassword from './api/forgotPassword';
+import getAddresses from './api/getAddresses';
+import getAvailableCountries from './api/getAvailableCountries';
+import getCMSPage from './api/getCMSPage';
+import getCart from './api/getCart';
+import getCategory from './api/getCategory';
+import getCountryDetails from './api/getCountryDetails';
+import getCurrentUser from './api/getCurrentUser';
+import getMenus from './api/getMenus';
 import getOrCreateCart from './api/getOrCreateCart';
 import getOrder from './api/getOrder';
 import getOrders from './api/getOrders';
-import saveGuestCheckoutEmail from './api/saveGuestCheckoutEmail';
-import getShipments from './api/getShipments';
-import saveShippingMethod from './api/saveShippingMethod';
-import getPaymentMethods from './api/getPaymentMethods';
-import savePaymentMethod from './api/savePaymentMethod';
 import getPaymentConfirmationData from './api/getPaymentConfirmationData';
-import handlePaymentConfirmationResponse from './api/handlePaymentConfirmationResponse';
-import makeOrder from './api/makeOrder';
-import forgotPassword from './api/forgotPassword';
-import resetPassword from './api/resetPassword';
+import getPaymentMethods from './api/getPaymentMethods';
+import getProduct from './api/getProduct';
+import getProducts from './api/getProducts';
+import getShipments from './api/getShipments';
 import getWishlist from './api/getWishlist';
-import addToWishlist from './api/addToWishlist';
+import handlePaymentConfirmationResponse from './api/handlePaymentConfirmationResponse';
+import isGuest from './api/isGuest';
+import logIn from './api/logIn';
+import logOut from './api/logOut';
+import { makeClient } from '@spree/storefront-api-v2-sdk';
+import makeOrder from './api/makeOrder';
+import registerUser from './api/registerUser';
+import removeCoupon from './api/removeCoupon';
+import removeFromCart from './api/removeFromCart';
 import removeFromWishlist from './api/removeFromWishlist';
-import deleteWishlist from './api/deleteWishlist';
-import changeCurrency from './api/changeCurrency';
-import deleteAddress from './api/deleteAddress';
-import getMenus from './api/getMenus';
+import resetPassword from './api/resetPassword';
+import saveCheckoutBillingAddress from './api/saveCheckoutBillingAddress';
+import saveCheckoutShippingAddress from './api/saveCheckoutShippingAddress';
+import saveGuestCheckoutEmail from './api/saveGuestCheckoutEmail';
+import savePaymentMethod from './api/savePaymentMethod';
+import saveShippingMethod from './api/saveShippingMethod';
+import updateAddress from './api/updateAddress';
+import updateCurrentUser from './api/updateCurrentUser';
+import updateItemQuantity from './api/updateItemQuantity';
 
 const defaultSettings = {
   backendUrl: 'https://demo.spreecommerce.org',
@@ -128,7 +130,8 @@ const { createApiClient } = apiClientFactory<any, any>({
     deleteWishlist,
     changeCurrency,
     deleteAddress,
-    getMenus
+    getMenus,
+    getCMSPage
   },
   extensions: [tokenExtension]
 });
