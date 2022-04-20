@@ -206,12 +206,7 @@ import {
   SfCharacteristic,
   SfDropdown
 } from '@storefront-ui/vue';
-import {
-  ref,
-  computed,
-  onBeforeUnmount,
-  onUpdated
-} from '@nuxtjs/composition-api';
+import { ref, computed, onBeforeUnmount } from '@nuxtjs/composition-api';
 import { useVSFContext } from '@vue-storefront/core';
 import { VSF_SPREE_CURRENCY_COOKIE } from '@vue-storefront/spree-api';
 import {
@@ -234,7 +229,7 @@ export default {
 
     const isLocaleModalOpen = ref(false);
     const isCurrencyModalOpen = ref(false);
-    const isMobile = ref(mapMobileObserver().isMobile.get());
+    const isMobile = computed(mapMobileObserver().isMobile);
 
     const { locales: allLocales, locale, numberFormats } = root.$i18n;
     const allCurrencies = computed(() =>
@@ -284,11 +279,6 @@ export default {
 
     onBeforeUnmount(() => {
       unMapMobileObserver();
-    });
-
-    onUpdated(() => {
-      unMapMobileObserver();
-      isMobile.value = mapMobileObserver().isMobile.get();
     });
 
     return {
