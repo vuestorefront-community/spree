@@ -7,16 +7,14 @@
         @click="openLocaleSelector()"
       >
         <img
-          :src="
-            `https://cdn.shopify.com/s/files/1/0407/1902/4288/files/${locale}_20x20.jpg`
-          "
+          :src="`https://cdn.shopify.com/s/files/1/0407/1902/4288/files/${locale}_20x20.jpg`"
           width="20"
           height="20"
         />
       </SfButton>
       <SfBottomModal
         :is-open="isLocaleModalOpen"
-        :title="$t('Change locale')"
+        :title="$t('components.locale_selector.change_locale')"
         @click:close="closeLocaleSelector()"
         class="locale-selector__container container container--locale"
       >
@@ -55,7 +53,7 @@
       </SfButton>
       <SfBottomModal
         :is-open="isCurrencyModalOpen"
-        :title="$t('Change currency')"
+        :title="$t('components.locale_selector.change_currency')"
         @click:close="closeCurrencySelector()"
         class="locale-selector__container container container--currency"
       >
@@ -64,9 +62,7 @@
             <SfButton
               class="sf-button sf-button--pure container__action"
               @click="handleChangeCurrencyClick(currency.code)"
-              :class="{
-                'container__action--selected': isCurrencySelected(currency)
-              }"
+              :class="{'container__action--selected': isCurrencySelected(currency)}"
             >
               <SfCharacteristic class="container__characteristic">
                 <template #title>
@@ -90,7 +86,7 @@
       >
         <template #title>
           <p class="sf-dropdown__title container__label container__label--hint">
-            {{ $t('Change locale') }}
+            {{ $t('components.locale_selector.change_locale') }}
           </p>
         </template>
         <template #opener>
@@ -149,7 +145,7 @@
       >
         <template #title>
           <p class="sf-dropdown__title container__label container__label--hint">
-            {{ $t('Change currency') }}
+            {{ $t('components.locale_selector.change_currency') }}
           </p>
         </template>
         <template #opener>
