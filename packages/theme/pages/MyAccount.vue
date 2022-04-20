@@ -64,7 +64,7 @@ export default {
     const route = useRoute();
     const router = useRouter();
     const { logout } = useUser();
-    const isMobile = computed(() => mapMobileObserver().isMobile.get());
+    const isMobile = computed(mapMobileObserver().isMobile);
     const activePage = computed(() => {
       const { pageName } = route.value.params;
       if (!pageName) return isMobile.value ? '' : 'My profile';
