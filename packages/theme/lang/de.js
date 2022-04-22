@@ -320,7 +320,9 @@ export default {
       items: 'Produkte',
       view: 'Sicht',
       change_to_grid_view: 'Wechseln Sie in die Rasteransicht',
-      change_to_list_view: 'Zur Listenansicht wechseln'
+      change_to_list_view: 'Zur Listenansicht wechseln',
+      content_page_not_found: 'Inhaltsseite nicht gefunden',
+      try_again_with_different_url: 'Versuchen Sie es erneut mit einer anderen URL'
     },
     filters_sidebar: {
       done: 'Erledigt',
