@@ -1,0 +1,32 @@
+@mixin SfProductCard() {
+  .sf-product-card,
+  .sf-product-card-horizontal {
+    display: flex;
+    &__image-wrapper .sf-product-card__link {
+      height: 100%;
+    }
+    &__image {
+      width: 100%;
+      height: 100%;
+      .sf-image {
+        display: block;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        opacity: 1;
+        font-weight: normal;
+        line-height: 1.6;
+        color: var(--c-primary);
+      }
+    }
+  }
+  .sf-product-card {
+    flex-flow: column;
+    &__image-wrapper {
+      flex-basis: 100%;
+    }
+  }
+  .sf-product-card-horizontal {
+    flex-flow: row;
+  }
+}
