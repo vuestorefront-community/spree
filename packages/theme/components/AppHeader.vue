@@ -109,7 +109,7 @@
 import { SfHeader, SfImage, SfIcon, SfButton, SfBadge, SfSearchBar, SfOverlay } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
 import { useCart, useFacet, useUser, cartGetters, useWishlist, wishlistGetters } from '@vue-storefront/spree';
-import { computed, ref, watch, onBeforeUnmount, useRouter, onUpdated } from '@nuxtjs/composition-api';
+import { computed, ref, watch, onBeforeUnmount, useRouter } from '@nuxtjs/composition-api';
 import { useUiHelpers } from '~/composables';
 import LocaleSelector from './LocaleSelector';
 import SearchResults from '~/components/SearchResults';
@@ -146,7 +146,7 @@ export default {
     const term = ref(getFacetsFromURL().phrase);
     const isSearchOpen = ref(false);
     const searchBarRef = ref(null);
-    const isMobile = ref(mapMobileObserver().isMobile.get());
+    const isMobile = computed(mapMobileObserver().isMobile);
 
     const result = computed(() => searchResult.value?.data);
     const cartTotalItems = computed(() => cartGetters.getTotalItems(cart.value));
@@ -200,10 +200,6 @@ export default {
     });
 
     const removeSearchResults = () => {};
-
-    onUpdated(() => {
-      mapMobileObserver();
-    });
 
     onBeforeUnmount(() => {
       unMapMobileObserver();
