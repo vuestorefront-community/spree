@@ -45,6 +45,7 @@ import removeFromWishlist from './api/removeFromWishlist';
 import deleteWishlist from './api/deleteWishlist';
 import changeCurrency from './api/changeCurrency';
 import deleteAddress from './api/deleteAddress';
+import getMenus from './api/getMenus';
 
 const defaultSettings = {
   backendUrl: 'https://demo.spreecommerce.org',
@@ -126,7 +127,8 @@ const { createApiClient } = apiClientFactory<any, any>({
     removeFromWishlist,
     deleteWishlist,
     changeCurrency,
-    deleteAddress
+    deleteAddress,
+    getMenus
   },
   extensions: [tokenExtension]
 });
