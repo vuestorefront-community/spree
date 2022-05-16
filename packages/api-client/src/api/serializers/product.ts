@@ -1,5 +1,5 @@
 import type { JsonApiDocument, JsonApiResponse } from '@spree/storefront-api-v2-sdk/types/interfaces/JsonApi';
-import type { IProduct, IProducts } from '@spree/storefront-api-v2-sdk/types/interfaces/Product';
+import type { IProduct, IProducts, ProductAttr } from '@spree/storefront-api-v2-sdk/types/interfaces/Product';
 import type { RelationType } from '@spree/storefront-api-v2-sdk/types/interfaces/Relationships';
 import type { ApiConfig, ProductVariant, OptionType, OptionValue, Image } from '../../types';
 import { extractRelationships, filterAttachments } from './common';
@@ -148,11 +148,14 @@ const partialDeserializeProductVariant = (
   inStock: variant.attributes.in_stock
 });
 
+const maybePrimaryVariantId = (product: ProductAttr): RelationType['id'] | null =>
+  // primary_variant may not exist if an older version of Spree is used. Only use primary_variant if available.
+  (product.relationships.primary_variant?.data as RelationType)?.id;
+
 export const deserializeSingleProductVariants = (apiProduct: IProduct): ProductVariant[] => {
   const attachments = apiProduct.included;
   const productId = apiProduct.data.id;
-  // primary_variant may not exist if na older version of Spree is used. Only use primary_variant if available.
-  const primaryVariantId = (apiProduct.data.relationships.primary_variant?.data as RelationType).id || null;
+  const primaryVariantId = maybePrimaryVariantId(apiProduct.data);
 
   const groupedVariants = groupIncluded<'primaryVariants' | 'optionVariants'>(
     attachments,
@@ -188,9 +191,7 @@ export const deserializeLimitedVariants = (apiProducts: IProducts): ProductVaria
 
   return apiProducts.data.map((product) => {
     const productId = product.id;
-    // primary_variant may not exist if na older version of Spree is used. Only use primary_variant if available.
-    const primaryVariantId = (product.relationships.primary_variant?.data as RelationType).id || null;
-
+    const primaryVariantId = maybePrimaryVariantId(product);
     const groupedVariants = groupIncluded<'primaryVariants' | 'optionVariants' | 'masterVariants' | 'nonMasterVariants'>(
       attachments,
       {
