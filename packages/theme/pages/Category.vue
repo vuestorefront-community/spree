@@ -28,20 +28,20 @@
               :show-chevron="true"
             >
               <SfAccordionItem
-                v-for="(cat, i) in categoryTree && categoryTree.items"
+                v-for="(cat, i) in ((menu && menu.items) || (categoryTree && categoryTree.items))"
                 :key="i"
-                :header="cat.label"
+                :header="cat.name || cat.label"
               >
                 <template>
                   <SfList class="list">
                     <SfListItem class="list__item">
                       <SfMenuItem
                         :count="cat.count || ''"
-                        :label="cat.label"
+                        :label="cat.name || cat.label"
                       >
                         <template #label>
                           <nuxt-link
-                            :to="localePath(th.getCatLink(cat))"
+                            :to="localePath(getRoute(cat))"
                             :class="cat.isCurrent ? 'sidebar--cat-selected' : ''"
                           >
                             All
@@ -56,11 +56,11 @@
                     >
                       <SfMenuItem
                         :count="subCat.count || ''"
-                        :label="subCat.label"
+                        :label="subCat.name || subCat.label"
                       >
                         <template #label="{ label }">
                           <nuxt-link
-                            :to="localePath(th.getCatLink(subCat))"
+                            :to="localePath(getRoute(subCat))"
                             :class="subCat.isCurrent ? 'sidebar--cat-selected' : ''"
                           >
                             {{ label }}
@@ -214,7 +214,7 @@ import {
   SfProperty
 } from '@storefront-ui/vue';
 import { computed, useContext } from '@nuxtjs/composition-api';
-import { useCart, useWishlist, productGetters, useFacet, facetGetters, useUser, wishlistGetters } from '@vue-storefront/spree';
+import { useCart, useWishlist, productGetters, useFacet, facetGetters, useUser, wishlistGetters, useMenus } from '@vue-storefront/spree';
 import { useUiHelpers, useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
@@ -236,10 +236,20 @@ export default {
     const { result, search, loading, error } = useFacet();
     const { wishlist, addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist } = useWishlist();
     const { isAuthenticated } = useUser();
+    const { menu, loadMenu } = useMenus('header');
     const products = computed(() => facetGetters.getProducts(result.value));
-    const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
-    const pagination = computed(() => facetGetters.getPagination(result.value));
     const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(result.value).map(e => ({...e, link: context.localePath(e.link)})));
+    const pagination = computed(() => facetGetters.getPagination(result.value));
+    const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
+    const { locale } = context.root.$i18n;
+
+    const getRoute = (category) => {
+      if (menu.value.isDisabled) {
+        return '/c/' + category.slug;
+      }
+      return category.link;
+    };
+
     const activeCategory = computed(() => {
       const items = categoryTree.value.items;
 
@@ -263,11 +273,14 @@ export default {
       }
     };
 
+    onMounted(async () => {
+      await loadMenu({menuType: 'header', menuName: 'Main menu', locale: locale});
+    });
+
     onSSR(async () => {
       await search(th.getFacetsFromURL());
       if (error?.value?.search) context.root.$nuxt.error({ statusCode: 404 });
     });
-
     return {
       ...uiState,
       th,
@@ -282,7 +295,9 @@ export default {
       isInWishlist,
       isInCart,
       handleWishlistClick,
-      isWishlistDisabled
+      isWishlistDisabled,
+      getRoute,
+      menu
     };
   },
   components: {

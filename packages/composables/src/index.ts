@@ -18,5 +18,7 @@ export { default as useWishlist } from './useWishlist';
 export { default as useForgotPassword } from './useForgotPassword';
 export { default as useCountry } from './useCountry';
 export { default as useStore } from './useStore';
+export { default as useMenus } from './useMenus';
 export * from './getters';
 export * from './types';
+
