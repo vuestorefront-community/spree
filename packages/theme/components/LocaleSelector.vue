@@ -1,48 +1,198 @@
 <template>
-  <div class="container">
+  <div class="locale-selector locale-selector--mobile" v-if="isMobile">
     <SfButton
-      data-cy="locale-select_change-language"
-      class="container__lang container__lang--selected"
-      @click="isLangModalOpen = !isLangModalOpen"
+      data-cy="locale-select_change-locale"
+      class="sf-button sf-button--pure locale-selector__opener locale-selector__opener--locale locale-selector__opener--selected"
+      @click="openLocaleSelector()"
     >
-      <img :src="`https://cdn.shopify.com/s/files/1/0407/1902/4288/files/${locale}_20x20.jpg`" width="20" height="20"/>
+      <img
+        :src="
+          `https://cdn.shopify.com/s/files/1/0407/1902/4288/files/${locale}_20x20.jpg`
+        "
+        width="20"
+        height="20"
+      />
     </SfButton>
-    <SfBottomModal :is-open="isLangModalOpen" title="Choose language" @click:close="isLangModalOpen = !isLangModalOpen">
+    <SfBottomModal
+      :is-open="isLocaleModalOpen"
+      :title="$t('Change locale')"
+      @click:close="closeLocaleSelector()"
+      class="locale-selector__container container container--locale"
+    >
       <SfList>
-        <SfListItem v-for="lang in availableLocales" :key="lang.code">
-          <a href="javascript:void(0)" @click="changeLocale(lang.code)">
-            <SfCharacteristic class="language">
+        <SfListItem v-for="locale in allLocales" :key="locale.code">
+          <nuxt-link
+            :to="switchLocalePath(locale.code)"
+            class="container__action"
+            :class="{ 'container__action--selected': isLocaleSelected(locale) }"
+          >
+            <SfCharacteristic class="container__characteristic">
               <template #title>
-                <span>{{ lang.label }}</span>
+                <span class="container__label">{{ locale.label }}</span>
               </template>
               <template #icon>
-                <img :src="`https://cdn.shopify.com/s/files/1/0407/1902/4288/files/${lang.code}_20x20.jpg`" width="20" height="20"/>
+                <img
+                  :src="
+                    `https://cdn.shopify.com/s/files/1/0407/1902/4288/files/${locale.code}_20x20.jpg`
+                  "
+                  class="container__icon"
+                  width="20"
+                  height="20"
+                />
               </template>
             </SfCharacteristic>
-          </a>
+          </nuxt-link>
         </SfListItem>
       </SfList>
     </SfBottomModal>
     <SfButton
       data-cy="locale-select_change-currency"
-      class="container__currency container__currency--selected"
-      @click="isCurrencyModalOpen = !isCurrencyModalOpen"
+      class="sf-button sf-button--pure locale-selector__opener locale-selector__opener--currency locale-selector__opener--selected"
+      @click="openCurrencySelector()"
     >
       {{ currency }}
     </SfButton>
-    <SfBottomModal :is-open="isCurrencyModalOpen" title="Choose currency" @click:close="isCurrencyModalOpen = !isCurrencyModalOpen">
+    <SfBottomModal
+      :is-open="isCurrencyModalOpen"
+      :title="$t('Change currency')"
+      @click:close="closeCurrencySelector()"
+      class="locale-selector__container container container--currency"
+    >
       <SfList>
-        <SfListItem v-for="currency in availableCurrencies" :key="currency.code">
-          <span @click="cartChangeCurrency(currency.code, currency.locale)">
-            <SfCharacteristic class="currency">
+        <SfListItem v-for="currency in allCurrencies" :key="currency.code">
+          <SfButton
+            class="sf-button sf-button--pure container__action"
+            @click="handleChangeCurrencyClick(currency.code, currency.locale)"
+            :class="{
+              'container__action--selected': isCurrencySelected(currency)
+            }"
+          >
+            <SfCharacteristic class="container__characteristic">
               <template #title>
-                {{ currency.code }}
+                <span class="container__label">{{ currency.code }}</span>
+              </template>
+              <template #icon>
+                <span />
               </template>
             </SfCharacteristic>
-          </span>
+          </SfButton>
         </SfListItem>
       </SfList>
     </SfBottomModal>
+  </div>
+  <div class="locale-selector locale-selector--desktop" v-else>
+    <SfDropdown
+      :isOpen="isLocaleModalOpen"
+      :persistent="false"
+      class="locale-selector__container container container--locale"
+      @click:close="closeLocaleSelector()"
+    >
+      <template #cancel>
+        <span />
+      </template>
+      <template #title>
+        <p class="sf-dropdown__title container__label container__label--hint">
+          {{ $t('Change locale') }}
+        </p>
+      </template>
+      <template #opener>
+        <SfButton
+          @click="openLocaleSelector()"
+          class="sf-button sf-button--pure container__opener"
+        >
+          <SfCharacteristic class="container__characteristic">
+            <template #title>
+              <span />
+            </template>
+            <template #icon>
+              <img
+                :src="
+                  `https://cdn.shopify.com/s/files/1/0407/1902/4288/files/${locale}_20x20.jpg`
+                "
+                class="container__icon"
+                width="20"
+                height="20"
+              />
+            </template>
+          </SfCharacteristic>
+        </SfButton>
+      </template>
+      <SfList>
+        <SfListItem v-for="locale in allLocales" :key="locale.code">
+          <nuxt-link
+            :to="switchLocalePath(locale.code)"
+            class="container__action"
+            :class="{ 'container__action--selected': isLocaleSelected(locale) }"
+          >
+            <SfCharacteristic class="container__characteristic">
+              <template #title>
+                <span class="container__label">{{ locale.label }}</span>
+              </template>
+              <template #icon>
+                <img
+                  :src="
+                    `https://cdn.shopify.com/s/files/1/0407/1902/4288/files/${locale.code}_20x20.jpg`
+                  "
+                  class="container__icon"
+                  width="20"
+                  height="20"
+                />
+              </template>
+            </SfCharacteristic>
+          </nuxt-link>
+        </SfListItem>
+      </SfList>
+    </SfDropdown>
+    <SfDropdown
+      :isOpen="isCurrencyModalOpen"
+      :persistent="false"
+      class="locale-selector__container container container--currency"
+      @click:close="closeCurrencySelector()"
+    >
+      <template #cancel>
+        <span />
+      </template>
+      <template #title>
+        <p class="sf-dropdown__title container__label container__label--hint">
+          {{ $t('Change currency') }}
+        </p>
+      </template>
+      <template #opener>
+        <SfButton
+          @click="openCurrencySelector()"
+          class="sf-button sf-button--pure container__opener"
+        >
+          <SfCharacteristic class="container__characteristic">
+            <template #title>
+              <span class="container__label">{{ currency }}</span>
+            </template>
+            <template #icon>
+              <span />
+            </template>
+          </SfCharacteristic>
+        </SfButton>
+      </template>
+      <SfList>
+        <SfListItem v-for="currency in allCurrencies" :key="currency.code">
+          <SfButton
+            class="sf-button sf-button--pure container__action"
+            @click="handleChangeCurrencyClick(currency.code, currency.locale)"
+            :class="{
+              'container__action--selected': isCurrencySelected(currency)
+            }"
+          >
+            <SfCharacteristic class="container__characteristic">
+              <template #title>
+                <span class="container__label">{{ currency.code }}</span>
+              </template>
+              <template #icon>
+                <span />
+              </template>
+            </SfCharacteristic>
+          </SfButton>
+        </SfListItem>
+      </SfList>
+    </SfDropdown>
   </div>
 </template>
 
@@ -53,11 +203,16 @@ import {
   SfButton,
   SfList,
   SfBottomModal,
-  SfCharacteristic
+  SfCharacteristic,
+  SfDropdown
 } from '@storefront-ui/vue';
-import { ref, computed } from '@nuxtjs/composition-api';
+import { ref, computed, onBeforeUnmount } from '@nuxtjs/composition-api';
 import { useVSFContext } from '@vue-storefront/core';
-
+import { VSF_SPREE_CURRENCY_COOKIE } from '@vue-storefront/spree-api';
+import {
+  mapMobileObserver,
+  unMapMobileObserver
+} from '@storefront-ui/vue/src/utilities/mobile-observer.js';
 export default {
   components: {
     SfImage,
@@ -65,131 +220,166 @@ export default {
     SfButton,
     SfList,
     SfBottomModal,
-    SfCharacteristic
+    SfCharacteristic,
+    SfDropdown
   },
-  setup(props, {root}) {
+  setup(_props, { root }) {
     const { $spree } = useVSFContext();
-    const { locales, locale, numberFormats } = root.$i18n;
-    const isLangModalOpen = ref(false);
+    const currency = root.$cookies.get(VSF_SPREE_CURRENCY_COOKIE);
+
+    const isLocaleModalOpen = ref(false);
     const isCurrencyModalOpen = ref(false);
-    const availableLocales = computed(() => locales.filter(i => i.code !== locale));
-    const availableCurrencies = [];
-    const currency = root.$cookies.get('vsf-spree-currency');
+    const isMobile = computed(mapMobileObserver().isMobile);
 
-    const cartChangeCurrency = async (code, locale) => {
+    const { locales: allLocales, locale, numberFormats } = root.$i18n;
+    const allCurrencies = computed(() =>
+      Object.keys(numberFormats).map((locale) => ({
+        locale,
+        code: numberFormats[locale].currency.currencyDefault
+      }))
+    );
+
+    const openLocaleSelector = () => {
+      isLocaleModalOpen.value = true;
+    };
+
+    const closeLocaleSelector = () => {
+      isLocaleModalOpen.value = false;
+    };
+
+    const openCurrencySelector = () => {
+      isCurrencyModalOpen.value = true;
+    };
+
+    const closeCurrencySelector = () => {
+      isCurrencyModalOpen.value = false;
+    };
+
+    const isCurrencySelected = ({ code }) => currency === code;
+
+    const isLocaleSelected = ({ code }) => locale === code;
+
+    const setCurrencyCookie = (currencyValue) => {
+      root.$cookies.set(VSF_SPREE_CURRENCY_COOKIE, currencyValue);
+    };
+
+    const handleChangeCurrencyClick = async (newCurrency) => {
       const token = root.$cookies.get('spree-cart-token');
-
       if (token) {
         const response = await $spree.api.changeCurrency({
-          currency: currency,
-          newCurrency: code
+          currency,
+          newCurrency
         });
-
-        if (response) {
-          updateLocaleCookies(code, locale);
-        }
+        if (response) setCurrencyCookie(newCurrency);
       } else {
-        updateLocaleCookies(code, locale);
+        setCurrencyCookie(newCurrency);
       }
-
       window.location.reload();
     };
 
-    function updateLocaleCookies(code) {
-      root.$cookies.set('vsf-spree-currency', code);
-    }
-
-    function changeLocale(code) {
-      root.$cookies.set('vsf-locale', code);
-      window.location.reload();
-    }
-
-    Object.entries(numberFormats).forEach(([country]) => {
-      const countryCurrency = numberFormats[country].currency.currencyDefault;
-
-      if (countryCurrency !== currency) {
-        availableCurrencies.push({
-          locale: country,
-          code: countryCurrency
-        });
-      }
+    onBeforeUnmount(() => {
+      unMapMobileObserver();
     });
 
     return {
-      availableLocales,
-      availableCurrencies,
+      allLocales,
+      allCurrencies,
       locale,
       currency,
-      isLangModalOpen,
+      isLocaleModalOpen,
       isCurrencyModalOpen,
-      cartChangeCurrency,
-      changeLocale
+      handleChangeCurrencyClick,
+      isMobile,
+      openLocaleSelector,
+      closeLocaleSelector,
+      openCurrencySelector,
+      closeCurrencySelector,
+      isCurrencySelected,
+      isLocaleSelected
     };
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.container {
-  margin: 0 -5px;
+.locale-selector {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  position: relative;
-
+  &--desktop {
+    column-gap: 0.5em;
+  }
+  &__opener {
+    padding: 0.5em 0.75rem;
+    font-weight: normal;
+  }
+  .container {
+    &.sf-dropdown {
+      --dropdown-position: relative;
+      --dropdown-container-position: absolute;
+      --dropdown-container-width: auto;
+      --dropdown-container-top: 100%;
+      &::v-deep .sf-dropdown__container {
+        right: 0;
+      }
+      &::v-deep .sf-dropdown__overlay {
+        display: block;
+      }
+      &::v-deep .sf-dropdown__title {
+        margin: 1em 0 0 0;
+        padding: 0 0.5rem;
+        white-space: nowrap;
+        display: block;
+      }
+    }
+    &__characteristic {
+      display: flex;
+      flex-flow: row;
+      column-gap: 0.5em;
+    }
+    &__label {
+      font-weight: normal;
+      &--hint {
+        color: var(--c-text-muted);
+      }
+    }
+    &__action {
+      margin: 0;
+      width: 100%;
+      text-align: left;
+      display: flex;
+      justify-content: flex-start;
+      font-weight: normal;
+      pointer-events: auto;
+      padding: 1em 1rem;
+      &--selected {
+        pointer-events: none;
+        cursor: default;
+        .container__label {
+          font-weight: 600;
+        }
+      }
+    }
+  }
   .sf-bottom-modal {
     z-index: 2;
     left: 0;
-    @include for-desktop {
-      --bottom-modal-height: 100vh;
-    }
   }
-
   .sf-list {
-    .language {
+    &__item {
+      pointer-events: none;
+      &:hover {
+        background-color: var(--c-light);
+      }
+    }
+    .container {
       padding: var(--spacer-sm) 0;
     }
-
-    .currency {
-      padding: var(--spacer-sm) 0;
-      cursor: pointer;
-    }
-
-    @include for-desktop {
-      display: flex;
-    }
-
     .sf-image {
       --image-width: 20px;
       margin-right: 1rem;
       border: 1px solid var(--c-light);
       border-radius: 50%;
-    }
-  }
-
-  &__lang {
-    --image-width: 20px;
-    --button-box-shadow: none;
-    background: none;
-    padding: 0 5px;
-    display: flex;
-    align-items: center;
-    opacity: 0.5;
-    border: none;
-    &:hover,
-    &--selected {
-      opacity: 1;
-    }
-  }
-
-  &__currency {
-    background: none;
-    --button-box-shadow: none;
-    font-weight: normal;
-
-    &:hover,
-    &--selected {
-      color: var(--c-text);
     }
   }
 }

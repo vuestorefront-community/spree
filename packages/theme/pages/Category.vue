@@ -213,7 +213,7 @@ import {
   SfColor,
   SfProperty
 } from '@storefront-ui/vue';
-import { computed, onMounted } from '@nuxtjs/composition-api';
+import { computed, onMounted, useContext } from '@nuxtjs/composition-api';
 import { useCart, useWishlist, productGetters, useFacet, facetGetters, useUser, wishlistGetters, useMenus } from '@vue-storefront/spree';
 import { useUiHelpers, useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
@@ -228,16 +228,17 @@ export default {
     'max-age': 60,
     'stale-when-revalidate': 5
   }),
-  setup(props, context) {
+  setup() {
     const th = useUiHelpers();
     const uiState = useUiState();
+    const context = useContext();
     const { addItem: addItemToCart, isInCart } = useCart();
     const { result, search, loading, error } = useFacet();
     const { wishlist, addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist } = useWishlist();
     const { isAuthenticated } = useUser();
     const { menu, loadMenu } = useMenus('header');
     const products = computed(() => facetGetters.getProducts(result.value));
-    const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(result.value));
+    const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(result.value).map(e => ({...e, link: context.localePath(e.link)})));
     const pagination = computed(() => facetGetters.getPagination(result.value));
     const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
     const { locale } = context.root.$i18n;

@@ -42,7 +42,7 @@ export default {
     SfCircleIcon,
     SfBadge
   },
-  setup() {
+  setup(_props, { root }) {
     const route = useRoute();
     const router = useRouter();
     const { toggleCartSidebar, toggleWishlistSidebar, toggleLoginModal, toggleMobileMenu, isMobileMenuOpen } = useUiState();
@@ -57,7 +57,7 @@ export default {
         toggleMobileMenu();
       }
       if (isAuthenticated.value) {
-        return router.push('/my-account');
+        return router.push(root.localePath('/my-account'));
       }
       toggleLoginModal();
     };

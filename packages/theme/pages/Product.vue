@@ -134,7 +134,7 @@ import {
 
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
-import { ref, computed, useRoute, useRouter } from '@nuxtjs/composition-api';
+import { ref, computed, useRoute, useRouter, useContext } from '@nuxtjs/composition-api';
 import { useProduct, useCart, productGetters } from '@vue-storefront/spree';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
@@ -151,6 +151,7 @@ export default {
     const qty = ref(1);
     const route = useRoute();
     const router = useRouter();
+    const context = useContext();
     const { products, search } = useProduct('products');
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
@@ -162,7 +163,7 @@ export default {
     const configuration = computed(() => productGetters.getAttributes(product.value, optionTypes.value));
     const categories = computed(() => productGetters.getCategoryIds(product.value));
     const properties = computed(() => productGetters.getProperties(product.value));
-    const breadcrumbs = computed(() => productGetters.getBreadcrumbs(product.value));
+    const breadcrumbs = computed(() => productGetters.getBreadcrumbs(product.value).map(e => ({...e, link: context.localePath(e.link)})));
     const isInStock = computed(() => productGetters.getInStock(product.value));
     const productGallery = computed(() => productGetters.getGallery(product.value));
 

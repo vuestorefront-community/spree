@@ -86,6 +86,11 @@ export default {
     project-only-end */
   ],
   modules: [
+    ['@vue-storefront/nuxt', {
+      i18n: {
+        useNuxtI18nModule: true
+      }
+    }],
     ['nuxt-i18n', {
       baseUrl: process.env.BASE_URL || 'http://localhost:3000'
     }],
@@ -94,45 +99,47 @@ export default {
     '@vue-storefront/middleware/nuxt'
   ],
   i18n: {
+    detectBrowserLanguage: false,
     currency: 'USD',
     country: 'US',
+    strategy: 'prefix_except_default',
+    langDir: 'lang/',
+    defaultLocale: 'en',
     locales: [
       {
-        code: 'en',
-        label: 'English',
-        file: 'en.js'
-      },
-      {
         code: 'de',
+        iso: 'de-DE',
         label: 'German',
         file: 'de.js'
+      },
+      {
+        code: 'en',
+        iso: 'en-US',
+        label: 'English',
+        file: 'en.js'
       }
     ],
-    defaultLocale: 'en',
-    strategy: 'no_prefix',
-    detectBrowserLanguage: false,
     currencies: [
       { name: 'USD', label: 'Dollar' }
     ],
-    langDir: 'lang/',
     vueI18n: {
-      silentTranslationWarn: true,
+      silentTranslationWarn: false,
       fallbackLocale: 'en',
       numberFormats: {
-        en: {
-          currency: {
-            style: 'currency',
-            currency: 'USD',
-            currencyDisplay: 'symbol',
-            currencyDefault: 'USD'
-          }
-        },
         de: {
           currency: {
             style: 'currency',
             currency: 'EUR',
             currencyDisplay: 'symbol',
             currencyDefault: 'EUR'
+          }
+        },
+        en: {
+          currency: {
+            style: 'currency',
+            currency: 'USD',
+            currencyDisplay: 'symbol',
+            currencyDefault: 'USD'
           }
         }
       }

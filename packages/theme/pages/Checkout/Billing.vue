@@ -239,7 +239,7 @@ export default {
     ValidationProvider,
     ValidationObserver
   },
-  setup() {
+  setup(_props, { root }) {
     const { billing: checkoutBillingAddress, load, save } = useBilling();
     const { countries, states, load: loadCountries, loadStates } = useCountry();
     const { isAuthenticated } = useUser();
@@ -274,7 +274,7 @@ export default {
       } else {
         await save({ billingDetails: form.value });
       }
-      router.push('/checkout/payment');
+      router.push(root.localePath('/checkout/payment'));
     };
 
     const isEqualAddress = (a, b) => {
