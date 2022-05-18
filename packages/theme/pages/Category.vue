@@ -213,7 +213,7 @@ import {
   SfColor,
   SfProperty
 } from '@storefront-ui/vue';
-import { computed, useContext } from '@nuxtjs/composition-api';
+import { computed, onMounted, useContext } from '@nuxtjs/composition-api';
 import { useCart, useWishlist, productGetters, useFacet, facetGetters, useUser, wishlistGetters, useMenus } from '@vue-storefront/spree';
 import { useUiHelpers, useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
