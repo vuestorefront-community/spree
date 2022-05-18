@@ -148,7 +148,7 @@ const partialDeserializeProductVariant = (
   inStock: variant.attributes.in_stock
 });
 
-const maybePrimaryVariantId = (product: ProductAttr): RelationType['id'] | null =>
+const maybePrimaryVariantId = (product: ProductAttr): RelationType['id'] | undefined =>
   // primary_variant may not exist if an older version of Spree is used. Only use primary_variant if available.
   (product.relationships.primary_variant?.data as RelationType)?.id;
 
