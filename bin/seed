@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+docker-compose -f spree_starter/docker-compose.yml run --rm web rake spree_sample:load
