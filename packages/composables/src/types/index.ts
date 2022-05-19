@@ -29,7 +29,7 @@ export type UseCountry = {
   loadStates(key: string): Promise<void>;
 };
 
-export { Cart, Order, LineItem, ProductVariant, Category, Wishlist, User } from '@vue-storefront/spree-api';
+export type { Cart, Order, LineItem, ProductVariant, Category, Wishlist, User } from '@vue-storefront/spree-api';
 
 export type UserAddress = Record<string, unknown>;
 
