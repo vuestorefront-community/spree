@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+git submodule init && git submodule update
+
 cd spree_starter && rm -rf .env && cp -f .env.sample .env &&
 docker-compose pull &&
 docker-compose build web &&
