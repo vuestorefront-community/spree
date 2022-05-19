@@ -59,7 +59,7 @@ yarn build
 yarn dev
 ```
 
-## Running in Docker
+## Running Vue Storefront + Spree in Docker
 
 1. Initialize the Git submodules and setup Spree images
 ```sh
