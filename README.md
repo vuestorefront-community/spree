@@ -47,7 +47,7 @@ yarn install
 export BACKEND_URL=https://demo.spreecommerce.org
 ```
 
-4. (optional) Then you can verify if everything works properly by building all three projects:
+4. Then build all three projects:
 
 ```sh
 yarn build
@@ -58,6 +58,8 @@ yarn build
 ```sh
 yarn dev
 ```
+
+Changing some parts of the code (notably the `api-client`) will trigger a re-build but the change will not be hot-reloaded. To ensure that the app sees you changes, re-run either `yarn build` or `yarn dev`.
 
 ## Running Vue Storefront + Spree in Docker
 
