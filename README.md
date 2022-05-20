@@ -61,6 +61,31 @@ yarn dev
 
 Changing some parts of the code (notably the `api-client`) will trigger a re-build but the change will not be hot-reloaded. To ensure that the app sees you changes, re-run either `yarn build` or `yarn dev`.
 
+## Running Vue Storefront + Spree in Docker
+
+1. Initialize the Git submodules and setup Spree images
+```sh
+./bin/setup
+```
+
+2. (optional) Seed the backend database
+```sh
+./bin/seed
+```
+
+3. Start the application
+```sh
+./bin/start
+```
+
+The Vue Storefront application is available at `http://localhost:3000`.
+The Spree backend is exposed at `http://localhost:4000`.
+
+4. Stopping the application
+```sh
+./bin/stop
+```
+
 ## Enabling optional features
 
 Some features that are either provided by Spree's extensions or that are only available in newer versions, need to be manually enabled in the configuration file. To do that, open the `packages/theme/middleware.config.js` and update the configuration to desired state

@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  frontend:
+    build: .
+    ports:
+      - ${DOCKER_HOST_FRONTEND_PORT:-3000}:3000
+    environment:
+      - BACKEND_URL=http://web:4000
+
+networks:
+  default:
+    external:
+      name: spree_starter_default
