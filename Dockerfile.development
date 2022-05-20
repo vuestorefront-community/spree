@@ -1,0 +1,9 @@
+FROM node:14.15
+
+WORKDIR /app
+ADD . /app/
+
+RUN yarn
+
+EXPOSE 3000
+CMD './docker-entrypoint.development.sh'
