@@ -104,18 +104,20 @@ const buildBreadcrumbs = (included, product) => {
   const taxons = extractRelationships(included, 'taxon', 'taxons', product);
   const breadcrumbs = [{ text: 'Home', link: '/' }];
 
-  const addTaxonToBreadcrumbs = (item) => {
-    const parentId = item.relationships.parent?.data?.id;
-    const parent = parentId ? filterAttachments(included, 'taxon', parentId)[0] : undefined;
-    if (parent) addTaxonToBreadcrumbs(parent);
+  if (taxons.length > 0) {
+    const addTaxonToBreadcrumbs = (item) => {
+      const parentId = item.relationships.parent?.data?.id;
+      const parent = parentId ? filterAttachments(included, 'taxon', parentId)[0] : undefined;
+      if (parent) addTaxonToBreadcrumbs(parent);
 
-    breadcrumbs.push({
-      text: item.attributes.name,
-      link: `/c/${item.attributes.permalink}`
-    });
-  };
+      breadcrumbs.push({
+        text: item.attributes.name,
+        link: `/c/${item.attributes.permalink}`
+      });
+    };
 
-  addTaxonToBreadcrumbs(taxons[0]);
+    addTaxonToBreadcrumbs(taxons[0]);
+  }
 
   breadcrumbs.push({
     text: product.attributes.name,
