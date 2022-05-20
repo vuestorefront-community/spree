@@ -103,7 +103,7 @@ export default {
     const menuSize = ref({});
     const { locale } = context.root.$i18n;
 
-    onMounted(() => menuSize.value = menu.value.items.length);
+    onMounted(() => menuSize.value = menu.value?.items?.length || 0);
 
     onSSR(async () => {
       await loadMenu({menuType: 'footer', menuName: 'Footer menu', locale: locale});
