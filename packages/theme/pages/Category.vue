@@ -241,7 +241,7 @@ export default {
     const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(result.value).map(e => ({...e, link: context.localePath(e.link)})));
     const pagination = computed(() => facetGetters.getPagination(result.value));
     const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
-    const { locale } = context.root.$i18n;
+    const { locale } = context.app.i18n;
 
     const getRoute = (category) => {
       if (menu.value.isDisabled) {
@@ -279,7 +279,7 @@ export default {
 
     onSSR(async () => {
       await search(th.getFacetsFromURL());
-      if (error?.value?.search) context.root.$nuxt.error({ statusCode: 404 });
+      if (error?.value?.search) context.app.nuxt.error({ statusCode: 404 });
     });
     return {
       ...uiState,
