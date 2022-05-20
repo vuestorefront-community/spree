@@ -47,7 +47,7 @@ yarn install
 export BACKEND_URL=https://demo.spreecommerce.org
 ```
 
-4. (optional) Then you can verify if everything works properly by building all three projects:
+4. Then build all three projects:
 
 ```sh
 yarn build
