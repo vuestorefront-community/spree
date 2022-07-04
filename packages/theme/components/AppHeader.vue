@@ -12,7 +12,7 @@
         </a>
       </template>
       <template #navigation>
-        <HeaderNavigation :isMobile="isMobile" />
+        <HeaderNavigation />
       </template>
       <template #aside>
         <LocaleSelector class="smartphone-only" />

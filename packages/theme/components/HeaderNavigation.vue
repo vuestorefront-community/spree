@@ -76,12 +76,6 @@ export default {
     SfAccordion,
     SfList
   },
-  props: {
-    isMobile: {
-      type: Boolean,
-      default: false
-    }
-  },
   setup(props, context) {
     const { result } = useFacet();
     const { isMobileMenuOpen, toggleMobileMenu } = useUiState();

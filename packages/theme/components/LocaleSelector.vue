@@ -63,7 +63,7 @@
           <SfListItem v-for="currency in allCurrencies" :key="currency.code">
             <SfButton
               class="sf-button sf-button--pure container__action"
-              @click="handleChangeCurrencyClick(currency.code, currency.locale)"
+              @click="handleChangeCurrencyClick(currency.code)"
               :class="{
                 'container__action--selected': isCurrencySelected(currency)
               }"
@@ -84,13 +84,10 @@
     <div class="locale-selector locale-selector--desktop desktop-only">
       <SfDropdown
         :isOpen="isLocaleModalOpen"
-        :persistent="false"
+        persistent
         class="locale-selector__container container container--locale"
         @click:close="closeLocaleSelector()"
       >
-        <template #cancel>
-          <span />
-        </template>
         <template #title>
           <p class="sf-dropdown__title container__label container__label--hint">
             {{ $t('Change locale') }}
@@ -146,13 +143,10 @@
       </SfDropdown>
       <SfDropdown
         :isOpen="isCurrencyModalOpen"
-        :persistent="false"
+        persistent
         class="locale-selector__container container container--currency"
         @click:close="closeCurrencySelector()"
       >
-        <template #cancel>
-          <span />
-        </template>
         <template #title>
           <p class="sf-dropdown__title container__label container__label--hint">
             {{ $t('Change currency') }}
@@ -177,7 +171,7 @@
           <SfListItem v-for="currency in allCurrencies" :key="currency.code">
             <SfButton
               class="sf-button sf-button--pure container__action"
-              @click="handleChangeCurrencyClick(currency.code, currency.locale)"
+              @click="handleChangeCurrencyClick(currency.code)"
               :class="{
                 'container__action--selected': isCurrencySelected(currency)
               }"
@@ -211,10 +205,6 @@ import {
 import { ref, computed, onBeforeUnmount } from '@nuxtjs/composition-api';
 import { useVSFContext } from '@vue-storefront/core';
 import { VSF_SPREE_CURRENCY_COOKIE } from '@vue-storefront/spree-api';
-import {
-  mapMobileObserver,
-  unMapMobileObserver
-} from '@storefront-ui/vue/src/utilities/mobile-observer.js';
 export default {
   components: {
     SfImage,
@@ -231,7 +221,6 @@ export default {
 
     const isLocaleModalOpen = ref(false);
     const isCurrencyModalOpen = ref(false);
-    const isMobile = computed(mapMobileObserver().isMobile);
 
     const { locales: allLocales, locale, numberFormats } = root.$i18n;
     const allCurrencies = computed(() =>
@@ -279,10 +268,6 @@ export default {
       window.location.reload();
     };
 
-    onBeforeUnmount(() => {
-      unMapMobileObserver();
-    });
-
     return {
       allLocales,
       allCurrencies,
@@ -291,7 +276,6 @@ export default {
       isLocaleModalOpen,
       isCurrencyModalOpen,
       handleChangeCurrencyClick,
-      isMobile,
       openLocaleSelector,
       closeLocaleSelector,
       openCurrencySelector,
