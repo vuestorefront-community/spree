@@ -1,39 +1,114 @@
 <template>
-  <div class="locale-selector locale-selector--mobile" v-if="isMobile">
-    <SfButton
-      data-cy="locale-select_change-locale"
-      class="sf-button sf-button--pure locale-selector__opener locale-selector__opener--locale locale-selector__opener--selected"
-      @click="openLocaleSelector()"
-    >
-      <img
-        :src="
-          `https://cdn.shopify.com/s/files/1/0407/1902/4288/files/${locale}_20x20.jpg`
-        "
-        width="20"
-        height="20"
-      />
-    </SfButton>
-    <SfBottomModal
-      :is-open="isLocaleModalOpen"
-      :title="$t('Change locale')"
-      @click:close="closeLocaleSelector()"
-      class="locale-selector__container container container--locale"
-    >
-      <SfList>
-        <SfListItem v-for="locale in allLocales" :key="locale.code">
-          <nuxt-link
-            :to="switchLocalePath(locale.code)"
-            class="container__action"
-            :class="{ 'container__action--selected': isLocaleSelected(locale) }"
+  <div>
+    <div class="locale-selector locale-selector--mobile smartphone-only">
+      <SfButton
+        data-cy="locale-select_change-locale"
+        class="sf-button sf-button--pure locale-selector__opener locale-selector__opener--locale locale-selector__opener--selected"
+        @click="openLocaleSelector()"
+      >
+        <img
+          :src="
+            `https://cdn.shopify.com/s/files/1/0407/1902/4288/files/${locale}_20x20.jpg`
+          "
+          width="20"
+          height="20"
+        />
+      </SfButton>
+      <SfBottomModal
+        :is-open="isLocaleModalOpen"
+        :title="$t('Change locale')"
+        @click:close="closeLocaleSelector()"
+        class="locale-selector__container container container--locale"
+      >
+        <SfList>
+          <SfListItem v-for="locale in allLocales" :key="locale.code">
+            <nuxt-link
+              :to="switchLocalePath(locale.code)"
+              class="container__action"
+              :class="{ 'container__action--selected': isLocaleSelected(locale) }"
+            >
+              <SfCharacteristic class="container__characteristic">
+                <template #title>
+                  <span class="container__label">{{ locale.label }}</span>
+                </template>
+                <template #icon>
+                  <img
+                    :src="
+                      `https://cdn.shopify.com/s/files/1/0407/1902/4288/files/${locale.code}_20x20.jpg`
+                    "
+                    class="container__icon"
+                    width="20"
+                    height="20"
+                  />
+                </template>
+              </SfCharacteristic>
+            </nuxt-link>
+          </SfListItem>
+        </SfList>
+      </SfBottomModal>
+      <SfButton
+        data-cy="locale-select_change-currency"
+        class="sf-button sf-button--pure locale-selector__opener locale-selector__opener--currency locale-selector__opener--selected"
+        @click="openCurrencySelector()"
+      >
+        {{ currency }}
+      </SfButton>
+      <SfBottomModal
+        :is-open="isCurrencyModalOpen"
+        :title="$t('Change currency')"
+        @click:close="closeCurrencySelector()"
+        class="locale-selector__container container container--currency"
+      >
+        <SfList>
+          <SfListItem v-for="currency in allCurrencies" :key="currency.code">
+            <SfButton
+              class="sf-button sf-button--pure container__action"
+              @click="handleChangeCurrencyClick(currency.code, currency.locale)"
+              :class="{
+                'container__action--selected': isCurrencySelected(currency)
+              }"
+            >
+              <SfCharacteristic class="container__characteristic">
+                <template #title>
+                  <span class="container__label">{{ currency.code }}</span>
+                </template>
+                <template #icon>
+                  <span />
+                </template>
+              </SfCharacteristic>
+            </SfButton>
+          </SfListItem>
+        </SfList>
+      </SfBottomModal>
+    </div>
+    <div class="locale-selector locale-selector--desktop desktop-only">
+      <SfDropdown
+        :isOpen="isLocaleModalOpen"
+        :persistent="false"
+        class="locale-selector__container container container--locale"
+        @click:close="closeLocaleSelector()"
+      >
+        <template #cancel>
+          <span />
+        </template>
+        <template #title>
+          <p class="sf-dropdown__title container__label container__label--hint">
+            {{ $t('Change locale') }}
+          </p>
+        </template>
+        <template #opener>
+          <SfButton
+            @click="openLocaleSelector()"
+            class="sf-button sf-button--pure container__opener"
           >
             <SfCharacteristic class="container__characteristic">
               <template #title>
-                <span class="container__label">{{ locale.label }}</span>
+                <span />
               </template>
               <template #icon>
                 <img
                   :src="
-                    `https://cdn.shopify.com/s/files/1/0407/1902/4288/files/${locale.code}_20x20.jpg`
+                    `https://cdn.shopify.com/s/files/1/0407/1902/4288/files/${locale}_20x20.jpg`
                   "
                   class="container__icon"
                   width="20"
@@ -41,158 +116,85 @@
                 />
               </template>
             </SfCharacteristic>
-          </nuxt-link>
-        </SfListItem>
-      </SfList>
-    </SfBottomModal>
-    <SfButton
-      data-cy="locale-select_change-currency"
-      class="sf-button sf-button--pure locale-selector__opener locale-selector__opener--currency locale-selector__opener--selected"
-      @click="openCurrencySelector()"
-    >
-      {{ currency }}
-    </SfButton>
-    <SfBottomModal
-      :is-open="isCurrencyModalOpen"
-      :title="$t('Change currency')"
-      @click:close="closeCurrencySelector()"
-      class="locale-selector__container container container--currency"
-    >
-      <SfList>
-        <SfListItem v-for="currency in allCurrencies" :key="currency.code">
+          </SfButton>
+        </template>
+        <SfList>
+          <SfListItem v-for="locale in allLocales" :key="locale.code">
+            <nuxt-link
+              :to="switchLocalePath(locale.code)"
+              class="container__action"
+              :class="{ 'container__action--selected': isLocaleSelected(locale) }"
+            >
+              <SfCharacteristic class="container__characteristic">
+                <template #title>
+                  <span class="container__label">{{ locale.label }}</span>
+                </template>
+                <template #icon>
+                  <img
+                    :src="
+                      `https://cdn.shopify.com/s/files/1/0407/1902/4288/files/${locale.code}_20x20.jpg`
+                    "
+                    class="container__icon"
+                    width="20"
+                    height="20"
+                  />
+                </template>
+              </SfCharacteristic>
+            </nuxt-link>
+          </SfListItem>
+        </SfList>
+      </SfDropdown>
+      <SfDropdown
+        :isOpen="isCurrencyModalOpen"
+        :persistent="false"
+        class="locale-selector__container container container--currency"
+        @click:close="closeCurrencySelector()"
+      >
+        <template #cancel>
+          <span />
+        </template>
+        <template #title>
+          <p class="sf-dropdown__title container__label container__label--hint">
+            {{ $t('Change currency') }}
+          </p>
+        </template>
+        <template #opener>
           <SfButton
-            class="sf-button sf-button--pure container__action"
-            @click="handleChangeCurrencyClick(currency.code, currency.locale)"
-            :class="{
-              'container__action--selected': isCurrencySelected(currency)
-            }"
+            @click="openCurrencySelector()"
+            class="sf-button sf-button--pure container__opener"
           >
             <SfCharacteristic class="container__characteristic">
               <template #title>
-                <span class="container__label">{{ currency.code }}</span>
+                <span class="container__label">{{ currency }}</span>
               </template>
               <template #icon>
                 <span />
               </template>
             </SfCharacteristic>
           </SfButton>
-        </SfListItem>
-      </SfList>
-    </SfBottomModal>
-  </div>
-  <div class="locale-selector locale-selector--desktop" v-else>
-    <SfDropdown
-      :isOpen="isLocaleModalOpen"
-      :persistent="false"
-      class="locale-selector__container container container--locale"
-      @click:close="closeLocaleSelector()"
-    >
-      <template #cancel>
-        <span />
-      </template>
-      <template #title>
-        <p class="sf-dropdown__title container__label container__label--hint">
-          {{ $t('Change locale') }}
-        </p>
-      </template>
-      <template #opener>
-        <SfButton
-          @click="openLocaleSelector()"
-          class="sf-button sf-button--pure container__opener"
-        >
-          <SfCharacteristic class="container__characteristic">
-            <template #title>
-              <span />
-            </template>
-            <template #icon>
-              <img
-                :src="
-                  `https://cdn.shopify.com/s/files/1/0407/1902/4288/files/${locale}_20x20.jpg`
-                "
-                class="container__icon"
-                width="20"
-                height="20"
-              />
-            </template>
-          </SfCharacteristic>
-        </SfButton>
-      </template>
-      <SfList>
-        <SfListItem v-for="locale in allLocales" :key="locale.code">
-          <nuxt-link
-            :to="switchLocalePath(locale.code)"
-            class="container__action"
-            :class="{ 'container__action--selected': isLocaleSelected(locale) }"
-          >
-            <SfCharacteristic class="container__characteristic">
-              <template #title>
-                <span class="container__label">{{ locale.label }}</span>
-              </template>
-              <template #icon>
-                <img
-                  :src="
-                    `https://cdn.shopify.com/s/files/1/0407/1902/4288/files/${locale.code}_20x20.jpg`
-                  "
-                  class="container__icon"
-                  width="20"
-                  height="20"
-                />
-              </template>
-            </SfCharacteristic>
-          </nuxt-link>
-        </SfListItem>
-      </SfList>
-    </SfDropdown>
-    <SfDropdown
-      :isOpen="isCurrencyModalOpen"
-      :persistent="false"
-      class="locale-selector__container container container--currency"
-      @click:close="closeCurrencySelector()"
-    >
-      <template #cancel>
-        <span />
-      </template>
-      <template #title>
-        <p class="sf-dropdown__title container__label container__label--hint">
-          {{ $t('Change currency') }}
-        </p>
-      </template>
-      <template #opener>
-        <SfButton
-          @click="openCurrencySelector()"
-          class="sf-button sf-button--pure container__opener"
-        >
-          <SfCharacteristic class="container__characteristic">
-            <template #title>
-              <span class="container__label">{{ currency }}</span>
-            </template>
-            <template #icon>
-              <span />
-            </template>
-          </SfCharacteristic>
-        </SfButton>
-      </template>
-      <SfList>
-        <SfListItem v-for="currency in allCurrencies" :key="currency.code">
-          <SfButton
-            class="sf-button sf-button--pure container__action"
-            @click="handleChangeCurrencyClick(currency.code, currency.locale)"
-            :class="{
-              'container__action--selected': isCurrencySelected(currency)
-            }"
-          >
-            <SfCharacteristic class="container__characteristic">
-              <template #title>
-                <span class="container__label">{{ currency.code }}</span>
-              </template>
-              <template #icon>
-                <span />
-              </template>
-            </SfCharacteristic>
-          </SfButton>
-        </SfListItem>
-      </SfList>
-    </SfDropdown>
+        </template>
+        <SfList>
+          <SfListItem v-for="currency in allCurrencies" :key="currency.code">
+            <SfButton
+              class="sf-button sf-button--pure container__action"
+              @click="handleChangeCurrencyClick(currency.code, currency.locale)"
+              :class="{
+                'container__action--selected': isCurrencySelected(currency)
+              }"
+            >
+              <SfCharacteristic class="container__characteristic">
+                <template #title>
+                  <span class="container__label">{{ currency.code }}</span>
+                </template>
+                <template #icon>
+                  <span />
+                </template>
+              </SfCharacteristic>
+            </SfButton>
+          </SfListItem>
+        </SfList>
+      </SfDropdown>
+    </div>
   </div>
 </template>
 
