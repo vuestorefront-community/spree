@@ -202,7 +202,7 @@ import {
   SfCharacteristic,
   SfDropdown
 } from '@storefront-ui/vue';
-import { ref, computed, onBeforeUnmount } from '@nuxtjs/composition-api';
+import { ref, computed } from '@nuxtjs/composition-api';
 import { useVSFContext } from '@vue-storefront/core';
 import { VSF_SPREE_CURRENCY_COOKIE } from '@vue-storefront/spree-api';
 export default {
