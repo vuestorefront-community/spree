@@ -1,62 +1,64 @@
 <template>
-  <div class="sf-header__navigation desktop" v-if="!isMobile">
-    <SfHeaderNavigationItem
-      v-for="(category, index) in categories"
-      :key="index"
-      class="nav-item"
-      v-e2e="`app-header-url_${category}`"
-      :label="category"
-      :link="localePath(`/c/categories/${category}`)"
-    />
-  </div>
-  <SfModal v-else-if="isCategoryTreeOrMenuAvailable" :visible="isMobileMenuOpen">
-    <SfAccordion open="" :multiple="false" transition="" showChevron>
-      <SfAccordionItem
-        v-for="(cat, i) in ((menu && menu.items) || (categoryTree && categoryTree.items))"
-        :key="i"
+  <div>
+    <div class="sf-header__navigation desktop-only">
+      <SfHeaderNavigationItem
+        v-for="(category, index) in categories"
+        :key="index"
         class="nav-item"
-        :header="cat.name || cat.label"
+        v-e2e="`app-header-url_${category}`"
+        :label="category"
+        :link="localePath(`/c/categories/${category}`)"
+      />
+    </div>
+    <SfModal v-if="isCategoryTreeOrMenuAvailable" :visible="isMobileMenuOpen">
+      <SfAccordion open="" :multiple="false" transition="" showChevron>
+        <SfAccordionItem
+          v-for="(cat, i) in ((menu && menu.items) || (categoryTree && categoryTree.items))"
+          :key="i"
+          class="nav-item"
+          :header="cat.name || cat.label"
+        >
+          <SfList>
+            <SfListItem>
+              <SfMenuItem
+                label="All"
+                class="sf-header-navigation-item__menu-item"
+                :link="localePath(getRoute(cat))"
+                @click.native="toggleMobileMenu"
+              />
+            </SfListItem>
+            <SfListItem
+              v-for="(subCat, j) in cat.items"
+              :key="j">
+              <SfMenuItem
+                :label="subCat.name || subCat.label"
+                class="sf-header-navigation-item__menu-item"
+                :link="localePath(getRoute(subCat))"
+                @click.native="toggleMobileMenu"
+              />
+            </SfListItem>
+          </SfList>
+        </SfAccordionItem>
+      </SfAccordion>
+    </SfModal>
+    <SfModal v-else :visible="isMobileMenuOpen">
+      <SfHeaderNavigationItem
+        v-for="(category, index) in categories"
+        :key="index"
+        class="nav-item"
+        v-e2e="`app-header-url_${category}`"
       >
-        <SfList>
-          <SfListItem>
-            <SfMenuItem
-              label="All"
-              class="sf-header-navigation-item__menu-item"
-              :link="localePath(getRoute(cat))"
-              @click.native="toggleMobileMenu"
-            />
-          </SfListItem>
-          <SfListItem
-            v-for="(subCat, j) in cat.items"
-            :key="j">
-            <SfMenuItem
-              :label="subCat.name || subCat.label"
-              class="sf-header-navigation-item__menu-item"
-              :link="localePath(getRoute(subCat))"
-              @click.native="toggleMobileMenu"
-            />
-          </SfListItem>
-        </SfList>
-      </SfAccordionItem>
-    </SfAccordion>
-  </SfModal>
-  <SfModal v-else :visible="isMobileMenuOpen">
-    <SfHeaderNavigationItem
-      v-for="(category, index) in categories"
-      :key="index"
-      class="nav-item"
-      v-e2e="`app-header-url_${category}`"
-    >
-      <template #mobile-navigation-item>
-        <SfMenuItem
-          :label="category"
-          class="sf-header-navigation-item__menu-item"
-          :link="localePath(`/c/categories/${category}`)"
-          @click.native="toggleMobileMenu"
-        />
-      </template>
-    </SfHeaderNavigationItem>
-  </SfModal>
+        <template #mobile-navigation-item>
+          <SfMenuItem
+            :label="category"
+            class="sf-header-navigation-item__menu-item"
+            :link="localePath(`/c/categories/${category}`)"
+            @click.native="toggleMobileMenu"
+          />
+        </template>
+      </SfHeaderNavigationItem>
+    </SfModal>
+  </div>
 </template>
 
 <script>
@@ -73,12 +75,6 @@ export default {
     SfModal,
     SfAccordion,
     SfList
-  },
-  props: {
-    isMobile: {
-      type: Boolean,
-      default: false
-    }
   },
   setup(props, context) {
     const { result } = useFacet();
