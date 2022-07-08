@@ -121,7 +121,7 @@ The monorepo contains three submodules:
 - composables - reusable business logic
 - theme - Nuxt.js-based frontend application
 
-For more details, refer to the official [architecture diagram](https://docs.vuestorefront.io/v2/advanced/architecture.html).
+For more details, refer to the official [project structure](https://docs.vuestorefront.io/v2/getting-started/project-structure.html).
 
 ## Feature support
 
