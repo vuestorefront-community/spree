@@ -34,7 +34,7 @@
     <LazyHydrate when-visible>
       <div class="similar-products">
         <SfHeading title="Match with it" :level="2"/>
-        <nuxt-link :to="localePath('/c/categories/women')" class="smartphone-only">
+        <nuxt-link :to="localePath(`/c/categories/women?locale=${locale}`)" class="smartphone-only">
           {{ $t('See all') }}
         </nuxt-link>
       </div>
@@ -65,7 +65,7 @@
             :score-rating="productGetters.getAverageRating(product)"
             :show-add-to-cart-button="false"
             :is-in-wishlist="isInWishlist({ product })"
-            :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
+            :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}?locale=${locale}`)"
             :wishlist-icon="isWishlistDisabled ? false : undefined"
             class="carousel__item__product"
             @click:wishlist="handleWishlistClick(product)"
@@ -149,11 +149,12 @@ export default {
     LazyHydrate
   },
   setup() {
-    const { $config } = useContext();
+    const { app, $config } = useContext();
     const { toggleNewsletterModal, toggleLoginModal } = useUiState();
     const { search, result } = useFacet('home');
     const { isAuthenticated } = useUser();
     const { wishlist, addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist } = useWishlist();
+    const { locale } = app.i18n;
 
     const products = computed(() => facetGetters.getProducts(result.value));
     const isWishlistDisabled = computed(() => wishlistGetters.isWishlistDisabled(wishlist.value));
@@ -252,7 +253,8 @@ export default {
       productGetters,
       isInWishlist,
       handleWishlistClick,
-      isWishlistDisabled
+      isWishlistDisabled,
+      locale
     };
   }
 };
