@@ -200,6 +200,8 @@ export default {
         path: '/my-account/:pageName/:id?',
         component: resolve(__dirname, 'pages/MyAccount.vue')
       });
+      const index = routes.findIndex(route => route.path === "/Product");
+      routes[index].path = "/products/:slug/";
     }
   },
   publicRuntimeConfig: {
