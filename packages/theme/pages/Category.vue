@@ -97,7 +97,7 @@
               :add-to-cart-disabled="!productGetters.getInStock(product)"
               :is-in-wishlist="isInWishlist({ product })"
               :is-added-to-cart="isInCart({ product })"
-              :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
+              :link="localePath(`/products/${productGetters.getSlug(product)}`)"
               :wishlist-icon="isWishlistDisabled ? false : undefined"
               class="products__product-card"
               @click:wishlist="handleWishlistClick(product)"
@@ -123,7 +123,7 @@
               :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
               :special-price="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
               :is-in-wishlist="isInWishlist({ product })"
-              :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
+              :link="localePath(`/products/${productGetters.getSlug(product)}`)"
               @click:wishlist="handleWishlistClick(product)"
               @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
             >
