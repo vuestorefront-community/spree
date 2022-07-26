@@ -44,7 +44,7 @@ export default {
     buttonText: {
       type: String,
       required: true
-    },
+    }
   },
   components: {
     SfButton,
