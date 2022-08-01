@@ -24,9 +24,6 @@ export default {
   },
   components: {
     SfHero
-  },
-  setup(props) {
-    console.log(props.section.links[0]);
   }
 };
 </script>
