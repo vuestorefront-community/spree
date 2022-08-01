@@ -247,7 +247,7 @@ export default {
       if (menu.value.isDisabled) {
         return '/c/' + category.slug;
       }
-      return category.link;
+      return category.link || '/c/' + category.slug;
     };
 
     const activeCategory = computed(() => {
