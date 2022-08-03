@@ -308,7 +308,7 @@ export default {
     const { shipping: checkoutShippingAddress, load, save, loading } = useShipping();
     const { shipping: savedAddresses, load: loadSavedAddresses, addAddress } = useUserShipping();
     const { isAuthenticated } = useUser();
-    const { $spree } = useVSFContext();
+    const context = useVSFContext();
     const billing = useBilling();
 
     const selectedSavedAddressId = ref(undefined);
@@ -343,7 +343,7 @@ export default {
 
     const handleFormSubmit = async () => {
       if (!isAuthenticated.value) {
-        await $spree.api.saveGuestCheckoutEmail(form.value.email);
+        await context.$spree.api.saveGuestCheckoutEmail(form.value.email);
       }
 
       const shippingAddress = isAuthenticated.value && selectedSavedAddress.value
@@ -352,10 +352,10 @@ export default {
 
       await save({ shippingDetails: shippingAddress });
       if (isCopyToBillingSelected.value) {
-        buttonText.value = 'Continue to payment';
+        buttonText.value = context.app.i18n.t('pages.checkout.shipping.button_continue_to_payment_label');
         await billing.save({ billingDetails: shippingAddress });
       } else {
-        buttonText.value = 'Continue to billing';
+        buttonText.value = context.app.i18n.t('pages.checkout.shipping.button_continue_to_billing_label');
       }
 
       if (isSaveAddressSelected.value) {
@@ -379,9 +379,9 @@ export default {
 
     const routeToBillingOrPayment = () => {
       if (isCopyToBillingSelected.value) {
-        router.push('/checkout/payment');
+        router.push(context.app.localePath('/checkout/payment'));
       } else {
-        router.push('/checkout/billing');
+        router.push(context.app.localePath('/checkout/billing'));
       }
     };
 

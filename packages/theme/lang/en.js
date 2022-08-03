@@ -68,7 +68,8 @@ export default {
         save_address_label: '@:shared.form.save_address',
         shipping_to_billing_label: 'Use the same details for billing',
         button_go_back_label: 'Go back',
-        button_continue_to_payment_label: 'Continue to payment'
+        button_continue_to_payment_label: 'Continue to payment',
+        button_continue_to_billing_label: 'Continue to billing'
       },
       thank_you: {
         order_no: 'Order No.',
