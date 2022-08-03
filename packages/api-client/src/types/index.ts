@@ -1,5 +1,5 @@
 import { Client } from '@spree/storefront-api-v2-sdk';
-import { IOAuthToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
+import { IOAuthToken } from '@spree/storefront-api-v2-sdk/src/interfaces/Token';
 
 export * from './cart';
 export * from './product';

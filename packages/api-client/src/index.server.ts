@@ -1,5 +1,6 @@
-import { ApiClientExtension, apiClientFactory } from '@vue-storefront/core';
-
+import { apiClientFactory, ApiClientExtension } from '@vue-storefront/core';
+import { makeClient } from '@spree/storefront-api-v2-sdk';
+import createAxiosFetcher from '@spree/storefront-api-v2-sdk/dist/server/createAxiosFetcher';
 import addAddress from './api/addAddress';
 import addToCart from './api/addToCart';
 import addToWishlist from './api/addToWishlist';
@@ -33,7 +34,6 @@ import handlePaymentConfirmationResponse from './api/handlePaymentConfirmationRe
 import isGuest from './api/isGuest';
 import logIn from './api/logIn';
 import logOut from './api/logOut';
-import { makeClient } from '@spree/storefront-api-v2-sdk';
 import makeOrder from './api/makeOrder';
 import registerUser from './api/registerUser';
 import removeCoupon from './api/removeCoupon';
@@ -64,7 +64,23 @@ const onCreate = (settings) => {
       ...defaultSettings,
       ...settings
     },
-    client: makeClient({ host: settings.backendUrl || defaultSettings.backendUrl })
+    client: makeClient({
+      host: settings.backendUrl || defaultSettings.backendUrl,
+      createFetcher: createAxiosFetcher,
+      beforeRequestFunction: (axios) => {
+        axios.interceptors.request.use((config) => {
+          console.log('fwafafa`f`awg`wfwWFwfwfwffefsegegssegesgseg');
+          console.log(settings)
+          config.params.locale = settings.internationalization.getLocale();
+          console.log(config);
+          return config;
+        }, (error) => {
+          // Do something with request error
+          return Promise.reject(error);
+        });
+      }
+
+    })
   };
 };
 
