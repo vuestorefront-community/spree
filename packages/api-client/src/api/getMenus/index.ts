@@ -1,5 +1,4 @@
 import { ApiContext } from '../../types';
-import axios from 'axios';
 import { deserializeMenu } from '../serializers/menu';
 import { Menu } from '../../types/menu';
 
@@ -12,20 +11,23 @@ const getMenuInclude = 'menu_items.linked_rescource';
 
 const findMenu = (menus: Menu[], name: string) => menus.find(e => e.name === name);
 
-export default async function getMenus({ config }: ApiContext, { menuType: menuType, menuName: menuName, locale: locale}): Promise<Menu> {
+export default async function getMenus({ client, config }: ApiContext, { menuType: menuType, menuName: menuName}): Promise<Menu> {
   if (!config.spreeFeatures.useMenuApi) {
     return {isDisabled: true, ...emptyMenu};
   }
 
-  const url = config.backendUrl.concat('/api/v2/storefront/menus');
-  const result = await axios.get(url, { params: {
+  const response = await client.menus.list({
     include: getMenuInclude,
-    'filter[location]': menuType,
-    locale: locale
-  }
+    filter: {
+      location: menuType
+    }
   });
 
-  const { included } = result.data;
-  const menus = deserializeMenu(included);
-  return findMenu(menus, menuName);
+  if (response.isSuccess()) {
+    const { included } = response.success();
+    const menus = deserializeMenu(included);
+    return findMenu(menus, menuName);
+  } else {
+    throw response.fail();
+  }
 }

@@ -10,7 +10,7 @@ export default function useMenus(id: string): UseMenus {
   const menu = sharedRef(null, `useMenus-${id}`);
   const error = sharedRef({ load: null, loadMenu: null }, `useMenus-error-${id}`);
 
-  const loadMenu = async ({ menuType, menuName, locale}) => {
+  const loadMenu = async ({ menuType, menuName }) => {
     if (menu.value && menu.value.items) {
       loading.value = false;
       error.value.load = null;
@@ -19,7 +19,7 @@ export default function useMenus(id: string): UseMenus {
 
     try {
       loading.value = true;
-      menu.value = await context.$spree.api.getMenus({menuType: menuType, menuName: menuName, locale: locale});
+      menu.value = await context.$spree.api.getMenus({ menuType: menuType, menuName: menuName });
       error.value.load = null;
     } catch (e) {
       error.value.load = e;

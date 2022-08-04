@@ -93,15 +93,14 @@ export default {
       desktopMin: 1024
     };
   },
-  setup(props, context) {
+  setup() {
     const { menu, loadMenu } = useMenus('footer');
     const menuSize = ref({});
-    const { locale } = context.root.$i18n;
 
     onMounted(() => menuSize.value = menu.value?.items?.length || 0);
 
     onSSR(async () => {
-      await loadMenu({menuType: 'footer', menuName: 'Footer menu', locale: locale});
+      await loadMenu({ menuType: 'footer', menuName: 'Footer menu' });
     });
 
     return {

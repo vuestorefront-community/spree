@@ -241,7 +241,6 @@ export default {
     const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(result.value).map(e => ({...e, link: context.localePath(e.link)})));
     const pagination = computed(() => facetGetters.getPagination(result.value));
     const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
-    const { locale } = context.app.i18n;
 
     const getRoute = (category) => {
       const slugBasedRoute = `/c/${category.slug}`;
@@ -275,7 +274,7 @@ export default {
     };
 
     onMounted(async () => {
-      await loadMenu({menuType: 'header', menuName: 'Main menu', locale: locale});
+      await loadMenu({ menuType: 'header', menuName: 'Main menu' });
     });
 
     onSSR(async () => {

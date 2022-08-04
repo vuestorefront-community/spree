@@ -93,7 +93,7 @@ export default {
     };
 
     onSSR(async () => {
-      await loadMenu({menuType: 'header', menuName: 'Main menu', locale: locale});
+      await loadMenu({ menuType: 'header', menuName: 'Main menu' });
 
     });
 
