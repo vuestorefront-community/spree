@@ -16,9 +16,9 @@
       </div>
     </div>
     <div v-else class="content-page__error">
-      <SfHeading :title="$t('components.category_page_header.content_page_not_found')" :level="1" />
+      <SfHeading :title="$t('components.content_page.not_found')" :level="1" />
       <p class="content-page__error-description">
-        {{ $t('components.category_page_header.try_again_with_different_url') }}
+        {{ $t('components.content_page.try_again_with_different_url') }}
       </p>
     </div>
   </div>

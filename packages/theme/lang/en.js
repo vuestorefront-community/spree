@@ -341,8 +341,10 @@ export default {
       items: 'Items',
       view: 'View',
       change_to_grid_view: 'Change to grid view',
-      change_to_list_view: 'Change to list view',
-      content_page_not_found: 'Content page not found',
+      change_to_list_view: 'Change to list view'
+    },
+    content_page: {
+      not_found: 'Content page not found',
       try_again_with_different_url: 'Try again with different URL'
     },
     filters_sidebar: {
