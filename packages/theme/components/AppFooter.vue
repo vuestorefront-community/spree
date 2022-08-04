@@ -37,7 +37,7 @@
           :key="item"
         >
           <SfMenuItem
-            :label="$t(item)"
+            :label="item"
           />
         </SfListItem>
       </SfList>
@@ -49,7 +49,7 @@
           :key="item"
         >
           <SfMenuItem
-            :label="$t(item)"
+            :label="item"
           />
         </SfListItem>
       </SfList>
@@ -61,7 +61,7 @@
           :key="item"
         >
           <SfMenuItem
-            :label="$t(item)"
+            :label="item"
           />
         </SfListItem>
       </SfList>

@@ -9,7 +9,7 @@
       <SfBar
         class="sf-modal__bar smartphone-only"
         :close="true"
-        :title="$t(barTitle)"
+        :title="barTitle"
         @click:close="closeModal"
       />
     </template>
