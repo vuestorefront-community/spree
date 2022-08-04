@@ -10,6 +10,7 @@ export * from './account';
 export * from './wishlist';
 export * from './user';
 export * from './menu';
+export * from './page';
 
 export type CategoryFilter = Record<string, unknown>;
 export type ShippingMethod = Record<string, unknown>;

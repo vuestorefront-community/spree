@@ -1,5 +1,5 @@
-import webpack from 'webpack';
 import theme from './themeConfig';
+import webpack from 'webpack';
 
 export default {
   ssr: true,
@@ -201,7 +201,7 @@ export default {
         path: '/my-account/:pageName/:id?',
         component: resolve(__dirname, 'pages/MyAccount.vue')
       });
-      
+
       // Delete OOB product route
       routes.splice(
         routes.findIndex(route => route.path === '/Product'),
