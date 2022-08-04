@@ -10,7 +10,8 @@ export default {
       state: 'State/Province',
       country: 'Country',
       postal_code: 'Zip-code',
-      phone_number: 'Phone number'
+      phone_number: 'Phone number',
+      save_address: 'Save address'
     }
   },
   composables: {
