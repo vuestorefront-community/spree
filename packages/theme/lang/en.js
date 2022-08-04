@@ -344,8 +344,8 @@ export default {
       change_to_list_view: 'Change to list view'
     },
     content_page: {
-      not_found: 'Content page not found',
-      try_again_with_different_url: 'Try again with different URL'
+      not_found: 'Page not found',
+      try_again_with_different_url: 'The URL is not valid and cannot be loaded'
     },
     filters_sidebar: {
       done: 'Done',

@@ -323,8 +323,8 @@ export default {
       change_to_list_view: 'Zur Listenansicht wechseln'
     },
     content_page: {
-      not_found: 'Inhaltsseite nicht gefunden',
-      try_again_with_different_url: 'Versuchen Sie es erneut mit einer anderen URL'
+      not_found: 'Seite nicht gefunden',
+      try_again_with_different_url: 'Die URL ist ungültig und kann nicht geladen werden'
     },
     filters_sidebar: {
       done: 'Erledigt',
