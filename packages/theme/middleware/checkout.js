@@ -1,4 +1,4 @@
-const cartEmpty = cart => cart.itemCount === 0
+const cartEmpty = cart => cart.itemCount === 0;
 const canEnterBilling = cart => Boolean(cart.address?.shipping) && cart.lineItems.length;
 const canEnterPayment = cart => Boolean(cart.address?.billing) && Boolean(cart.address?.shipping) && cart.lineItems.length;
 
@@ -9,22 +9,26 @@ export default async ({ app, $vsf }) => {
 
   const cart = await $vsf.$spree.api.getCart();
 
+  const redirectWithLocalePath = (path) => {
+    app.context.redirect(app.localePath(path));
+  };
+
   switch (currentPath) {
     case 'shipping':
-      if (cartEmpty(cart)){
-        app.context.redirect('/');
+      if (cartEmpty(cart)) {
+        redirectWithLocalePath('/');
       }
       break;
     case 'billing':
       if (!canEnterBilling(cart)) {
-        app.context.redirect('/checkout/shipping');
+        redirectWithLocalePath('/checkout/shipping');
       }
       break;
     case 'payment':
       if (!canEnterBilling(cart)) {
-        app.context.redirect('/checkout/shipping');
+        redirectWithLocalePath('/checkout/shipping');
       } else if (!canEnterPayment(cart)) {
-        app.context.redirect('/checkout/billing');
+        redirectWithLocalePath('/checkout/billing');
       }
       break;
   }
