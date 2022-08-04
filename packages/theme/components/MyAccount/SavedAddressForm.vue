@@ -184,24 +184,8 @@ import { reactive, watch, computed, onMounted } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
 import { useCountry } from '@vue-storefront/spree';
 
-extend('required', {
-  ...required,
-  message: 'This field is required'
-});
-
-extend('min', {
-  ...min,
-  message: 'The field should have at least {length} characters'
-});
-
-extend('oneOf', {
-  ...oneOf,
-  message: 'Invalid country'
-});
-
 export default {
   name: 'SavedAddressForm',
-
   components: {
     SfInput,
     SfButton,
@@ -210,7 +194,6 @@ export default {
     ValidationProvider,
     ValidationObserver
   },
-
   props: {
     address: {
       type: Object,
@@ -233,7 +216,20 @@ export default {
       required: true
     }
   },
-
+  created() {
+    extend('required', {
+      ...required,
+      message: this.$i18n.t('shared.validation.required')
+    });
+    extend('min', {
+      ...min,
+      message: this.$i18n.t('shared.validation.min')
+    });
+    extend('oneOf', {
+      ...oneOf,
+      message: this.$i18n.t('shared.validation.one_of.country')
+    });
+  },
   setup(props, { emit }) {
     const { countries, states, load: loadCountries, loadStates } = useCountry();
     const form = reactive({

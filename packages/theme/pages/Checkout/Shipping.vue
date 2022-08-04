@@ -272,19 +272,6 @@ import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import AddressPicker from '~/components/Checkout/AddressPicker';
 import _ from 'lodash';
 
-extend('required', {
-  ...required,
-  message: 'This field is required'
-});
-extend('min', {
-  ...min,
-  message: 'The field should have at least {length} characters'
-});
-extend('digits', {
-  ...digits,
-  message: 'Please provide a valid phone number'
-});
-
 export default {
   name: 'Shipping',
   components: {
@@ -297,6 +284,20 @@ export default {
     ValidationProvider,
     ValidationObserver,
     VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
+  },
+  created() {
+    extend('required', {
+      ...required,
+      message: this.$i18n.t('shared.validation.required')
+    });
+    extend('min', {
+      ...min,
+      message: this.$i18n.t('shared.validation.min')
+    });
+    extend('digits', {
+      ...digits,
+      message: this.$i18n.t('shared.validation.digits.phone_number')
+    });
   },
   setup () {
     const router = useRouter();
