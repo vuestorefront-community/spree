@@ -7,7 +7,7 @@
       class="tab-orphan"
     >
       <SfTab
-        :title="$t(`pages.my_account.saved_addresses_details.${isNewAddress ? tab_title_new_address : tab_title_old_address}`)">
+        :title="$t(`pages.my_account.saved_addresses_details.${isNewAddress ? 'tab_title_new_address' : 'tab_title_old_address'}`)">
         <p class="message">
           {{ $t('pages.my_account.saved_addresses_details.contact_details_updated') }}
         </p>
