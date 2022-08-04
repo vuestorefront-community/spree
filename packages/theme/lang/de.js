@@ -1,5 +1,22 @@
 export default {
   shared: {
+    validation: {
+      email: 'Bitte geben Sie eine gültige E-Mail Adresse an',
+      required: 'Dieses Feld ist erforderlich',
+      password: {
+        min_characters_letter_number: 'Das Passwort muss mindestens {minCharacters} Zeichen lang sein, darunter ein Buchstabe und eine Zahl'
+      },
+      confirmed: {
+        passwords: 'Passwörter stimmen nicht überein'
+      },
+      min: 'Dieses Feld sollte mindestens {length} Zeichen haben',
+      one_of: {
+        country: 'Ungültiges Land'
+      },
+      digits: {
+        phone_number: 'Geben Sie bitte eine gültige Telephonnummer an'
+      }
+    },
     form: {
       email: 'Email',
       first_name: 'Vorname',

@@ -55,29 +55,13 @@ import {
   SfButton,
   SfSelect
 } from '@storefront-ui/vue';
-import {required, confirmed} from 'vee-validate/dist/rules';
+import { required, confirmed } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { reactive} from '@nuxtjs/composition-api';
 import { useUser } from '@vue-storefront/spree';
 
-extend('required', {
-  ...required,
-  message: 'This field is required'
-});
-
-extend('password', {
-  validate: value => String(value).length >= 8 && String(value).match(/[A-Za-z]/gi) && String(value).match(/[0-9]/gi),
-  message: 'Password must have at least 8 characters including one letter and a number'
-});
-
-extend('confirmed', {
-  ...confirmed,
-  message: 'Passwords don\'t match'
-});
-
 export default {
   name: 'PasswordResetForm',
-
   components: {
     SfInput,
     SfButton,
@@ -85,7 +69,6 @@ export default {
     ValidationProvider,
     ValidationObserver
   },
-
   password: {
     type: Object,
     default: () => ({
@@ -93,7 +76,20 @@ export default {
       newPasswordConfirmation: ''
     })
   },
-
+  created() {
+    extend('required', {
+      ...required,
+      message: this.$i18n.t('shared.validation.required')
+    });
+    extend('password', {
+      validate: value => String(value).length >= 8 && String(value).match(/[A-Za-z]/gi) && String(value).match(/[0-9]/gi),
+      message: this.$i18n.t('shared.validation.password.min_characters_letter_number', { minCharacters: 8 })
+    });
+    extend('confirmed', {
+      ...confirmed,
+      message: this.$i18n.t('shared.validation.confirmed.passwords')
+    });
+  },
   setup(password) {
     const { changePassword} = useUser();
     const form = reactive({

@@ -1,5 +1,22 @@
 export default {
   shared: {
+    validation: {
+      email: 'Please, provide a valid email address',
+      required: 'This field is required',
+      password: {
+        min_characters_letter_number: 'Password must have at least {minCharacters} characters including one letter and a number'
+      },
+      confirmed: {
+        passwords: 'Passwords don\'t match'
+      },
+      min: 'This field should have at least {length} characters',
+      one_of: {
+        country: 'Invalid country'
+      },
+      digits: {
+        phone_number: 'Please, provide a valid phone number'
+      }
+    },
     form: {
       email: 'Email',
       first_name: 'First Name',

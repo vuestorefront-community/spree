@@ -201,16 +201,6 @@ import { required, email } from 'vee-validate/dist/rules';
 import { useUiState } from '~/composables';
 import { useUser, useForgotPassword } from '@vue-storefront/spree';
 
-extend('email', {
-  ...email,
-  message: 'Invalid email'
-});
-
-extend('required', {
-  ...required,
-  message: 'This field is required'
-});
-
 export default {
   name: 'LoginModal',
   components: {
@@ -223,6 +213,16 @@ export default {
     ValidationProvider,
     ValidationObserver,
     SfBar
+  },
+  created() {
+    extend('required', {
+      ...required,
+      message: this.$i18n.t('shared.validation.required')
+    });
+    extend('email', {
+      ...email,
+      message: this.$i18n.t('shared.validation.email')
+    });
   },
   setup(_root, context) {
     const SCREEN_LOGIN = 'login';

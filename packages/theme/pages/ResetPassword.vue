@@ -70,12 +70,6 @@ import { useForgotPassword, forgotPasswordGetters } from '@vue-storefront/spree'
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
 
-// TODO: change validation msgs
-extend('required', {
-  ...required,
-  message: 'This field is required'
-});
-
 export default {
   name: 'ResetPassword',
   layout: 'blank',
@@ -92,6 +86,12 @@ export default {
     SfInput,
     ValidationProvider,
     ValidationObserver
+  },
+  created() {
+    extend('required', {
+      ...required,
+      message: this.$i18n.t('shared.validation.required')
+    });
   },
   setup() {
     const route = useRoute();
