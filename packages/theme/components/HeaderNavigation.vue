@@ -76,14 +76,13 @@ export default {
     SfAccordion,
     SfList
   },
-  setup(props, context) {
+  setup() {
     const { result } = useFacet();
     const { isMobileMenuOpen, toggleMobileMenu } = useUiState();
     const { menu, loadMenu } = useMenus('header');
     const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
     const categories = ['women', 'men'];
     const isCategoryTreeOrMenuAvailable = computed(() => categoryTree.value?.items?.length > 0 || !menu.value.isDisabled);
-    const { locale } = context.root.$i18n;
 
     const getRoute = (category) => {
       if (menu.value.isDisabled) {

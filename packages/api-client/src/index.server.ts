@@ -69,7 +69,7 @@ const onCreate = (settings) => {
       createFetcher: createAxiosFetcher,
       beforeRequestFunction: (axios) => {
         axios.interceptors.request.use((config) => {
-          const locale = settings.internationalization.getLocale()
+          const locale = settings.internationalization.getLocale();
           !config?.params ? config.params = { locale: locale } : config.params.locale = locale;
           return config;
         }, (error) => {
