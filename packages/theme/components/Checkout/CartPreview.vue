@@ -55,11 +55,11 @@
     <span class="highlighted coupon-error" v-if="cartError.applyCoupon">{{ cartError.applyCoupon.message }}</span>
     <div class="highlighted">
       <SfCharacteristic
-        v-for="characteristic in characteristics"
-        :key="characteristic.title"
-        :title="characteristic.title"
-        :description="characteristic.description"
-        :icon="characteristic.icon"
+        v-for="{ key, title, description, icon } in $t('components.checkout.cart_preview.characteristics')"
+        :key="key"
+        :title="title"
+        :description="description"
+        :icon="icon"
         class="characteristic"
       />
     </div>
@@ -116,25 +116,6 @@ export default {
       updateItemQty,
       cartGetters,
       applyCoupon,
-      characteristics: [
-        {
-          title: 'Safety',
-          description: 'It carefully packaged with a personal touch',
-          icon: 'safety'
-        },
-        {
-          title: 'Easy shipping',
-          description:
-            'You’ll receive dispatch confirmation and an arrival date',
-          icon: 'shipping'
-        },
-        {
-          title: 'Changed your mind?',
-          description: 'Rest assured, we offer free returns within 30 days',
-          icon: 'return'
-        }
-      ],
-
       hasSpecialPrice: computed(() => totals.value.special > 0 && totals.value.special < totals.value.subtotal),
       cartError
     };

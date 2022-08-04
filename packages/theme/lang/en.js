@@ -183,7 +183,27 @@ export default {
         shipping: 'Shipping',
         total: 'Total',
         enter_promo_code: 'Enter promo code',
-        apply: 'Apply'
+        apply: 'Apply',
+        characteristics: [
+          {
+            key: 'characteristic-safety',
+            title: 'Safety',
+            description: 'It carefully packaged with a personal touch',
+            icon: 'safety'
+          },
+          {
+            key: 'characteristic-easy-shopping',
+            title: 'Easy shipping',
+            description: 'You’ll receive dispatch confirmation and an arrival date',
+            icon: 'shipping'
+          },
+          {
+            key: 'characteristic-changed-your-mind',
+            title: 'Changed your mind?',
+            description: 'Rest assured, we offer free returns within 30 days',
+            icon: 'return'
+          }
+        ]
       },
       user_billing_address: {
         set_as_default_address: 'Use this address as my default one.'

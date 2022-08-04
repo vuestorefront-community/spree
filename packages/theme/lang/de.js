@@ -184,7 +184,27 @@ export default {
         shipping: 'Versand',
         total: 'Gesamt',
         enter_promo_code: 'Aktionscode eingeben',
-        apply: 'Anwenden'
+        apply: 'Anwenden',
+        characteristics: [
+          {
+            key: 'characteristic-safety',
+            title: 'Sicherheit',
+            description: 'Sorgfältig verpackt mit persönlicher Note',
+            icon: 'safety'
+          },
+          {
+            key: 'characteristic-easy-shopping',
+            title: 'Einfacher Versand',
+            description: 'Sie erhalten eine Versandbestätigung und ein Ankunftsdatum',
+            icon: 'shipping'
+          },
+          {
+            key: 'characteristic-changed-your-mind',
+            title: 'Ihre Meinung geändert?',
+            description: 'Seien Sie versichert, wir bieten kostenlose Rücksendungen innerhalb von 30 Tagen an',
+            icon: 'return'
+          }
+        ]
       },
       user_billing_address: {
         set_as_default_address: 'Verwenden Sie diese Adresse als meine Standardadresse.'
