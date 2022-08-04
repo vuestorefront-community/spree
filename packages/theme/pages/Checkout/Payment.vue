@@ -77,7 +77,7 @@
           <SfButton
             type="button"
             class="sf-button color-secondary summary__back-button"
-            @click="router.push('/checkout/billing')"
+            @click="router.push(localePath('/checkout/billing'))"
           >
             {{ $t('Go back') }}
           </SfButton>
@@ -110,7 +110,7 @@ import {
 } from '@storefront-ui/vue';
 import { onSSR, Logger } from '@vue-storefront/core';
 import { ref, computed, useRouter } from '@nuxtjs/composition-api';
-import { useMakeOrder, useCart, cartGetters } from '@vue-storefront/spree';
+import { useMakeOrder, useCart, cartGetters, orderGetters } from '@vue-storefront/spree';
 
 export default {
   name: 'ReviewOrder',
@@ -128,7 +128,7 @@ export default {
     SfLink,
     VsfPaymentProvider: () => import('~/components/Checkout/VsfPaymentProvider')
   },
-  setup() {
+  setup(_props, { root }) {
     const router = useRouter();
     const { cart, load } = useCart();
     const { make, loading, error: makeError } = useMakeOrder();
@@ -147,6 +147,7 @@ export default {
     };
 
     const processOrder = async () => {
+      const orderId = orderGetters.getId(cart.value);
       try {
         await savePayment.value();
       } catch (e) {
@@ -159,8 +160,7 @@ export default {
         Logger.error(makeError.value.make);
         return;
       }
-
-      router.push(`/checkout/thank-you?order=${cart.value.number}`);
+      router.push(root.localePath(`/checkout/thank-you?order=${orderId}`));
     };
 
     return {

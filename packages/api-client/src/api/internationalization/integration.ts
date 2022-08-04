@@ -1,19 +1,18 @@
+import { VSF_LOCALE_COOKIE } from '@vue-storefront/core';
+import { VSF_SPREE_CURRENCY_COOKIE } from '../../';
 import { InternationalizationIntegration } from '../../types';
-
-const currencyCookieName = 'vsf-spree-currency';
-const localeCookieName = 'vsf-locale';
 
 export default function createInternationalizationIntegration(
   req,
   res
 ): InternationalizationIntegration {
-  const currentCurrency = req.cookies[currencyCookieName];
-  const currentLocale = req.cookies[localeCookieName];
+  const currentCurrency = req.cookies[VSF_SPREE_CURRENCY_COOKIE];
+  const currentLocale = req.cookies[VSF_LOCALE_COOKIE];
 
   return {
     getCurrency: () => {
       if (currentCurrency) {
-        res.cookie(currencyCookieName, currentCurrency);
+        res.cookie(VSF_SPREE_CURRENCY_COOKIE, currentCurrency);
       }
 
       return currentCurrency;
@@ -21,7 +20,7 @@ export default function createInternationalizationIntegration(
 
     getLocale: () => {
       if (currentLocale) {
-        res.cookie(localeCookieName, currentLocale);
+        res.cookie(VSF_LOCALE_COOKIE, currentLocale);
       }
 
       return currentLocale;

@@ -10,6 +10,6 @@ export default (context) => {
     }
   }
 
-  context.app.router.push('/');
-  context.redirect('/');
+  context.app.router.push(context.app.localePath('/'));
+  context.redirect(context.app.localePath('/'));
 };

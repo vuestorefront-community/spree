@@ -1,5 +1,5 @@
 import type { JsonApiDocument, JsonApiResponse } from '@spree/storefront-api-v2-sdk/types/interfaces/JsonApi';
-import type { IProduct, IProducts } from '@spree/storefront-api-v2-sdk/types/interfaces/Product';
+import type { IProduct, IProducts, ProductAttr } from '@spree/storefront-api-v2-sdk/types/interfaces/Product';
 import type { RelationType } from '@spree/storefront-api-v2-sdk/types/interfaces/Relationships';
 import type { ApiConfig, ProductVariant, OptionType, OptionValue, Image } from '../../types';
 import { extractRelationships, filterAttachments } from './common';
@@ -104,18 +104,20 @@ const buildBreadcrumbs = (included, product) => {
   const taxons = extractRelationships(included, 'taxon', 'taxons', product);
   const breadcrumbs = [{ text: 'Home', link: '/' }];
 
-  const addTaxonToBreadcrumbs = (item) => {
-    const parentId = item.relationships.parent?.data?.id;
-    const parent = parentId ? filterAttachments(included, 'taxon', parentId)[0] : undefined;
-    if (parent) addTaxonToBreadcrumbs(parent);
+  if (taxons.length > 0) {
+    const addTaxonToBreadcrumbs = (item) => {
+      const parentId = item.relationships.parent?.data?.id;
+      const parent = parentId ? filterAttachments(included, 'taxon', parentId)[0] : undefined;
+      if (parent) addTaxonToBreadcrumbs(parent);
 
-    breadcrumbs.push({
-      text: item.attributes.name,
-      link: `/c/${item.attributes.permalink}`
-    });
-  };
+      breadcrumbs.push({
+        text: item.attributes.name,
+        link: `/c/${item.attributes.permalink}`
+      });
+    };
 
-  addTaxonToBreadcrumbs(taxons[0]);
+    addTaxonToBreadcrumbs(taxons[0]);
+  }
 
   breadcrumbs.push({
     text: product.attributes.name,
@@ -148,11 +150,14 @@ const partialDeserializeProductVariant = (
   inStock: variant.attributes.in_stock
 });
 
+const maybePrimaryVariantId = (product: ProductAttr): RelationType['id'] | undefined =>
+  // primary_variant may not exist if an older version of Spree is used. Only use primary_variant if available.
+  (product.relationships.primary_variant?.data as RelationType)?.id;
+
 export const deserializeSingleProductVariants = (apiProduct: IProduct): ProductVariant[] => {
   const attachments = apiProduct.included;
   const productId = apiProduct.data.id;
-  // primary_variant may not exist if na older version of Spree is used. Only use primary_variant if available.
-  const primaryVariantId = (apiProduct.data.relationships.primary_variant?.data as RelationType).id || null;
+  const primaryVariantId = maybePrimaryVariantId(apiProduct.data);
 
   const groupedVariants = groupIncluded<'primaryVariants' | 'optionVariants'>(
     attachments,
@@ -188,9 +193,7 @@ export const deserializeLimitedVariants = (apiProducts: IProducts): ProductVaria
 
   return apiProducts.data.map((product) => {
     const productId = product.id;
-    // primary_variant may not exist if na older version of Spree is used. Only use primary_variant if available.
-    const primaryVariantId = (product.relationships.primary_variant?.data as RelationType).id || null;
-
+    const primaryVariantId = maybePrimaryVariantId(product);
     const groupedVariants = groupIncluded<'primaryVariants' | 'optionVariants' | 'masterVariants' | 'nonMasterVariants'>(
       attachments,
       {

@@ -154,5 +154,8 @@ export default {
   'show more': 'mehr anzeigen',
   'hide': 'ausblenden',
   'Change to grid view': 'Zur Rasteransicht wechseln',
-  'Change to list view': 'Zur Listenansicht wechseln'
+  'Change to list view': 'Zur Listenansicht wechseln',
+  'Select sorting': 'Sortierung auswählen',
+  'Change locale': 'Sprache ändern',
+  'Change currency': 'Währung ändern',
 };

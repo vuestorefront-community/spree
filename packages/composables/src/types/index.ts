@@ -1,11 +1,23 @@
-import type { CategorySearchResult, LineItem, ProductVariant, Order, Country, State, WishedProduct } from '@vue-storefront/spree-api';
+import type { CategorySearchResult, LineItem, ProductVariant, Order, Country, State, WishedProduct, Menu } from '@vue-storefront/spree-api';
 import type { AgnosticGroupedFacet, ComputedProperty } from '@vue-storefront/core';
 
 export { UseCategory, UseProduct } from '@vue-storefront/core';
 
+export type UseMenusErrors = {
+  load: Error;
+  loadMenu: Error;
+};
+
 export type UseCountryErrors = {
   load: Error;
   loadStates: Error;
+};
+
+export type UseMenus = {
+  menu: ComputedProperty<Menu>;
+  loading: ComputedProperty<boolean>;
+  error: ComputedProperty<UseMenusErrors>;
+  loadMenu({menuType, menuName, locale}): Promise<void>;
 };
 
 export type UseCountry = {
@@ -17,7 +29,7 @@ export type UseCountry = {
   loadStates(key: string): Promise<void>;
 };
 
-export { Cart, Order, LineItem, ProductVariant, Category, Wishlist, User } from '@vue-storefront/spree-api';
+export type { Cart, Order, LineItem, ProductVariant, Category, Wishlist, User } from '@vue-storefront/spree-api';
 
 export type UserAddress = Record<string, unknown>;
 
@@ -38,9 +50,11 @@ export type ProductsResponse = {
   total: number;
 };
 
-export type OrderSearchParams = Record<string, any>;
+export type OrderSearchParams = {
+  orderId?: string
+};
 
-export type OrdersResponse = Order[];
+export type OrdersResponse = Order[] | Order;
 
 export type PriceRange = {
   min: number;

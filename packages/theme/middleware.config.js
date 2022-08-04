@@ -3,11 +3,18 @@ const defaultFeatures = {
     // Associate guest cart after the customer logs in. Requires Spree 4.3+
     associateGuestCart: false,
     // Fetch basic information about products from the `primary_variant` relationship. Requires Spree 4.3+
-    fetchPrimaryVariant: false
+    fetchPrimaryVariant: false,
+    useMenuApi: false
   },
   spree43: {
     associateGuestCart: true,
-    fetchPrimaryVariant: true
+    fetchPrimaryVariant: true,
+    useMenuApi: false
+  },
+  spree44: {
+    associateGuestCart: true,
+    fetchPrimaryVariant: true,
+    useMenuApi: true
   }
 };
 

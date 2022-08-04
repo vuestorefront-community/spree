@@ -2,6 +2,7 @@
   <SfAddressPicker
     class="address-picker"
     v-if="addresses && addresses.length > 0"
+    :class="{'disable-input': isFormSubmitted}"
     :selected="selectedAddressId"
     @change="onSelectAddress"
   >
@@ -39,6 +40,10 @@ export default {
     value: {
       type: String,
       default: ''
+    },
+    isFormSubmitted: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -68,5 +73,9 @@ export default {
   flex-wrap: wrap;
   gap: var(--spacer-xs);
   margin-bottom: var(--spacer-xs);
+}
+.disable-input {
+  --input-color: var(--c-text-disabled);
+  -webkit-text-fill-color: var(--c-text-disabled);
 }
 </style>

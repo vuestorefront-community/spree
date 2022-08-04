@@ -9,8 +9,12 @@
     <AddressPicker
       v-if="isAuthenticated && savedAddresses"
       v-model="selectedSavedAddressId"
+      :key="isFormSubmitted"
       :addresses="savedAddresses.addresses"
       :saved-address="checkoutShippingAddress"
+      :isFormSubmitted="isFormSubmitted"
+      @input="getBackToShippingDetails()"
+
     />
     <form @submit.prevent="handleSubmit(handleFormSubmit)">
       <div v-if="!selectedSavedAddressId" class="form">
@@ -22,6 +26,8 @@
           slim
         >
           <SfInput
+            v-on:click="getBackToShippingDetails()"
+            :class="{'disable-input': isFormSubmitted}"
             v-model="form.email"
             label="Email"
             name="email"
@@ -37,6 +43,8 @@
           slim
         >
           <SfInput
+            v-on:click="getBackToShippingDetails()"
+            :class="{'disable-input': isFormSubmitted}"
             v-e2e="'shipping-firstName'"
             v-model="form.firstName"
             label="First name"
@@ -54,6 +62,8 @@
           slim
         >
           <SfInput
+            v-on:click="getBackToShippingDetails()"
+            :class="{'disable-input': isFormSubmitted}"
             v-e2e="'shipping-lastName'"
             v-model="form.lastName"
             label="Last name"
@@ -71,6 +81,8 @@
           slim
         >
           <SfInput
+            v-on:click="getBackToShippingDetails()"
+            :class="{'disable-input': isFormSubmitted}"
             v-e2e="'shipping-streetName'"
             v-model="form.addressLine1"
             label="Street name"
@@ -82,6 +94,8 @@
           />
         </ValidationProvider>
         <SfInput
+          v-on:click="getBackToShippingDetails()"
+          :class="{'disable-input': isFormSubmitted}"
           v-e2e="'shipping-apartment'"
           v-model="form.addressLine2"
           label="House/Apartment number"
@@ -95,6 +109,8 @@
           slim
         >
           <SfInput
+            v-on:click="getBackToShippingDetails()"
+            :class="{'disable-input': isFormSubmitted}"
             v-e2e="'shipping-city'"
             v-model="form.city"
             label="City"
@@ -113,6 +129,7 @@
           slim
         >
           <SfSelect
+            :class="{'disable-dropdown': isFormSubmitted}"
             data-cy="shipping-details-input_state"
             class="form__element form form__select sf-select--underlined"
             v-model="form.state"
@@ -121,6 +138,7 @@
             :required="isStateRequired"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
+            @input="getBackToShippingDetails()"
           >
             <SfSelectOption
               v-for="{ code, name } in states"
@@ -138,6 +156,7 @@
           slim
         >
           <SfSelect
+            :class="{'disable-dropdown': isFormSubmitted}"
             v-e2e="'shipping-country'"
             v-model="form.country"
             label="Country"
@@ -146,6 +165,7 @@
             required
             :valid="!errors[0]"
             :errorMessage="errors[0]"
+            @input="getBackToShippingDetails()"
           >
             <SfSelectOption
               v-for="countryOption in countries"
@@ -163,6 +183,8 @@
           slim
         >
           <SfInput
+            v-on:click="getBackToShippingDetails()"
+            :class="{'disable-input': isFormSubmitted}"
             v-e2e="'shipping-zipcode'"
             v-model="form.postalCode"
             label="Zip-code"
@@ -180,6 +202,8 @@
           slim
         >
           <SfInput
+            v-on:click="getBackToShippingDetails()"
+            :class="{'disable-input': isFormSubmitted}"
             v-e2e="'shipping-phone'"
             v-model="form.phone"
             label="Phone number"
@@ -207,7 +231,7 @@
             infoMessage=""
             errorMessage=""
             valid
-            :disabled="false"
+            :disabled="isFormSubmitted"
             v-model="isCopyToBillingSelected"
           />
         </div>
@@ -224,7 +248,9 @@
       </div>
       <VsfShippingProvider
         v-if="isFormSubmitted"
-        @submit="router.push(localePath({ name: 'billing' }))"
+        @submit="routeToBillingOrPayment()"
+        @back="() => isFormSubmitted = !isFormSubmitted"
+        :buttonText="buttonText"
       />
     </form>
   </ValidationObserver>
@@ -277,6 +303,7 @@ export default {
     const isFormSubmitted = ref(false);
     const isSaveAddressSelected = ref(false);
     const isCopyToBillingSelected = ref(true);
+    const buttonText = ref(null);
     const { countries, states, load: loadCountries, loadStates } = useCountry();
     const { shipping: checkoutShippingAddress, load, save, loading } = useShipping();
     const { shipping: savedAddresses, load: loadSavedAddresses, addAddress } = useUserShipping();
@@ -305,6 +332,13 @@ export default {
 
       return savedAddresses.value.addresses.find(e => e._id === selectedSavedAddressId.value);
     });
+
+    const getBackToShippingDetails = () => {
+      if (isFormSubmitted.value) {
+        isFormSubmitted.value = !isFormSubmitted;
+      }
+    };
+
     const isStateRequired = computed(() => form.value.country && countries.value.find(e => e.key === form.value.country).stateRequired);
 
     const handleFormSubmit = async () => {
@@ -318,7 +352,10 @@ export default {
 
       await save({ shippingDetails: shippingAddress });
       if (isCopyToBillingSelected.value) {
+        buttonText.value = 'Continue to payment';
         await billing.save({ billingDetails: shippingAddress });
+      } else {
+        buttonText.value = 'Continue to billing';
       }
 
       if (isSaveAddressSelected.value) {
@@ -337,6 +374,14 @@ export default {
     const populateSelectedAddressId = () => {
       if (checkoutShippingAddress.value && savedAddresses.value?.addresses) {
         selectedSavedAddressId.value = savedAddresses.value.addresses.find(e => isEqualAddress(e, checkoutShippingAddress.value))?._id;
+      }
+    };
+
+    const routeToBillingOrPayment = () => {
+      if (isCopyToBillingSelected.value) {
+        router.push('/checkout/payment');
+      } else {
+        router.push('/checkout/billing');
       }
     };
 
@@ -393,7 +438,10 @@ export default {
       selectedSavedAddressId,
       checkoutShippingAddress,
       handleFormSubmit,
-      isCopyToBillingSelected
+      isCopyToBillingSelected,
+      getBackToShippingDetails,
+      routeToBillingOrPayment,
+      buttonText
     };
   }
 };
@@ -409,7 +457,6 @@ export default {
     ::v-deep .sf-select__dropdown {
       font-size: var(--font-size--lg);
       margin: 0;
-      color: var(--c-text);
       font-family: var(--font-family--secondary);
       font-weight: var(--font-weight--normal);
     }
@@ -487,4 +534,17 @@ export default {
 .title {
   margin: var(--spacer-xl) 0 var(--spacer-base) 0;
 }
+.disable-input{
+    --input-border-color: var(--c-text-disabled);
+    --input-color: var(--c-text-disabled);
+    -webkit-text-fill-color: var(--c-text-disabled);
+
+}
+.disable-dropdown{
+  color: var(--c-text-disabled);
+  --select-dropdown-border-color: var(--c-text-disabled);
+  --select-label-color: var(--c-text-disabled);
+  --select-dropdown-color: var(--c-text-disabled);
+}
+
 </style>

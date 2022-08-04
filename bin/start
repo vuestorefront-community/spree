@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+docker-compose -f spree_starter/docker-compose.yml up -d
+docker-compose up -d

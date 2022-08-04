@@ -2,6 +2,12 @@
   <img src="https://user-images.githubusercontent.com/1626923/137092657-fb398d20-b592-4661-a1f9-4135db0b61d5.png" alt="Vue Storefront" height="80px" />
 </div>
 
+### Stay connected
+
+[![GitHub Repo stars](https://img.shields.io/github/stars/vuestorefront/vue-storefront?style=social)](https://github.com/vuestorefront/vue-storefront)
+[![Twitter Follow](https://img.shields.io/twitter/follow/vuestorefront?style=social)](https://twitter.com/vuestorefront)
+[![YouTube Channel Subscribers](https://img.shields.io/youtube/channel/subscribers/UCkm1F3Cglty3CE1QwKQUhhg?style=social)](https://www.youtube.com/c/VueStorefront)
+[![Discord](https://img.shields.io/discord/770285988244750366?label=join%20discord&logo=Discord&logoColor=white)](https://discord.vuestorefront.io)
 
 # Vue Storefront 2 integration for Spree Commerce
 
@@ -41,7 +47,7 @@ yarn install
 export BACKEND_URL=https://demo.spreecommerce.org
 ```
 
-4. (optional) Then you can verify if everything works properly by building all three projects:
+4. Then build all three projects:
 
 ```sh
 yarn build
@@ -51,6 +57,33 @@ yarn build
 
 ```sh
 yarn dev
+```
+
+Changing some parts of the code (notably the `api-client`) will trigger a re-build but the change will not be hot-reloaded. To ensure that the app sees you changes, re-run either `yarn build` or `yarn dev`.
+
+## Running Vue Storefront + Spree in Docker
+
+1. Initialize the Git submodules and setup Spree images
+```sh
+./bin/setup
+```
+
+2. (optional) Seed the backend database
+```sh
+./bin/seed
+```
+
+3. Start the application
+```sh
+./bin/start
+```
+
+The Vue Storefront application is available at `http://localhost:3000`.
+The Spree backend is exposed at `http://localhost:4000`.
+
+4. Stopping the application
+```sh
+./bin/stop
 ```
 
 ## Enabling optional features
@@ -88,7 +121,7 @@ The monorepo contains three submodules:
 - composables - reusable business logic
 - theme - Nuxt.js-based frontend application
 
-For more details, refer to the official [architecture diagram](https://docs.vuestorefront.io/v2/advanced/architecture.html).
+For more details, refer to the official [project structure](https://docs.vuestorefront.io/v2/getting-started/project-structure.html).
 
 ## Feature support
 

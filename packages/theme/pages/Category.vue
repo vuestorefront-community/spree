@@ -28,20 +28,20 @@
               :show-chevron="true"
             >
               <SfAccordionItem
-                v-for="(cat, i) in categoryTree && categoryTree.items"
+                v-for="(cat, i) in ((menu && menu.items) || (categoryTree && categoryTree.items))"
                 :key="i"
-                :header="cat.label"
+                :header="cat.name || cat.label"
               >
                 <template>
                   <SfList class="list">
                     <SfListItem class="list__item">
                       <SfMenuItem
                         :count="cat.count || ''"
-                        :label="cat.label"
+                        :label="cat.name || cat.label"
                       >
                         <template #label>
                           <nuxt-link
-                            :to="localePath(th.getCatLink(cat))"
+                            :to="localePath(getRoute(cat))"
                             :class="cat.isCurrent ? 'sidebar--cat-selected' : ''"
                           >
                             All
@@ -56,11 +56,11 @@
                     >
                       <SfMenuItem
                         :count="subCat.count || ''"
-                        :label="subCat.label"
+                        :label="subCat.name || subCat.label"
                       >
                         <template #label="{ label }">
                           <nuxt-link
-                            :to="localePath(th.getCatLink(subCat))"
+                            :to="localePath(getRoute(subCat))"
                             :class="subCat.isCurrent ? 'sidebar--cat-selected' : ''"
                           >
                             {{ label }}
@@ -93,13 +93,11 @@
               :image="productGetters.getCoverImage(product)"
               :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
               :special-price="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
-              :max-rating="5"
-              :score-rating="productGetters.getAverageRating(product)"
               :show-add-to-cart-button="true"
               :add-to-cart-disabled="!productGetters.getInStock(product)"
               :is-in-wishlist="isInWishlist({ product })"
               :is-added-to-cart="isInCart({ product })"
-              :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
+              :link="localePath(`/products/${productGetters.getSlug(product)}`)"
               :wishlist-icon="isWishlistDisabled ? false : undefined"
               class="products__product-card"
               @click:wishlist="handleWishlistClick(product)"
@@ -124,10 +122,8 @@
               :image="productGetters.getCoverImage(product)"
               :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
               :special-price="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
-              :max-rating="5"
-              :score-rating="3"
               :is-in-wishlist="isInWishlist({ product })"
-              :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
+              :link="localePath(`/products/${productGetters.getSlug(product)}`)"
               @click:wishlist="handleWishlistClick(product)"
               @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
             >
@@ -142,11 +138,18 @@
               </template>
               <template #actions>
                 <SfButton
-                  class="sf-button--text desktop-only"
-                  style="margin: 0 0 1rem auto; display: block;"
-                  @click="() => {}"
+                  v-if="!isInWishlist({ product })"
+                  class="sf-button--text wishlist__button desktop-only"
+                  @click="handleWishlistClick(product)"
                 >
                   {{ $t('Save for later') }}
+                </SfButton>
+                <SfButton
+                  v-else
+                  class="sf-button--text wishlist__button desktop-only"
+                  @click="handleWishlistClick(product)"
+                >
+                  {{ $t('Remove from wishlist') }}
                 </SfButton>
               </template>
             </SfProductCardHorizontal>
@@ -210,8 +213,8 @@ import {
   SfColor,
   SfProperty
 } from '@storefront-ui/vue';
-import { computed } from '@nuxtjs/composition-api';
-import { useCart, useWishlist, productGetters, useFacet, facetGetters, useUser, wishlistGetters } from '@vue-storefront/spree';
+import { computed, onMounted, useContext } from '@nuxtjs/composition-api';
+import { useCart, useWishlist, productGetters, useFacet, facetGetters, useUser, wishlistGetters, useMenus } from '@vue-storefront/spree';
 import { useUiHelpers, useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
@@ -225,17 +228,28 @@ export default {
     'max-age': 60,
     'stale-when-revalidate': 5
   }),
-  setup(props, context) {
+  setup() {
     const th = useUiHelpers();
     const uiState = useUiState();
+    const context = useContext();
     const { addItem: addItemToCart, isInCart } = useCart();
     const { result, search, loading, error } = useFacet();
     const { wishlist, addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist } = useWishlist();
     const { isAuthenticated } = useUser();
+    const { menu, loadMenu } = useMenus('header');
     const products = computed(() => facetGetters.getProducts(result.value));
-    const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
-    const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(result.value));
+    const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(result.value).map(e => ({...e, link: context.localePath(e.link)})));
     const pagination = computed(() => facetGetters.getPagination(result.value));
+    const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
+    const { locale } = context.app.i18n;
+
+    const getRoute = (category) => {
+      if (menu.value.isDisabled) {
+        return '/c/' + category.slug;
+      }
+      return category.link;
+    };
+
     const activeCategory = computed(() => {
       const items = categoryTree.value.items;
 
@@ -259,11 +273,14 @@ export default {
       }
     };
 
-    onSSR(async () => {
-      await search(th.getFacetsFromURL());
-      if (error?.value?.search) context.root.$nuxt.error({ statusCode: 404 });
+    onMounted(async () => {
+      await loadMenu({menuType: 'header', menuName: 'Main menu', locale: locale});
     });
 
+    onSSR(async () => {
+      await search(th.getFacetsFromURL());
+      if (error?.value?.search) context.app.nuxt.error({ statusCode: 404 });
+    });
     return {
       ...uiState,
       th,
@@ -278,7 +295,9 @@ export default {
       isInWishlist,
       isInCart,
       handleWishlistClick,
-      isWishlistDisabled
+      isWishlistDisabled,
+      getRoute,
+      menu
     };
   },
   components: {
@@ -453,5 +472,9 @@ export default {
       margin-top: 3.75rem;
     }
   }
+}
+.wishlist__button{
+  margin: 0 0 1rem auto;
+  display: block;
 }
 </style>

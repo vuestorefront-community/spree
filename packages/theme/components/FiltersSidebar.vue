@@ -114,7 +114,7 @@ import {
   SfColor,
   SfRange
 } from '@storefront-ui/vue';
-
+import { VSF_SPREE_CURRENCY_COOKIE } from '@vue-storefront/spree-api';
 import { ref, computed, watch, onMounted } from '@nuxtjs/composition-api';
 import { useFacet, facetGetters } from '@vue-storefront/spree';
 import { useUiHelpers, useUiState } from '~/composables';
@@ -136,8 +136,7 @@ export default {
     const { toggleFilterSidebar, isFilterSidebarOpen } = useUiState();
     const { result } = useFacet();
     const selectedPrice = ref({});
-    const localCurrency = ref(context.root.$cookies.get('vsf-spree-currency'));
-    const locale = ref(context.root.$cookies.get('vsf-locale'));
+    const localCurrency = ref(context.root.$cookies.get(VSF_SPREE_CURRENCY_COOKIE));
     let range = [0, 300];
     let isPriceDefaultValue = true;
     const urlPriceRange = getSearchPriceFromUrl();
@@ -171,7 +170,8 @@ export default {
       keyboardSupport: true,
       format: {
         to: (value) => {
-          return new Intl.NumberFormat([locale.value, locale.value.toUpperCase()].join('-'), {style: 'currency', currency: localCurrency.value, maximumFractionDigits: 0}).format(value);
+          const { locale } = context.root.$i18n;
+          return new Intl.NumberFormat(`${locale}-${locale.toUpperCase()}`, {style: 'currency', currency: localCurrency.value, maximumFractionDigits: 0}).format(value);
         },
         from: (value) => {
           return value;

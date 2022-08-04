@@ -1,0 +1,17 @@
+version: '3.7'
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.development
+    ports:
+      - ${DOCKER_HOST_FRONTEND_PORT:-3000}:3000
+    environment:
+      - BACKEND_URL=http://web:4000
+    volumes:
+      - .:/app
+
+networks:
+  default:
+    external:
+      name: spree_starter_default

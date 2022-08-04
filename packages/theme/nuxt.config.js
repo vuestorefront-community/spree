@@ -86,6 +86,11 @@ export default {
     project-only-end */
   ],
   modules: [
+    ['@vue-storefront/nuxt', {
+      i18n: {
+        useNuxtI18nModule: true
+      }
+    }],
     ['nuxt-i18n', {
       baseUrl: process.env.BASE_URL || 'http://localhost:3000'
     }],
@@ -94,39 +99,33 @@ export default {
     '@vue-storefront/middleware/nuxt'
   ],
   i18n: {
+    detectBrowserLanguage: false,
     currency: 'USD',
     country: 'US',
+    strategy: 'prefix_except_default',
+    langDir: 'lang/',
+    defaultLocale: 'en',
     locales: [
       {
-        code: 'en',
-        label: 'English',
-        file: 'en.js'
-      },
-      {
         code: 'de',
+        iso: 'de-DE',
         label: 'German',
         file: 'de.js'
+      },
+      {
+        code: 'en',
+        iso: 'en-US',
+        label: 'English',
+        file: 'en.js'
       }
     ],
-    defaultLocale: 'en',
-    strategy: 'no_prefix',
-    detectBrowserLanguage: false,
     currencies: [
       { name: 'USD', label: 'Dollar' }
     ],
-    langDir: 'lang/',
     vueI18n: {
-      silentTranslationWarn: true,
+      silentTranslationWarn: false,
       fallbackLocale: 'en',
       numberFormats: {
-        en: {
-          currency: {
-            style: 'currency',
-            currency: 'USD',
-            currencyDisplay: 'symbol',
-            currencyDefault: 'USD'
-          }
-        },
         de: {
           currency: {
             style: 'currency',
@@ -134,10 +133,17 @@ export default {
             currencyDisplay: 'symbol',
             currencyDefault: 'EUR'
           }
+        },
+        en: {
+          currency: {
+            style: 'currency',
+            currency: 'USD',
+            currencyDisplay: 'symbol',
+            currencyDefault: 'USD'
+          }
         }
-      },
-    },
-    detectBrowserLanguage: false
+      }
+    }
   },
   pwa: {
     meta: {
@@ -157,8 +163,14 @@ export default {
     },
     display: 'swap'
   },
+  css: [
+    '~/assets/styles.scss'
+  ],
   styleResources: {
-    scss: [require.resolve('@storefront-ui/shared/styles/_helpers.scss', { paths: [process.cwd()] })]
+    scss: [
+      require.resolve('@storefront-ui/shared/styles/_helpers.scss', { paths: [process.cwd()] }),
+      '~/assets/components/*.scss'
+    ]
   },
   build: {
     transpile: [
@@ -175,13 +187,33 @@ export default {
     ]
   },
   router: {
-    middleware: ['checkout'],
+    middleware: ['checkout', 'order-details'],
     scrollBehavior (_to, _from, savedPosition) {
       if (savedPosition) {
         return savedPosition;
       } else {
         return { x: 0, y: 0 };
       }
+    },
+    extendRoutes(routes, resolve) {
+      routes.push({
+        path: '/my-account/:pageName/:id?',
+        component: resolve(__dirname, 'pages/MyAccount.vue')
+      });
+      
+      // Delete OOB product route
+      routes.splice(
+        routes.findIndex(route => route.path === '/Product'),
+        1
+      );
+
+      // Re-register the product route with different path
+      routes.push({
+        name: 'Product',
+        path: '/products/:slug/',
+        component: resolve(__dirname, '_theme/pages/Product.vue'),
+        chunkName: '_theme/pages/Product'
+      });
     }
   },
   publicRuntimeConfig: {

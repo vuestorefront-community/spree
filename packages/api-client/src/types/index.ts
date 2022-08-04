@@ -9,6 +9,7 @@ export * from './country';
 export * from './account';
 export * from './wishlist';
 export * from './user';
+export * from './menu';
 
 export type CategoryFilter = Record<string, unknown>;
 export type ShippingMethod = Record<string, unknown>;
@@ -51,6 +52,7 @@ export type ApiConfig = {
   spreeFeatures: {
     associateGuestCart: boolean;
     fetchPrimaryVariant: boolean;
+    useMenuApi: boolean;
     wishlist: string;
   }
 }
@@ -90,4 +92,8 @@ export type GetProductParams = {
 export type ResetPasswordParams = {
   token: string;
   password: string;
+};
+
+export type GetOrderParams = {
+  orderId: string;
 };

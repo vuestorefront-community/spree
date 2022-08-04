@@ -28,18 +28,6 @@
             :regular="$n(productGetters.getPrice(product).regular, 'currency')"
             :special="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
           />
-          <div>
-            <div class="product__rating">
-              <SfRating
-                :score="averageRating"
-                :max="5"
-              />
-              <a v-if="!!totalReviews" href="#" class="product__count">
-                ({{ totalReviews }})
-              </a>
-            </div>
-            <SfButton class="sf-button--text">{{ $t('Read all reviews') }}</SfButton>
-          </div>
         </div>
         <div>
           <SfSelect
@@ -85,22 +73,7 @@
         <LazyHydrate when-idle>
           <SfTabs :open-tab="1" class="product__tabs">
             <SfTab title="Description" style="padding: 0; margin: 0">
-              <p class="product__description" style="padding: 0; margin: 0">{{ productGetters.getDescription(product) }}</p>
-            </SfTab>
-            <SfTab title="Read reviews">
-              <SfReview
-                v-for="review in reviews"
-                :key="reviewGetters.getReviewId(review)"
-                :author="reviewGetters.getReviewAuthor(review)"
-                :date="reviewGetters.getReviewDate(review)"
-                :message="reviewGetters.getReviewMessage(review)"
-                :max-rating="5"
-                :rating="reviewGetters.getReviewRating(review)"
-                :char-limit="250"
-                read-more-text="Read more"
-                hide-full-text="Read less"
-                class="product__review"
-              />
+              <div v-html="productGetters.getDescription(product)" class="product__description" ></div>
             </SfTab>
             <SfTab
               title="Properties"
@@ -154,7 +127,6 @@ import {
   SfBanner,
   SfAlert,
   SfSticky,
-  SfReview,
   SfBreadcrumbs,
   SfButton,
   SfColor
@@ -162,8 +134,8 @@ import {
 
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
-import { ref, computed, useRoute, useRouter } from '@nuxtjs/composition-api';
-import { useProduct, useCart, productGetters, useReview, reviewGetters } from '@vue-storefront/spree';
+import { ref, computed, useRoute, useRouter, useContext } from '@nuxtjs/composition-api';
+import { useProduct, useCart, productGetters } from '@vue-storefront/spree';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import cacheControl from './../helpers/cacheControl';
@@ -179,11 +151,11 @@ export default {
     const qty = ref(1);
     const route = useRoute();
     const router = useRouter();
+    const context = useContext();
     const { products, search } = useProduct('products');
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
-    const { reviews: productReviews, search: searchReviews } = useReview('productReviews');
-    const { id, slug } = route.value.params;
+    const { slug } = route.value.params;
 
     const product = computed(() => productGetters.getFiltered(products.value, { master: true, attributes: route.value.query })[0]);
     const optionTypes = computed(() => productGetters.getOptionTypeNames(product.value));
@@ -191,15 +163,13 @@ export default {
     const configuration = computed(() => productGetters.getAttributes(product.value, optionTypes.value));
     const categories = computed(() => productGetters.getCategoryIds(product.value));
     const properties = computed(() => productGetters.getProperties(product.value));
-    const breadcrumbs = computed(() => productGetters.getBreadcrumbs(product.value));
+    const breadcrumbs = computed(() => productGetters.getBreadcrumbs(product.value).map(e => ({...e, link: context.localePath(e.link)})));
     const isInStock = computed(() => productGetters.getInStock(product.value));
-    const reviews = computed(() => reviewGetters.getItems(productReviews.value));
     const productGallery = computed(() => productGetters.getGallery(product.value));
 
     onSSR(async () => {
       await search({ slug });
       await searchRelatedProducts({ categoryId: [categories.value[0]], limit: 8 });
-      await searchReviews({ productId: id });
     });
 
     const updateFilter = (filter) => {
@@ -216,11 +186,7 @@ export default {
       updateFilter,
       configuration,
       product,
-      reviews,
-      reviewGetters,
       isInStock,
-      averageRating: computed(() => productGetters.getAverageRating(product.value)),
-      totalReviews: computed(() => productGetters.getTotalReviews(product.value)),
       relatedProducts: computed(() => productGetters.getFiltered(relatedProducts.value, { master: true })),
       relatedLoading,
       options,
@@ -249,7 +215,6 @@ export default {
     SfImage,
     SfBanner,
     SfSticky,
-    SfReview,
     SfBreadcrumbs,
     SfButton,
     InstagramFeed,
@@ -338,6 +303,8 @@ export default {
       1.6,
       var(--font-family--secondary)
     );
+    padding: 0;
+    margin: 0;
   }
   &__select-size {
     margin: 0 var(--spacer-sm);

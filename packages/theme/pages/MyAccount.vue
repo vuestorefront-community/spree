@@ -25,6 +25,7 @@
         <SfContentPage title="Order history">
           <OrderHistory />
         </SfContentPage>
+        <OrderDetails />
       </SfContentCategory>
 
       <SfContentPage title="Log out" />
@@ -39,6 +40,7 @@ import MyProfile from './MyAccount/MyProfile';
 import SavedAddressesDetails from './MyAccount/SavedAddressesDetails';
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
+import OrderDetails from './MyAccount/OrderDetails';
 import {
   mapMobileObserver,
   unMapMobileObserver
@@ -52,7 +54,8 @@ export default {
     MyProfile,
     SavedAddressesDetails,
     MyNewsletter,
-    OrderHistory
+    OrderHistory,
+    OrderDetails
   },
   middleware: [
     'is-authenticated'
@@ -60,19 +63,12 @@ export default {
   setup(props, context) {
     const route = useRoute();
     const router = useRouter();
-
     const { logout } = useUser();
-    const isMobile = computed(() => mapMobileObserver().isMobile.get());
+    const isMobile = computed(mapMobileObserver().isMobile);
     const activePage = computed(() => {
       const { pageName } = route.value.params;
-
-      if (pageName) {
-        return (pageName.charAt(0).toUpperCase() + pageName.slice(1)).replace('-', ' ');
-      } else if (!isMobile.value) {
-        return 'My profile';
-      } else {
-        return '';
-      }
+      if (!pageName) return isMobile.value ? '' : 'My profile';
+      return `${pageName.charAt(0).toUpperCase()}${pageName.slice(1)}`.replace('-', ' ');
     });
 
     const changeActivePage = async (title) => {
@@ -85,7 +81,6 @@ export default {
       const slugifiedTitle = (title || '').toLowerCase().replace(' ', '-');
       const transformedPath = `/my-account/${slugifiedTitle}`;
       const localeTransformedPath = context.root.localePath(transformedPath);
-
       router.push(localeTransformedPath);
     };
 
