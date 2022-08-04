@@ -21,7 +21,7 @@
     <SfFooterColumn :title="$t('components.app_footer.about_us.title')">
       <SfList>
         <SfListItem
-          v-for="item in $t(`components.app_footer.about_us.items`)"
+          v-for="item in $t('components.app_footer.about_us.items')"
           :key="item"
           >
           <SfMenuItem
@@ -33,7 +33,7 @@
     <SfFooterColumn :title="$t('components.app_footer.departments.title')">
       <SfList>
         <SfListItem
-          v-for="item in $t(`components.app_footer.departments.items`)"
+          v-for="item in $t('components.app_footer.departments.items')"
           :key="item"
         >
           <SfMenuItem
@@ -45,7 +45,7 @@
     <SfFooterColumn :title="$t('components.app_footer.help.title')">
       <SfList>
         <SfListItem
-          v-for="item in $t(`components.app_footer.help.items`)"
+          v-for="item in $t('components.app_footer.help.items')"
           :key="item"
         >
           <SfMenuItem
@@ -57,7 +57,7 @@
     <SfFooterColumn :title="$t('components.app_footer.payment_and_delivery.title')">
       <SfList>
         <SfListItem
-          v-for="item in $t(`components.app_footer.payment_and_delivery.items`)"
+          v-for="item in $t('components.app_footer.payment_and_delivery.items')"
           :key="item"
         >
           <SfMenuItem
