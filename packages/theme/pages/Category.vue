@@ -244,10 +244,11 @@ export default {
     const { locale } = context.app.i18n;
 
     const getRoute = (category) => {
+      const slugBasedRoute = `/c/${category.slug}`;
       if (menu.value.isDisabled) {
-        return '/c/' + category.slug;
+        return slugBasedRoute;
       }
-      return category.link;
+      return category.link || slugBasedRoute;
     };
 
     const activeCategory = computed(() => {
