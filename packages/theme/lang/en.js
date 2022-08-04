@@ -6,7 +6,7 @@ export default {
       last_name: 'Last Name',
       street: 'Street Name',
       apartment: 'House/Apartment number',
-      city: 'Last Name',
+      city: 'City',
       state: 'State/Province',
       country: 'Country',
       postal_code: 'Zip-code',
