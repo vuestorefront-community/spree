@@ -66,7 +66,6 @@ export default {
 
     onMounted(async () => {
       await loadShipments();
-      selectedShippingRates.value = shipments.value.reduce((prev, curr) => ({...prev, [curr.id]: null }), {});
     });
 
     const selectShippingRate = (shipmentId, shippingRateId) => {
