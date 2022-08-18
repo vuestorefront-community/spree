@@ -1,6 +1,7 @@
 import { ApiClientExtension, apiClientFactory } from '@vue-storefront/core';
 
 import addAddress from './api/addAddress';
+import addPaymentMethod from './api/addPaymentMethod';
 import addToCart from './api/addToCart';
 import addToWishlist from './api/addToWishlist';
 import applyCoupon from './api/applyCoupon';
@@ -24,6 +25,7 @@ import getOrCreateCart from './api/getOrCreateCart';
 import getOrder from './api/getOrder';
 import getOrders from './api/getOrders';
 import getPaymentConfirmationData from './api/getPaymentConfirmationData';
+import getPaymentIntent from './api/getPaymentIntent';
 import getPaymentMethods from './api/getPaymentMethods';
 import getProduct from './api/getProduct';
 import getProducts from './api/getProducts';
@@ -120,6 +122,8 @@ const { createApiClient } = apiClientFactory<any, any>({
     getPaymentMethods,
     savePaymentMethod,
     getPaymentConfirmationData,
+    addPaymentMethod,
+    getPaymentIntent,
     handlePaymentConfirmationResponse,
     makeOrder,
     forgotPassword,
