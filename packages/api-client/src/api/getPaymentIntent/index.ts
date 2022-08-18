@@ -18,10 +18,10 @@ export default async function getPaymentIntent({ client, config }: ApiContext, m
         headers: getAuthorizationHeaders(token)
       }
     );
-    return { 
+    return {
       clientSecret: response.data.client_secret
     };
-  } catch (e) { 
+  } catch (e) {
     Logger.error(e);
     throw e;
   }
