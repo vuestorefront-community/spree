@@ -75,7 +75,7 @@ export default {
         await $spree.api.addPaymentMethod(methodId);
 
         const paymentIntent = await $spree.api.getPaymentIntent(methodId);
-       
+
         stripe.value = await loadStripe(publishableKey.value);
         elements.value = stripe.value.elements({
           clientSecret: paymentIntent.clientSecret
