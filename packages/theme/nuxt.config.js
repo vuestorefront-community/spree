@@ -218,6 +218,7 @@ export default {
     }
   },
   publicRuntimeConfig: {
-    theme
+    theme,
+    baseUrl: process.env.BASE_URL || 'http://localhost:3000'
   }
 };
