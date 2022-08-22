@@ -48,6 +48,7 @@ import saveShippingMethod from './api/saveShippingMethod';
 import updateAddress from './api/updateAddress';
 import updateCurrentUser from './api/updateCurrentUser';
 import updateItemQuantity from './api/updateItemQuantity';
+import createAxiosFetcher from '@spree/storefront-api-v2-sdk/dist/server/createAxiosFetcher';
 
 const defaultSettings = {
   backendUrl: 'https://demo.spreecommerce.org',
@@ -59,12 +60,20 @@ const defaultSettings = {
 };
 
 const onCreate = (settings) => {
+  const locale = settings.internationalization.getLocale();
+  const currency = settings.internationalization.getCurrency();
+  const config = {
+    ...defaultSettings,
+    ...settings
+  };
   return {
-    config: {
-      ...defaultSettings,
-      ...settings
-    },
-    client: makeClient({ host: settings.backendUrl || defaultSettings.backendUrl })
+    config,
+    client: makeClient({
+      host: config.backendUrl,
+      createFetcher: createAxiosFetcher
+    })
+      .withLocale(locale)
+      .withCurrency(currency)
   };
 };
 
@@ -73,7 +82,6 @@ const tokenExtension: ApiClientExtension = {
   hooks: (req, res) => {
     const auth = createAuthIntegration(req, res);
     const internationalization = createInternationalizationIntegration(req, res);
-
     return {
       beforeCreate: ({ configuration }) => ({
         ...configuration,
