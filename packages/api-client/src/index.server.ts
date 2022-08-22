@@ -49,6 +49,9 @@ import updateAddress from './api/updateAddress';
 import updateCurrentUser from './api/updateCurrentUser';
 import updateItemQuantity from './api/updateItemQuantity';
 import createAxiosFetcher from '@spree/storefront-api-v2-sdk/dist/server/createAxiosFetcher';
+import { ApiContext } from './types';
+import getCurrentBearerToken from './api/authentication/getCurrentBearerToken';
+import getCurrentCartToken from './api/authentication/getCurrentCartToken';
 
 const defaultSettings = {
   backendUrl: 'https://demo.spreecommerce.org',
@@ -92,55 +95,88 @@ const tokenExtension: ApiClientExtension = {
   }
 };
 
+const injectClientTokens = async (context: ApiContext): Promise<ApiContext> => {
+  const [orderToken, bearerToken] = await Promise.all([
+    getCurrentCartToken(context.config),
+    getCurrentBearerToken(context)
+  ]);
+  return {
+    ...context,
+    client: context.client
+      .withBearerToken(bearerToken)
+      .withOrderToken(orderToken?.orderToken)
+  };
+};
+
+const withEndpointMiddleware = <RESPONSE = any>(
+  endpointFunction: (...params: any) => Promise<RESPONSE>
+) => {
+  return async (
+    endpointContext: ApiContext,
+    ...args: any
+  ): Promise<RESPONSE> => {
+    const context = await injectClientTokens(endpointContext);
+    return await endpointFunction(context, ...args);
+  };
+};
+
+const api = Object.entries({
+  getProduct,
+  getProducts,
+  getCategory,
+  getCurrentUser,
+  updateCurrentUser,
+  logIn,
+  logOut,
+  isGuest,
+  changePassword,
+  registerUser,
+  addAddress,
+  getAddresses,
+  getAvailableCountries,
+  getCountryDetails,
+  updateAddress,
+  getCart,
+  addToCart,
+  updateItemQuantity,
+  removeFromCart,
+  clearCart,
+  applyCoupon,
+  removeCoupon,
+  saveCheckoutShippingAddress,
+  saveCheckoutBillingAddress,
+  getOrCreateCart,
+  getOrder,
+  getOrders,
+  saveGuestCheckoutEmail,
+  getShipments,
+  saveShippingMethod,
+  getPaymentMethods,
+  savePaymentMethod,
+  getPaymentConfirmationData,
+  handlePaymentConfirmationResponse,
+  makeOrder,
+  forgotPassword,
+  resetPassword,
+  getWishlist,
+  addToWishlist,
+  removeFromWishlist,
+  deleteWishlist,
+  changeCurrency,
+  deleteAddress,
+  getMenus,
+  getCMSPage
+}).reduce(
+  (obj, [endpointKey, endpointArgs]) => ({
+    ...obj,
+    [endpointKey]: withEndpointMiddleware(endpointArgs)
+  }),
+  {}
+);
+
 const { createApiClient } = apiClientFactory<any, any>({
   onCreate,
-  api: {
-    getProduct,
-    getProducts,
-    getCategory,
-    getCurrentUser,
-    updateCurrentUser,
-    logIn,
-    logOut,
-    isGuest,
-    changePassword,
-    registerUser,
-    addAddress,
-    getAddresses,
-    getAvailableCountries,
-    getCountryDetails,
-    updateAddress,
-    getCart,
-    addToCart,
-    updateItemQuantity,
-    removeFromCart,
-    clearCart,
-    applyCoupon,
-    removeCoupon,
-    saveCheckoutShippingAddress,
-    saveCheckoutBillingAddress,
-    getOrCreateCart,
-    getOrder,
-    getOrders,
-    saveGuestCheckoutEmail,
-    getShipments,
-    saveShippingMethod,
-    getPaymentMethods,
-    savePaymentMethod,
-    getPaymentConfirmationData,
-    handlePaymentConfirmationResponse,
-    makeOrder,
-    forgotPassword,
-    resetPassword,
-    getWishlist,
-    addToWishlist,
-    removeFromWishlist,
-    deleteWishlist,
-    changeCurrency,
-    deleteAddress,
-    getMenus,
-    getCMSPage
-  },
+  api,
   extensions: [tokenExtension]
 });
 
