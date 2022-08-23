@@ -39,8 +39,6 @@ export default {
         const orderId = orderGetters.getId(cart.value);
         const { error } = await stripe.value.confirmPayment({
           elements: elements.value,
-          // Note: If payment is successfully confirmed, user will be redirected to the return_url
-          // and make(); will never be called in Payment.vue. Completing the order will be handled via webhook.
           confirmParams: {
             return_url: `${$config.baseUrl}/checkout/thank-you?order=${orderId}`
           }

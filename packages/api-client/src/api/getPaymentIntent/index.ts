@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { ApiContext } from '../../types';
+import { ApiContext, PaymentIntent } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import getAuthorizationHeaders from '../authentication/getAuthorizationHeaders';
 import { Logger } from '@vue-storefront/core';
 
-export default async function getPaymentIntent({ client, config }: ApiContext, methodId) {
+export default async function getPaymentIntent({ client, config }: ApiContext, methodId: number): Promise<PaymentIntent> {
   try {
     const token = await getCurrentBearerOrCartToken({ client, config });
     const currency = await config.internationalization.getCurrency();

@@ -155,7 +155,6 @@ export default {
         return;
       }
 
-      // Only complete order if payment is successful
       if (paymentSuccessful.value) {
         await make();
         if (makeError.value.make) {
