@@ -10,7 +10,8 @@ export default async function savePaymentMethod({ client, config }: ApiContext, 
     order: {
       payments_attributes: [
         {
-          payment_method_id: methodId.toString()
+          payment_method_id: methodId.toString(),
+          braintree_nonce: payload.braintree_nonce.toString()
         }
       ]
     },

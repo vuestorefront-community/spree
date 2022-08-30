@@ -14,6 +14,7 @@ import deleteWishlist from './api/deleteWishlist';
 import forgotPassword from './api/forgotPassword';
 import getAddresses from './api/getAddresses';
 import getAvailableCountries from './api/getAvailableCountries';
+import getBraintreeToken from './api/getBraintreeToken';
 import getCMSPage from './api/getCMSPage';
 import getCart from './api/getCart';
 import getCategory from './api/getCategory';
@@ -131,7 +132,8 @@ const { createApiClient } = apiClientFactory<any, any>({
     changeCurrency,
     deleteAddress,
     getMenus,
-    getCMSPage
+    getCMSPage,
+    getBraintreeToken
   },
   extensions: [tokenExtension]
 });

@@ -28,6 +28,7 @@ import { SfButton, SfRadio } from '@storefront-ui/vue';
 import { ref, onMounted, computed } from '@nuxtjs/composition-api';
 import { useVSFContext } from '@vue-storefront/core';
 import Stripe from '~/components/Checkout/PaymentMethod/Stripe';
+import Braintree from '~/components/Checkout/PaymentMethod/Braintree';
 import Check from '~/components/Checkout/PaymentMethod/Check';
 import { Logger } from '@vue-storefront/core';
 
@@ -38,6 +39,7 @@ export default {
     SfButton,
     SfRadio,
     Stripe,
+    Braintree,
     Check
   },
 
@@ -55,6 +57,8 @@ export default {
       switch (selectedMethod.value) {
         case 'Spree::Gateway::StripeElementsGateway':
           return 'Stripe';
+        case 'Spree::Gateway::BraintreeVzeroDropInUi':
+          return 'Braintree';
         case 'Spree::PaymentMethod::Check':
           return 'Check';
       }
