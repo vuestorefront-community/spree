@@ -30,27 +30,27 @@ export default {
     const fieldCount = ref(null);
     const validFields = ref(0);
 
-    const savePayment = async () => {    
+    const savePayment = async () => {
       try {
         const methodId = props.method.id;
         await payment.value.requestPaymentMethod(
-          async function(error, braintreeResponse) {
+          async (error, braintreeResponse) => {
             if (error) {
               Logger.error(error);
               errorRef.value.textContent = error;
               payment.value.clearSelectedPaymentMethod();
               return;
             }
-            
+
             const payload = {
               braintree_last_two: braintreeResponse.details.lastTwo,
-              braintree_card_type: braintreeResponse.details.cardType.replace(/\s/g, ""),
+              braintree_card_type: braintreeResponse.details.cardType.replace(/\s/g, ''),
               braintree_nonce: braintreeResponse.nonce
             };
 
             await $spree.api.savePaymentMethod(methodId, payload);
           }
-        )
+        );
         return true;
       } catch (error) {
         Logger.error(error);
@@ -60,7 +60,7 @@ export default {
 
     const handleCardChange = (ev) => {
       fieldCount.value ??= Object.keys(ev.fields).length;
-      var field = ev.fields[ev.emittedBy];
+      const field = ev.fields[ev.emittedBy];
       if (field.isValid) {
         validFields.value = validFields.value + 1;
       } else {
@@ -78,9 +78,8 @@ export default {
     onMounted(async () => {
       try {
         const methodId = props.method.id;
-
         const response = await $spree.api.getBraintreeToken(methodId);
-        
+
         dropIn.create({
           container: paymentRef.value,
           authorization: response.clientToken
@@ -103,5 +102,5 @@ export default {
   }
 };
 </script>
-  
+
 <style></style>
