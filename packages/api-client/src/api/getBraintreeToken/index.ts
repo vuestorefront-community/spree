@@ -18,10 +18,10 @@ export default async function getBraintreeToken({ client, config }: ApiContext, 
         headers: getAuthorizationHeaders(token)
       }
     );
-    return { 
+    return {
       clientToken: response.data.client_token
     };
-  } catch (e) { 
+  } catch (e) {
     Logger.error(e);
     throw e;
   }
