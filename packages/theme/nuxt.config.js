@@ -119,30 +119,9 @@ export default {
         file: 'en.js'
       }
     ],
-    currencies: [
-      { name: 'USD', label: 'Dollar' }
-    ],
     vueI18n: {
       silentTranslationWarn: false,
-      fallbackLocale: 'en',
-      numberFormats: {
-        de: {
-          currency: {
-            style: 'currency',
-            currency: 'EUR',
-            currencyDisplay: 'symbol',
-            currencyDefault: 'EUR'
-          }
-        },
-        en: {
-          currency: {
-            style: 'currency',
-            currency: 'USD',
-            currencyDisplay: 'symbol',
-            currencyDefault: 'USD'
-          }
-        }
-      }
+      fallbackLocale: 'en'
     }
   },
   pwa: {
@@ -218,6 +197,10 @@ export default {
     }
   },
   publicRuntimeConfig: {
-    theme
+    theme,
+    currencies: [
+      { code: 'USD', label: 'Dollar' },
+      { code: 'EUR', label: 'Euro' }
+    ]
   }
 };

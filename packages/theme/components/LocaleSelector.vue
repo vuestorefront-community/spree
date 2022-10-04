@@ -58,7 +58,7 @@
         class="locale-selector__container container container--currency"
       >
         <SfList>
-          <SfListItem v-for="currency in allCurrencies" :key="currency.code">
+          <SfListItem v-for="currency in $config.currencies" :key="currency.code">
             <SfButton
               class="sf-button sf-button--pure container__action"
               @click="handleChangeCurrencyClick(currency.code)"
@@ -164,7 +164,7 @@
           </SfButton>
         </template>
         <SfList>
-          <SfListItem v-for="currency in allCurrencies" :key="currency.code">
+          <SfListItem v-for="currency in $config.currencies" :key="currency.code">
             <SfButton
               class="sf-button sf-button--pure container__action"
               @click="handleChangeCurrencyClick(currency.code)"
@@ -198,7 +198,7 @@ import {
   SfCharacteristic,
   SfDropdown
 } from '@storefront-ui/vue';
-import { ref, computed } from '@nuxtjs/composition-api';
+import { ref } from '@nuxtjs/composition-api';
 import { useVSFContext } from '@vue-storefront/core';
 import { VSF_SPREE_CURRENCY_COOKIE } from '@vue-storefront/spree-api';
 export default {
@@ -218,13 +218,7 @@ export default {
     const isLocaleModalOpen = ref(false);
     const isCurrencyModalOpen = ref(false);
 
-    const { locales: allLocales, locale, numberFormats } = root.$i18n;
-    const allCurrencies = computed(() =>
-      Object.keys(numberFormats).map((locale) => ({
-        locale,
-        code: numberFormats[locale].currency.currencyDefault
-      }))
-    );
+    const { locales: allLocales, locale } = root.$i18n;
 
     const openLocaleSelector = () => {
       isLocaleModalOpen.value = true;
@@ -266,7 +260,6 @@ export default {
 
     return {
       allLocales,
-      allCurrencies,
       locale,
       currency,
       isLocaleModalOpen,

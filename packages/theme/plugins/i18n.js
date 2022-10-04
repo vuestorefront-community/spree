@@ -18,8 +18,7 @@ export default ({ app, $config }) => {
     currency: {
       style: 'currency',
       currency: currency,
-      currencyDisplay: 'symbol',
-      currencyDefault: app.i18n.numberFormats[locale].currency.currencyDefault
+      currencyDisplay: 'symbol'
     }
   });
 
