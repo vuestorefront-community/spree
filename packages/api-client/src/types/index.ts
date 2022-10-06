@@ -11,6 +11,7 @@ export * from './wishlist';
 export * from './user';
 export * from './menu';
 export * from './page';
+export * from './paymentintent';
 
 export type CategoryFilter = Record<string, unknown>;
 export type ShippingMethod = Record<string, unknown>;

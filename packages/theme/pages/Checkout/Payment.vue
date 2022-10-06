@@ -135,6 +135,7 @@ export default {
     const isPaymentReady = ref(false);
     const savePayment = ref(null);
     const terms = ref(false);
+    const paymentSuccessful = ref(false);
 
     onSSR(async () => {
       await load();
@@ -148,18 +149,20 @@ export default {
     const processOrder = async () => {
       const orderId = orderGetters.getId(cart.value);
       try {
-        await savePayment.value();
+        paymentSuccessful.value = await savePayment.value();
       } catch (e) {
         Logger.error(e);
         return;
       }
 
-      await make();
-      if (makeError.value.make) {
-        Logger.error(makeError.value.make);
-        return;
+      if (paymentSuccessful.value) {
+        await make();
+        if (makeError.value.make) {
+          Logger.error(makeError.value.make);
+          return;
+        }
+        router.push(root.localePath(`/checkout/thank-you?order=${orderId}`));
       }
-      router.push(root.localePath(`/checkout/thank-you?order=${orderId}`));
     };
 
     return {
