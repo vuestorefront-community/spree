@@ -1,3 +1,4 @@
+import { getRoutes } from './routes';
 import theme from './themeConfig';
 import webpack from 'webpack';
 
@@ -195,26 +196,9 @@ export default {
         return { x: 0, y: 0 };
       }
     },
-    extendRoutes(routes, resolve) {
-      routes.push({
-        name: 'OrderDetails',
-        path: '/my-account/:pageName/:id?',
-        component: resolve(__dirname, 'pages/MyAccount.vue')
-      });
-
-      // Delete OOB product route
-      routes.splice(
-        routes.findIndex(route => route.path === '/Product'),
-        1
-      );
-
-      // Re-register the product route with different path
-      routes.push({
-        name: 'Product',
-        path: '/products/:slug/',
-        component: resolve(__dirname, '_theme/pages/Product.vue'),
-        chunkName: '_theme/pages/Product'
-      });
+    extendRoutes(routes) {
+      routes.splice(0, routes.length);
+      routes.push(...getRoutes());
     }
   },
   publicRuntimeConfig: {
