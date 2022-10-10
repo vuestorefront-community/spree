@@ -1,3 +1,5 @@
+require('dotenv').config({ path: `./../../.env.${process.env.NODE_ENV}` });
+
 const defaultFeatures = {
   spree42: {
     // Associate guest cart after the customer logs in. Requires Spree 4.3+
