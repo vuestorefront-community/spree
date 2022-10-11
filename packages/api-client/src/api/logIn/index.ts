@@ -1,17 +1,15 @@
-import axios from 'axios';
 import { IOAuthToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
 import { ApiConfig, ApiContext } from '../../types';
 
-async function associateCart(config: ApiConfig, guestCartToken: string, bearerToken: IOAuthToken) {
-  await axios.patch(
-    `${config.backendUrl}/api/v2/storefront/cart/associate?guest_order_token=${guestCartToken}`,
-    {},
-    {
-      headers: {
-        Authorization: `Bearer ${bearerToken.access_token}`
-      }
-    }
-  );
+async function associateCart(client, config: ApiConfig, guestCartToken: string, bearerToken: IOAuthToken) {
+  const response = await client.cart.associateGuestCart({
+    bearer_token: bearerToken.access_token,
+    guest_order_token: guestCartToken
+  });
+
+  if (response.isFail()) {
+    throw response.fail();
+  }
 }
 
 export default async function logIn({ client, config }: ApiContext, params): Promise<void> {
@@ -24,7 +22,7 @@ export default async function logIn({ client, config }: ApiContext, params): Pro
     await config.auth.changeOAuthToken(bearerToken);
 
     if (config.spreeFeatures.associateGuestCart && guestCartToken) {
-      await associateCart(config, guestCartToken, bearerToken);
+      await associateCart(client, config, guestCartToken, bearerToken);
     }
   } else {
     throw response.fail();
