@@ -3128,10 +3128,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@spree/storefront-api-v2-sdk@5.1.6":
-  version "5.1.6"
-  resolved "https://registry.yarnpkg.com/@spree/storefront-api-v2-sdk/-/storefront-api-v2-sdk-5.1.6.tgz#59d2aead9ac67ec538fefa421baf4f5d6fe9ff01"
-  integrity sha512-DgCqcLFsgmLZJumXHRfJ9tZ9gINqDrtbPk6Is3y5Kprc3OaPoEkgdsTj4x6ZNi+dQ65CFf1dDkzN87FvrE0fbQ==
+"@spree/storefront-api-v2-sdk@5.1.7":
+  version "5.1.7"
+  resolved "https://registry.yarnpkg.com/@spree/storefront-api-v2-sdk/-/storefront-api-v2-sdk-5.1.7.tgz#0404ed5a8242352e8b929b285d8cf88fed2994e2"
+  integrity sha512-cEWZ5oxQWievf52SHN68fpZTHZrTmABOETQ76JO+bM5QHHed3GkkMkbnKxZKWzM85BevOTg91usmy1HQdFhCQA==
 
 "@storefront-ui/shared@0.11.0":
   version "0.11.0"
