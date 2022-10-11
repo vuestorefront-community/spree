@@ -33,7 +33,7 @@ import handlePaymentConfirmationResponse from './api/handlePaymentConfirmationRe
 import isGuest from './api/isGuest';
 import logIn from './api/logIn';
 import logOut from './api/logOut';
-import { makeClient } from '@spree/storefront-api-v2-sdk';
+import { makeClient, createAxiosFetcher } from '@spree/storefront-api-v2-sdk';
 import makeOrder from './api/makeOrder';
 import registerUser from './api/registerUser';
 import removeCoupon from './api/removeCoupon';
@@ -64,7 +64,7 @@ const onCreate = (settings) => {
       ...defaultSettings,
       ...settings
     },
-    client: makeClient({ host: settings.backendUrl || defaultSettings.backendUrl })
+    client: makeClient({ host: settings.backendUrl || defaultSettings.backendUrl, createFetcher: createAxiosFetcher })
   };
 };
 
