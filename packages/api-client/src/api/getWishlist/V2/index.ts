@@ -6,11 +6,11 @@ import { emptyWishlist, wishedProductDocumentTypeV2, wishedProductsRelationshipN
 const getWishlistInclude = 'wished_items,wished_items.variant,wished_items.variant.images,wished_items.variant.product';
 
 export default async function getWishlistV2({ client, config }: ApiContext): Promise<Wishlist> {
-  const bearerToken = await getCurrentBearerToken({ client, config });
-  if (!bearerToken) emptyWishlist;
+  const { bearer_token } = await getCurrentBearerToken({ client, config });
+  if (!bearer_token) emptyWishlist;
 
   const response = await client.wishlists.default({
-    bearer_token: bearerToken,
+    bearer_token,
     include: getWishlistInclude
   });
 

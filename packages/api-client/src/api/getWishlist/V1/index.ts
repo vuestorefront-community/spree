@@ -9,11 +9,11 @@ const getWishlistInclude = 'wished_products,wished_products.variant,wished_produ
 
 export default async function getWishlistV1({ client, config }: ApiContext): Promise<Wishlist> {
   const url = config.backendUrl.concat(`/api/v2/storefront/wishlists/default?include=${getWishlistInclude}`);
-  const bearerToken = await getCurrentBearerToken({ client, config });
-  if (!bearerToken) return emptyWishlist;
+  const { bearer_token } = await getCurrentBearerToken({ client, config });
+  if (!bearer_token) return emptyWishlist;
 
   const result = await axios.get(url, {
-    headers: getAuthorizationHeaders({ bearerToken })
+    headers: getAuthorizationHeaders({ bearer_token })
   });
 
   const { data, included } = result.data;

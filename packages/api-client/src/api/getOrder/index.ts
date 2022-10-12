@@ -6,8 +6,8 @@ import { cartParams } from '../common/cart';
 
 export default async function getOrder({ client, config }: ApiContext, { orderId }: GetOrderParams): Promise<Order> {
   try {
-    const token = await getCurrentBearerToken({ client, config });
-    const response = await client.account.completedOrder({ bearerToken: token }, orderId, { ...cartParams });
+    const { bearer_token } = await getCurrentBearerToken({ client, config });
+    const response = await client.account.completedOrder({ bearerToken: bearer_token }, orderId, { ...cartParams });
 
     if (response.isSuccess()) {
       const payload = response.success();

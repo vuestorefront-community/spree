@@ -1,4 +1,5 @@
 import { ApiContext, Cart } from '../../types';
+import { RequiredAnyToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializeCart } from '../serializers/cart';
 import { cartParams } from '../common/cart';
@@ -29,7 +30,7 @@ const emptyCart: Cart = {
 
 export default async function getCart({ client, config }: ApiContext): Promise<Cart> {
   try {
-    const token = await getCurrentBearerOrCartToken({ client, config });
+    const token = await getCurrentBearerOrCartToken({ client, config }) as RequiredAnyToken;
 
     // User is not signed in nor has a cart
     // We're returning dummy cart here not to create empty carts in the backend
@@ -40,7 +41,8 @@ export default async function getCart({ client, config }: ApiContext): Promise<C
 
     const currency = await config.internationalization.getCurrency();
 
-    const result = await client.cart.show(token, {
+    const result = await client.cart.show({
+      ...token,
       ...cartParams,
       currency
     });
@@ -58,3 +60,26 @@ export default async function getCart({ client, config }: ApiContext): Promise<C
     return emptyCart;
   }
 }
+
+
+// declare type someobj = 
+//     | { prop1?: string, prop2?: never }
+//     | { prop1?: never, prop2?: string }
+
+// declare type funcparams = {
+//     prop1: string,
+//     someotherprop: number
+// } 
+
+// function func (params: funcparams) {
+//     console.log(params);
+// }
+
+// const testobj: someobj = {
+//     prop1: 'test'
+// }
+
+// func({
+//     ...testobj,
+//     someotherprop: 7
+// })

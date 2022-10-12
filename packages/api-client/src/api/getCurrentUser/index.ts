@@ -3,9 +3,9 @@ import getCurrentBearerToken from '../authentication/getCurrentBearerToken';
 import { deserializeUser } from '../serializers/user';
 
 export default async function getCurrentUser({ client, config }: ApiContext) {
-  const bearerToken = await getCurrentBearerToken({ client, config });
+  const { bearer_token } = await getCurrentBearerToken({ client, config });
 
-  const response = await client.account.accountInfo({ bearerToken });
+  const response = await client.account.accountInfo({ bearerToken: bearer_token });
   if (response.isSuccess()) {
     return deserializeUser(response.success().data);
   } else {
