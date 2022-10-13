@@ -1,14 +1,26 @@
 <template>
   <div>
     <div class="sf-header__navigation desktop-only">
-      <SfHeaderNavigationItem
-        v-for="(category, index) in categories"
-        :key="index"
-        class="nav-item"
-        v-e2e="`app-header-url_${category}`"
-        :label="category"
-        :link="localePath(`/c/categories/${category}`)"
-      />
+      <template v-if="isCategoryTreeOrMenuAvailable">
+        <SfHeaderNavigationItem
+          v-for="(category, index) in ((menu && menu.items) || (categoryTree && categoryTree.items))"
+          :key="index"
+          class="nav-item"
+          v-e2e="`app-header-url_${category.name || category.label}`"
+          :label="category.name || category.label"
+          :link="isExternalLink(category) ? category.link : getRoute(category)"
+        />
+      </template>
+      <template v-else>
+        <SfHeaderNavigationItem
+          v-for="(category, index) in categories"
+          :key="index"
+          class="nav-item"
+          v-e2e="`app-header-url_${category}`"
+          :label="category"
+          :link="localePath(`/c/categories/${category}`)"
+        />
+      </template>
     </div>
     <SfModal v-if="isCategoryTreeOrMenuAvailable" :visible="isMobileMenuOpen">
       <SfAccordion open="" :multiple="false" transition="" showChevron>
@@ -86,15 +98,17 @@ export default {
     const { locale } = context.root.$i18n;
 
     const getRoute = (category) => {
-      if (menu.value.isDisabled) {
-        return '/c/' + category.slug;
-      }
-      return category.link;
+      if (category.slug) return `/c/${category.slug}`;
+      if (category.link) return category.link.replace('/t', '/c');
+      return '/';
+    };
+
+    const isExternalLink = (category) => {
+      return category.link && (category.link.includes('https://') || category.link.includes('http://'));
     };
 
     onSSR(async () => {
-      await loadMenu({menuType: 'header', menuName: 'Main menu', locale: locale});
-
+      await loadMenu({menuType: 'header', menuName: 'Main Menu', locale: locale});
     });
 
     return {
@@ -104,7 +118,8 @@ export default {
       isMobileMenuOpen,
       toggleMobileMenu,
       menu,
-      getRoute
+      getRoute,
+      isExternalLink
     };
   }
 };
