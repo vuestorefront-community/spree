@@ -60,26 +60,3 @@ export default async function getCart({ client, config }: ApiContext): Promise<C
     return emptyCart;
   }
 }
-
-
-// declare type someobj = 
-//     | { prop1?: string, prop2?: never }
-//     | { prop1?: never, prop2?: string }
-
-// declare type funcparams = {
-//     prop1: string,
-//     someotherprop: number
-// } 
-
-// function func (params: funcparams) {
-//     console.log(params);
-// }
-
-// const testobj: someobj = {
-//     prop1: 'test'
-// }
-
-// func({
-//     ...testobj,
-//     someotherprop: 7
-// })
