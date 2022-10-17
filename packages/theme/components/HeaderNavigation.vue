@@ -1,12 +1,11 @@
 <template>
   <div>
-    <DesktopMenu v-bind="{ menu, isMenuAvailable, getRoute, isExternalLink }" />
-    <MobileMenu v-bind="{ menu, isMenuAvailable, getRoute, isExternalLink }" />
+    <DesktopMenu v-bind="{ menu, getRoute, isExternalLink }" />
+    <MobileMenu v-bind="{ menu, getRoute, isExternalLink }" />
   </div>
 </template>
 
 <script>
-import { computed } from '@nuxtjs/composition-api';
 import { useMenus } from '@vue-storefront/spree';
 import { onSSR } from '@vue-storefront/core';
 import DesktopMenu from './HeaderNavigation/DesktopMenu.vue';
@@ -18,9 +17,8 @@ export default {
     DesktopMenu,
     MobileMenu
   },
-  setup(context) {
+  setup(props, context) {
     const { menu, loadMenu } = useMenus('header');
-    const isMenuAvailable = computed(() => !menu.value.isDisabled);
     const { locale } = context.root.$i18n;
 
     const getRoute = (category) => {
@@ -32,11 +30,10 @@ export default {
     };
 
     onSSR(async () => {
-      await loadMenu({menuType: 'header', menuName: 'Main Menu', locale: locale});
+      await loadMenu({menuType: 'header', menuName: 'Main Menu', locale });
     });
 
     return {
-      isMenuAvailable,
       menu,
       getRoute,
       isExternalLink

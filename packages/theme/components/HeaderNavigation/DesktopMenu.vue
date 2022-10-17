@@ -17,14 +17,13 @@
 </template>
 
 <script>
+import { computed } from '@nuxtjs/composition-api';
+
 export default {
   name: 'MenuItem',
   props: {
     menu: {
       type: Object
-    },
-    isMenuAvailable: {
-      type: Boolean
     },
     getRoute: {
       type: Function
@@ -32,6 +31,13 @@ export default {
     isExternalLink: {
       type: Function
     }
+  },
+  setup(props) {
+    const isMenuAvailable = computed(() => !props.menu.isDisabled);
+
+    return {
+      isMenuAvailable
+    };
   }
 };
 </script>

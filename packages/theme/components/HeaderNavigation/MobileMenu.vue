@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import { computed } from '@nuxtjs/composition-api';
 import { SfMenuItem, SfModal, SfAccordion, SfList } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
 
@@ -62,9 +63,6 @@ export default {
     menu: {
       type: Object
     },
-    isMenuAvailable: {
-      type: Boolean
-    },
     getRoute: {
       type: Function
     },
@@ -72,10 +70,12 @@ export default {
       type: Function
     }
   },
-  setup() {
+  setup(props) {
     const { isMobileMenuOpen, toggleMobileMenu } = useUiState();
+    const isMenuAvailable = computed(() => !props.menu.isDisabled);
 
     return {
+      isMenuAvailable,
       isMobileMenuOpen,
       toggleMobileMenu
     };
