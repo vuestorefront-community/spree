@@ -25,6 +25,7 @@ export const deserializeCmsSection = (cmsSections: JsonApiDocument[], backendUrl
     title: section.attributes.content?.title,
     subtitle: section.attributes.content?.subtitle,
     buttonText: section.attributes.content?.button_text,
+    content: section.attributes.content,
     settings: section.attributes.settings,
     fit: section.attributes.fit,
     imgOneSm: backendUrl.concat(section.attributes.img_one_sm),
