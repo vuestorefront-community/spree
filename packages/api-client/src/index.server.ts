@@ -34,7 +34,7 @@ import isGuest from './api/isGuest';
 import logIn from './api/logIn';
 import logOut from './api/logOut';
 import { makeClient } from '@spree/storefront-api-v2-sdk';
-import { default as createAxiosFetcher } from '@spree/storefront-api-v2-sdk/dist/server/createAxiosFetcher';
+import createAxiosFetcher from '@spree/storefront-api-v2-sdk/dist/server/createAxiosFetcher';
 import makeOrder from './api/makeOrder';
 import registerUser from './api/registerUser';
 import removeCoupon from './api/removeCoupon';

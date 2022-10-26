@@ -2,7 +2,7 @@ import { ApiContext } from '../../types';
 import getCurrentBearerToken from '../authentication/getCurrentBearerToken';
 
 export default async function updateUser({ client, config }: ApiContext, { email, firstName, lastName }): Promise<void> {
-  const { bearer_token } = await getCurrentBearerToken({ client, config });
+  const token = await getCurrentBearerToken({ client, config });
   const updateData = {
     user: {
       email,
@@ -10,7 +10,7 @@ export default async function updateUser({ client, config }: ApiContext, { email
       last_name: lastName
     }
   };
-  const result = await client.account.update({ bearerToken: bearer_token }, updateData);
+  const result = await client.account.update({ bearerToken: token.bearer_token }, updateData);
   if (result.isFail()) {
     throw result.fail();
   }

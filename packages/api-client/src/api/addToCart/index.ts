@@ -10,9 +10,7 @@ export default async function addToCart({ client, config }: ApiContext, { token,
 
     const result = await client.cart.addItem(
       {
-        orderToken: token
-      },
-      {
+        order_token: token,
         variant_id: variantId,
         quantity,
         currency,

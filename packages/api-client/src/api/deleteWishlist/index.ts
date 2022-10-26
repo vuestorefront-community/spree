@@ -1,12 +1,13 @@
+import { RequiredAccountToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
 import getCurrentBearerToken from '../authentication/getCurrentBearerToken';
 import { ApiContext, DeleteWishlistParams } from '../../types';
 
 export default async function deleteWishlist({ client, config }: ApiContext, { wishlistToken }: DeleteWishlistParams): Promise<void> {
-  const { bearer_token } = await getCurrentBearerToken({ client, config });
-  if (!bearer_token || !wishlistToken) return;
+  const token = await getCurrentBearerToken({ client, config }) as RequiredAccountToken;
+  if (!token.bearer_token || !wishlistToken) return;
 
   const response = await client.wishlists.remove({
-    bearer_token,
+    ...token,
     wishlist_token: wishlistToken
   });
 
