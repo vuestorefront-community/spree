@@ -167,7 +167,7 @@ export default {
     ]
   },
   router: {
-    middleware: ['checkout', 'order-details'],
+    middleware: ['checkout'],
     scrollBehavior (_to, _from, savedPosition) {
       if (savedPosition) {
         return savedPosition;
