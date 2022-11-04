@@ -8,11 +8,11 @@
       <div class="my-account__sidebar">
         <h1>{{ $t('pages.my_account.content_page_title_my_account') }}</h1>
         <h2>{{ $t('pages.my_account.content_category_title_personal_details') }}</h2>
-        <NuxtLink to="/my-account">{{ $t('pages.my_account.content_page_title_my_profile') }}</NuxtLink>
+        <NuxtLink to="/my-account/my-profile">{{ $t('pages.my_account.content_page_title_my_profile') }}</NuxtLink>
         <NuxtLink to="/my-account/saved-addresses">{{ $t('pages.my_account.content_page_title_saved_addresses') }}</NuxtLink>
         <h2>{{ $t('pages.my_account.content_category_title_order_details') }}</h2>
         <NuxtLink to="/my-account/order-history">{{ $t('pages.my_account.content_page_title_order_history') }}</NuxtLink>
-        <span @click="handleLogout">{{ $t('pages.my_account.content_page_title_log_out') }}</span>
+        <span class="my-account__logout" @click="handleLogout">{{ $t('pages.my_account.content_page_title_log_out') }}</span>
       </div>
       <div class="my-account__view">
         <NuxtChild />
@@ -23,8 +23,7 @@
 <script>
 import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
 import {
-  useRouter,
-  onBeforeUnmount
+  useRouter
 } from '@nuxtjs/composition-api';
 import { useUser } from '@vue-storefront/spree';
 import MyProfile from './MyAccount/MyProfile';
@@ -32,9 +31,6 @@ import SavedAddressesDetails from './MyAccount/SavedAddressesDetails';
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
 import OrderDetails from './MyAccount/OrderDetails';
-import {
-  unMapMobileObserver
-} from '@storefront-ui/vue/src/utilities/mobile-observer.js';
 
 export default {
   name: 'MyAccount',
@@ -52,14 +48,10 @@ export default {
     const router = useRouter();
     const { logout } = useUser();
 
-    const handleLogout = async () =>
-      logout()
-        .then(() => context.root.localePath({ name: 'home' }))
-        .then(path => router.push(path));
-
-    onBeforeUnmount(() => {
-      unMapMobileObserver();
-    });
+    const handleLogout = async () => {
+      await logout();
+      router.replace(context.root.localePath({ name: 'home' }));
+    };
 
     return { handleLogout };
   },
@@ -94,9 +86,10 @@ export default {
 }
 .my-account {
   display: flex;
+  --sidebar-width: 300px;
 
   &__sidebar {
-    width: 250px;
+    width: var(--sidebar-width);
     font-family: var(--font-family--secondary);
 
     h1 {
@@ -120,7 +113,10 @@ export default {
     }
   }
   &__view {
-    width: calc(100% - 300px);
+    width: calc(100% - var(--sidebar-width));
+  }
+  &__logout {
+    cursor: pointer;
   }
 }
 </style>
