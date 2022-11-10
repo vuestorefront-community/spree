@@ -18,81 +18,53 @@
     />
     <form @submit.prevent="handleSubmit(handleFormSubmit)">
       <div v-if="!selectedSavedAddressId" class="form">
-        <ValidationProvider
-          v-if="!isAuthenticated"
-          name="email"
-          rules="required|email"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-on:click="getBackToShippingDetails()"
-            :class="{'disable-input': isFormSubmitted}"
+        <EmailValidationProvider v-slot="{ errors }" v-if="!isAuthenticated" slim append-rules="required|trim">
+          <EmailInput
+            :errors="errors"
             v-model="form.email"
+            :disabled="isFormSubmitted"
+            class="form__element"
             :label="$t('pages.checkout.shipping.email_label')"
-            name="email"
-            class="form__element"
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
+            @click="getBackToShippingDetails()"
           />
-        </ValidationProvider>
-        <ValidationProvider
+        </EmailValidationProvider>
+
+
+        <ValidatedInput
+          v-model="form.firstName"
+          :disabled="isFormSubmitted"
+          :label="$t('pages.checkout.shipping.first_name_label')"
           name="firstName"
-          rules="required|min:2"
-          v-slot="{ errors }"
           slim
-        >
-          <SfInput
-            v-on:click="getBackToShippingDetails()"
-            :class="{'disable-input': isFormSubmitted}"
-            v-e2e="'shipping-firstName'"
-            v-model="form.firstName"
-            :label="$t('pages.checkout.shipping.first_name_label')"
-            name="firstName"
-            class="form__element form__element--half"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
+          required
+          rules="required|min:2"
+          class="form__element--half"
+          v-e2e="'shipping-firstName'"
+          @click="() => getBackToShippingDetails()"
+        />
+        <ValidatedInput
+          v-model="form.lastName"
+          :disabled="isFormSubmitted"
+          :label="$t('pages.checkout.shipping.last_name_label')"
           name="lastName"
-          rules="required|min:2"
-          v-slot="{ errors }"
           slim
-        >
-          <SfInput
-            v-on:click="getBackToShippingDetails()"
-            :class="{'disable-input': isFormSubmitted}"
-            v-e2e="'shipping-lastName'"
-            v-model="form.lastName"
-            :label="$t('pages.checkout.shipping.last_name_label')"
-            name="lastName"
-            class="form__element form__element--half form__element--half-even"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
+          required
+          rules="required|min:2"
+          class="form__element--half form__element--half-even"
+          v-e2e="'shipping-firstName'"
+          @click="() => getBackToShippingDetails()"
+        />
+        <ValidatedInput
+          v-model="form.addressLine1"
+          :disabled="isFormSubmitted"
+          :label="$t('pages.checkout.shipping.street_label')"
           name="streetName"
-          rules="required|min:2"
-          v-slot="{ errors }"
           slim
-        >
-          <SfInput
-            v-on:click="getBackToShippingDetails()"
-            :class="{'disable-input': isFormSubmitted}"
-            v-e2e="'shipping-streetName'"
-            v-model="form.addressLine1"
-            :label="$t('pages.checkout.shipping.street_label')"
-            name="streetName"
-            class="form__element"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
+          required
+          rules="required|min:2"
+          v-e2e="'shipping-streetName'"
+          @click="() => getBackToShippingDetails()"
+        />
         <SfInput
           v-on:click="getBackToShippingDetails()"
           :class="{'disable-input': isFormSubmitted}"
@@ -102,118 +74,81 @@
           name="apartment"
           class="form__element"
         />
-        <ValidationProvider
+        <ValidatedInput
+          v-model="form.city"
+          :disabled="isFormSubmitted"
+          :label="$t('pages.checkout.shipping.city_label')"
           name="city"
-          rules="required|min:2"
-          v-slot="{ errors }"
           slim
-        >
-          <SfInput
-            v-on:click="getBackToShippingDetails()"
-            :class="{'disable-input': isFormSubmitted}"
-            v-e2e="'shipping-city'"
-            v-model="form.city"
-            :label="$t('pages.checkout.shipping.city_label')"
-            name="city"
-            class="form__element"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
+          required
+          rules="required|min:2"
+          v-e2e="'shipping-city'"
+          @click="() => getBackToShippingDetails()"
+        />
+        <ValidatedSelect
+          v-model="form.country"
+          :disabled="isFormSubmitted"
+          :label="$t('pages.checkout.shipping.country_label')"
           name="country"
-          rules="required|min:2"
-          v-slot="{ errors }"
           slim
+          required
+          rules="required|min:2"
+          class="form__element--half sf-select--underlined"
+          v-e2e="'shipping-country'"
+          @input="getBackToShippingDetails()"
         >
-          <SfSelect
-            :class="{'disable-dropdown': isFormSubmitted}"
-            v-e2e="'shipping-country'"
-            v-model="form.country"
-            :label="$t('pages.checkout.shipping.country_label')"
-            name="country"
-            class="form__element form__element--half form__select sf-select--underlined"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-            @input="getBackToShippingDetails()"
+          <SfSelectOption
+            v-for="countryOption in countries"
+            :key="countryOption.key"
+            :value="countryOption.key"
           >
-            <SfSelectOption
-              v-for="countryOption in countries"
-              :key="countryOption.key"
-              :value="countryOption.key"
-            >
-              {{ countryOption.label }}
-            </SfSelectOption>
-          </SfSelect>
-        </ValidationProvider>
-        <ValidationProvider
+            {{ countryOption.label }}
+          </SfSelectOption>
+        </ValidatedSelect>
+        <ValidatedInput
+          v-model="form.postalCode"
+          :disabled="isFormSubmitted"
+          :label="$t('pages.checkout.shipping.postal_code_label')"
           name="zipCode"
+          slim
+          required
           rules="required|min:2"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-on:click="getBackToShippingDetails()"
-            :class="{'disable-input': isFormSubmitted}"
-            v-e2e="'shipping-zipcode'"
-            v-model="form.postalCode"
-            :label="$t('pages.checkout.shipping.postal_code_label')"
-            name="zipCode"
-            class="form__element form__element--half form__element--half-even"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
+          class="form__element--half form__element--half-even"
+          v-e2e="'shipping-zipcode'"
+          @click="() => getBackToShippingDetails()"
+        />
+        <ValidatedSelect
           v-if="states && states.length > 0"
-          v-slot="{ errors }"
+          v-model="form.state"
+          :disabled="isFormSubmitted"
+          :label="$t('pages.checkout.shipping.state_label')"
           name="state"
+          slim
+          :required="isStateRequired"
           rules="required"
-          slim
+          data-cy="shipping-details-input_state"
+          class="form sf-select--underlined"
+          @input="getBackToShippingDetails()"
         >
-          <SfSelect
-            :class="{ 'disable-dropdown': isFormSubmitted }"
-            data-cy="shipping-details-input_state"
-            class="form__element form form__select sf-select--underlined"
-            v-model="form.state"
-            name="state"
-            :label="$t('pages.checkout.shipping.state_label')"
-            :required="isStateRequired"
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-            @input="getBackToShippingDetails()"
+          <SfSelectOption
+            v-for="{ code, name } in states"
+            :key="code"
+            :value="name"
           >
-            <SfSelectOption
-              v-for="{ code, name } in states"
-              :key="code"
-              :value="name"
-            >
-              {{ name }}
-            </SfSelectOption>
-          </SfSelect>
-        </ValidationProvider>
-        <ValidationProvider
+            {{ name }}
+          </SfSelectOption>
+        </ValidatedSelect>
+        <ValidatedInput
+          v-model="form.phone"
+          :disabled="isFormSubmitted"
+          :label="$t('pages.checkout.shipping.phone_number_label')"
           name="phone"
-          rules="required|digits:9"
-          v-slot="{ errors }"
           slim
-        >
-          <SfInput
-            v-on:click="getBackToShippingDetails()"
-            :class="{'disable-input': isFormSubmitted}"
-            v-e2e="'shipping-phone'"
-            v-model="form.phone"
-            :label="$t('pages.checkout.shipping.phone_number_label')"
-            name="phone"
-            class="form__element"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
+          required
+          rules="required|digits:9"
+          v-e2e="'shipping-phone'"
+          @click="() => getBackToShippingDetails()"
+        />
         <SfCheckbox
           class="form__save-address"
           v-if="isAuthenticated && !isFormSubmitted"
@@ -268,8 +203,12 @@ import { ref, watch, computed, onMounted, useRouter } from '@nuxtjs/composition-
 import { onSSR, useVSFContext } from '@vue-storefront/core';
 import { useBilling, useShipping, useCountry, useUser, useUserShipping } from '@vue-storefront/spree';
 import { required, min, digits } from 'vee-validate/dist/rules';
-import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import { ValidationObserver, extend } from 'vee-validate';
 import AddressPicker from '~/components/Checkout/AddressPicker';
+import ValidatedInput from '~/components/ValidatedInputs/ValidatedInput';
+import ValidatedSelect from '~/components/ValidatedInputs/ValidatedSelect';
+import EmailValidationProvider from '~/components/ValidationProviders/EmailValidationProvider';
+import EmailInput from '~/components/FormComponents/EmailInput';
 import _ from 'lodash';
 
 export default {
@@ -281,8 +220,11 @@ export default {
     SfSelect,
     SfCheckbox,
     AddressPicker,
-    ValidationProvider,
+    EmailValidationProvider,
+    EmailInput,
     ValidationObserver,
+    ValidatedInput,
+    ValidatedSelect,
     VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
   },
   created() {
@@ -456,7 +398,7 @@ export default {
 <style lang="scss" scoped>
 .form {
   --button-width: 100%;
-  &__select {
+  ::v-deep &__select {
     display: flex;
     align-items: center;
     --select-option-font-size: var(--font-size--lg);
@@ -473,7 +415,7 @@ export default {
     align-items: center;
     --button-width: auto;
   }
-  &__element {
+  ::v-deep &__element {
     margin: 0 0 var(--spacer-xl) 0;
     @include for-desktop {
       flex: 0 0 100%;

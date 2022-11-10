@@ -17,29 +17,21 @@
       <div v-if="currentScreen === SCREEN_LOGIN">
         <ValidationObserver v-slot="{ handleSubmit }" key="log-in">
           <form class="form" @submit.prevent="handleSubmit(handleLogin)">
-            <ValidationProvider rules="required|email" v-slot="{ errors }">
-              <SfInput
-                v-e2e="'login-modal-email'"
-                v-model="form.username"
-                :valid="!errors[0]"
-                :errorMessage="errors[0]"
-                name="email"
-                :label="$t('components.login_modal.email_modal_label')"
-                class="form__element"
-              />
-            </ValidationProvider>
-            <ValidationProvider rules="required" v-slot="{ errors }">
-              <SfInput
-                v-e2e="'login-modal-password'"
-                v-model="form.password"
-                :valid="!errors[0]"
-                :errorMessage="errors[0]"
-                name="password"
-                :label="$t('components.login_modal.password_modal_label')"
-                type="password"
-                class="form__element"
-              />
-            </ValidationProvider>
+            <ValidatedInput
+              v-model="form.username"
+              :label="$t('components.login_modal.email_modal_label')"
+              name="email"
+              rules="required|email"
+              v-e2e="'login-modal-email'"
+            />
+            <ValidatedInput
+              v-model="form.password"
+              :label="$t('components.login_modal.password_modal_label')"
+              name="password"
+              type="password"
+              rules="required"
+              v-e2e="'login-modal-password'"
+            />
             <SfCheckbox
               v-e2e="'login-modal-remember-me'"
               v-model="rememberMe"
@@ -77,17 +69,13 @@
         <p>{{ $t('components.login_modal.forgot_password') }}</p>
         <ValidationObserver v-slot="{ handleSubmit }" key="log-in">
           <form class="form" @submit.prevent="handleSubmit(handleForgotten)">
-            <ValidationProvider rules="required|email" v-slot="{ errors }">
-              <SfInput
-                v-e2e="'forgot-modal-email'"
-                v-model="form.username"
-                :valid="!errors[0]"
-                :errorMessage="errors[0]"
-                name="email"
-                :label="$t('components.login_modal.forgot_password_modal_email')"
-                class="form__element"
-              />
-            </ValidationProvider>
+            <ValidatedInput
+              v-model="form.username"
+              :label="$t('components.login_modal.forgot_password_modal_email')"
+              name="email"
+              rules="required|email"
+              v-e2e="'forgot-modal-email'"
+            />
             <div v-if="forgotPasswordError.request">
               {{ forgotPasswordError.request.message }}
             </div>
@@ -113,51 +101,35 @@
       <div v-else class="form">
         <ValidationObserver v-slot="{ handleSubmit }" key="sign-up">
           <form class="form" @submit.prevent="handleSubmit(handleRegister)" autocomplete="off">
-            <ValidationProvider rules="required|email" v-slot="{ errors }">
-              <SfInput
-                v-e2e="'login-modal-email'"
-                v-model="form.email"
-                :valid="!errors[0]"
-                :errorMessage="errors[0]"
-                name="email"
-                :label="$t('components.login_modal.email_modal_label')"
-                class="form__element"
-              />
-            </ValidationProvider>
-            <ValidationProvider rules="required" v-slot="{ errors }">
-              <SfInput
-                v-e2e="'login-modal-firstName'"
-                v-model="form.firstName"
-                :valid="!errors[0]"
-                :errorMessage="errors[0]"
-                name="first-name"
-                :label="$t('components.login_modal.first_name_modal_label')"
-                class="form__element"
-              />
-            </ValidationProvider>
-            <ValidationProvider rules="required" v-slot="{ errors }">
-              <SfInput
-                v-e2e="'login-modal-lastName'"
-                v-model="form.lastName"
-                :valid="!errors[0]"
-                :errorMessage="errors[0]"
-                name="last-name"
-                :label="$t('components.login_modal.last_name_modal_label')"
-                class="form__element"
-              />
-            </ValidationProvider>
-            <ValidationProvider rules="required" v-slot="{ errors }">
-              <SfInput
-                v-e2e="'login-modal-password'"
-                v-model="form.password"
-                :valid="!errors[0]"
-                :errorMessage="errors[0]"
-                name="password"
-                :label="$t('components.login_modal.password_modal_label')"
-                type="password"
-                class="form__element"
-              />
-            </ValidationProvider>
+            <ValidatedInput
+              v-model="form.email"
+              :label="$t('components.login_modal.email_modal_label')"
+              name="email"
+              rules="required|email"
+              v-e2e="'login-modal-email'"
+            />
+            <ValidatedInput
+              v-model="form.firstName"
+              :label="$t('components.login_modal.first_name_modal_label')"
+              name="first-name"
+              rules="required"
+              v-e2e="'login-modal-firstName'"
+            />
+            <ValidatedInput
+              v-model="form.lastName"
+              :label="$t('components.login_modal.last_name_modal_label')"
+              name="last-name"
+              rules="required"
+              v-e2e="'login-modal-lastName'"
+            />
+            <ValidatedInput
+              v-model="form.password"
+              :label="$t('components.login_modal.password_modal_label')"
+              name="password"
+              type="password"
+              rules="required"
+              v-e2e="'login-modal-password'"
+            />
             <ValidationProvider :rules="{ required: { allowFalse: false } }" v-slot="{ errors }">
               <SfCheckbox
                 v-e2e="'login-modal-create-account'"
@@ -200,6 +172,7 @@ import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, email } from 'vee-validate/dist/rules';
 import { useUiState } from '~/composables';
 import { useUser, useForgotPassword } from '@vue-storefront/spree';
+import ValidatedInput from '~/components/ValidatedInputs/ValidatedInput';
 
 export default {
   name: 'LoginModal',
@@ -210,6 +183,7 @@ export default {
     SfCheckbox,
     SfLoader,
     SfAlert,
+    ValidatedInput,
     ValidationProvider,
     ValidationObserver,
     SfBar
@@ -341,7 +315,7 @@ export default {
 }
 .form {
   margin-top: var(--spacer-sm);
-  &__element {
+  ::v-deep &__element {
     margin: 0 0 var(--spacer-xl) 0;
   }
 }
