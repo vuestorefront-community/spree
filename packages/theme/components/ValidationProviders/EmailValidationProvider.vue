@@ -2,19 +2,22 @@
   <ValidationProvider
     v-slot="{ errors }"
     :rules="mergedRules"
+    :slim="slim"
   >
-    <slot
-      :errors="errors"
-    />
+    <slot :errors="errors" />
   </ValidationProvider>
 </template>
 
 <script>
 import { ValidationProvider } from 'vee-validate';
-import { computed } from '@nuxtjs/composition-api';
+import { toRefs } from '@nuxtjs/composition-api';
+import useMergedValidationRules from '~/composables/useMergedValidationRules';
 
 export default {
   name: 'EmailValidationProvider',
+  components: {
+    ValidationProvider
+  },
   props: {
     name: {
       type: String,
@@ -25,7 +28,7 @@ export default {
     rules: {
       type: String,
       default() {
-        return 'email';
+        return 'email|trim';
       }
     },
     'append-rules': {
@@ -33,13 +36,17 @@ export default {
       default() {
         return '';
       }
+    },
+    slim: {
+      type: Boolean,
+      default() {
+        return true;
+      }
     }
   },
-  components: {
-    ValidationProvider
-  },
-  setup({ rules, appendRules }) {
-    const mergedRules = computed(() => `${rules}${appendRules ? `|${appendRules}` : ''}`);
+  setup(props) {
+    const { rules, appendRules } = toRefs(props);
+    const { mergedRules } = useMergedValidationRules(rules, appendRules);
 
     return {
       mergedRules

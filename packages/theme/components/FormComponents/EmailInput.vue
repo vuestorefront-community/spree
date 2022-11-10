@@ -1,14 +1,13 @@
 <template>
-  <div>
-    <SfInput
-      @click="e => $emit('click', e)"
-      @input="e => $emit('input', e)"
-      v-bind="{...$attrs, ...$props}"
-      :class="{'disable-input': disabled}"
-      :valid="!errors[0]"
-      :errorMessage="errors[0]"
-    />
-  </div>
+  <SfInput
+    :name="name"
+    :label="label"
+    :disabled="disabled"
+    :valid="!errors[0]"
+    :errorMessage="errors[0]"
+    @click="e => $emit('click', e)"
+    @input="e => $emit('input', e)"
+  />
 </template>
 
 <script>
@@ -18,34 +17,32 @@ import {
 
 export default {
   name: 'EmailInput',
+  components: {
+    SfInput
+  },
   props: {
-    disabled: {
-      type: Boolean,
-      default() {
-        return false;
-      }
-    },
-    label: {
-      type: String,
-      default() {
-        return '';
-      }
-    },
     name: {
       type: String,
       default() {
         return 'email';
       }
     },
-    value: {
+    label: {
       type: String
     },
+    disabled: {
+      type: Boolean
+    },
+    value: {
+      type: String,
+      required: true
+    },
     errors: {
-      type: Array
+      type: Array,
+      default() {
+        return [];
+      }
     }
-  },
-  components: {
-    SfInput
   }
 };
 </script>
