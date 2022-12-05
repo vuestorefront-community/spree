@@ -1,5 +1,7 @@
 import { JsonApiDocument } from '@spree/storefront-api-v2-sdk/types/interfaces/JsonApi';
-import { CmsSection, ContentPage } from '../../types';
+import type { PageAttr } from '@spree/storefront-api-v2-sdk/types/interfaces/Page';
+import type { RelationType } from '@spree/storefront-api-v2-sdk/types/interfaces/Relationships';
+import { CmsSection, ContentPage, PagesSearchResult } from '../../types';
 
 export const deserializeLinks = (links: string[]): string[] => {
   return links.map(link => {
@@ -25,6 +27,7 @@ export const deserializeCmsSection = (cmsSections: JsonApiDocument[], backendUrl
     title: section.attributes.content?.title,
     subtitle: section.attributes.content?.subtitle,
     buttonText: section.attributes.content?.button_text,
+    content: section.attributes.content,
     settings: section.attributes.settings,
     fit: section.attributes.fit,
     imgOneSm: backendUrl.concat(section.attributes.img_one_sm),
@@ -52,3 +55,21 @@ export const deserializePage = (data: JsonApiDocument, included: JsonApiDocument
   cmsSections: deserializeCmsSection(included, backendUrl)
 });
 
+export const deserializePages = (data: PageAttr[], included: JsonApiDocument[], backendUrl: string): PagesSearchResult => {
+  return {
+    data: data.map(page => ({
+      id: page.id,
+      title: page.attributes.title,
+      content: page.attributes.content,
+      locale: page.attributes.locale,
+      type: page.attributes.type,
+      slug: page.attributes.slug,
+      cmsSections: deserializeCmsSection(
+        Array.isArray(page.relationships.cms_sections.data)
+          ? page.relationships.cms_sections.data.map(section => included.find(x => x.id === section.id))
+          : [included.find(x => x.id === (page.relationships.cms_sections.data as RelationType).id)]
+        , backendUrl
+      )
+    }))
+  };
+};

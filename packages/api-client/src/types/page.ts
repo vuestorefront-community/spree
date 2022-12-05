@@ -35,3 +35,10 @@ export type ContentPage = {
 export type GetContentPageParams = {
     contentPageSlug: string;
 };
+export type GetContentPagesParams = {
+    contentPageType: string;
+};
+
+export type PagesSearchResult = {
+    data: ContentPage[];
+}
