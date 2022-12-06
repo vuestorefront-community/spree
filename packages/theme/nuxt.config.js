@@ -1,6 +1,9 @@
 import { getRoutes } from './routes';
 import theme from './themeConfig';
 import webpack from 'webpack';
+import * as dotenv from 'dotenv';
+
+dotenv.config({ path: `./../../.env.${process.env.NODE_ENV}` });
 
 export default {
   ssr: true,
@@ -185,6 +188,7 @@ export default {
     currencies: [
       { code: 'USD', label: 'Dollar' },
       { code: 'EUR', label: 'Euro' }
-    ]
+    ],
+    backendUrl: process.env.BACKEND_URL
   }
 };

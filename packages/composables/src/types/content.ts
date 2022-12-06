@@ -4,6 +4,7 @@ export type { ContentPage };
 
 export type ContentSearchParams = {
   contentPageSlug: string;
+  contentPageType?: string;
 };
 
 export type ContentGetters = {
