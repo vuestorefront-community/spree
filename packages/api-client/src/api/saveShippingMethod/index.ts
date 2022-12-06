@@ -1,6 +1,6 @@
 import { Logger } from '@vue-storefront/core';
 import { ApiContext } from '../../types';
-import { RequiredAnyToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
+import type { RequiredAnyToken } from '@spree/storefront-api-v2-sdk';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializeCartShipments } from '../serializers/shipping';
 

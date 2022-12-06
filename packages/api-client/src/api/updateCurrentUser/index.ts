@@ -1,6 +1,6 @@
 import { ApiContext } from '../../types';
 import getCurrentBearerToken from '../authentication/getCurrentBearerToken';
-import { RequiredAccountToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
+import type { RequiredAccountToken } from '@spree/storefront-api-v2-sdk';
 
 export default async function updateUser({ client, config }: ApiContext, { email, firstName, lastName }): Promise<void> {
   const token = await getCurrentBearerToken({ client, config }) as RequiredAccountToken;

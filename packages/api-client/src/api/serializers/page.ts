@@ -1,4 +1,4 @@
-import { JsonApiDocument } from '@spree/storefront-api-v2-sdk/types/interfaces/JsonApi';
+import type { JsonApiDocument } from '@spree/storefront-api-v2-sdk';
 import { CmsSection, ContentPage } from '../../types';
 
 export const deserializeLinks = (links: string[]): string[] => {

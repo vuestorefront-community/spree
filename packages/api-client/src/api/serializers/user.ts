@@ -1,4 +1,4 @@
-import { JsonApiDocument } from '@spree/storefront-api-v2-sdk/types/interfaces/JsonApi';
+import type { JsonApiDocument } from '@spree/storefront-api-v2-sdk';
 import {User} from '../../types';
 
 export const deserializeUser = (jsonUser: JsonApiDocument): User => {

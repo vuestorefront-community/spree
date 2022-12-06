@@ -1,4 +1,4 @@
-import { IOAuthToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
+import type { IOAuthToken } from '@spree/storefront-api-v2-sdk';
 import { ApiConfig, ApiContext } from '../../types';
 
 async function associateCart(client, config: ApiConfig, guestCartToken: string, bearerToken: IOAuthToken) {

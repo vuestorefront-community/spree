@@ -1,4 +1,4 @@
-import { RequiredAccountToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
+import type { RequiredAccountToken } from '@spree/storefront-api-v2-sdk';
 import getCurrentBearerToken from '../../authentication/getCurrentBearerToken';
 import { AddToWishlistParams, ApiContext } from '../../../types';
 

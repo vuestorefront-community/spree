@@ -1,4 +1,4 @@
-import { RequiredAccountToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
+import type { RequiredAccountToken } from '@spree/storefront-api-v2-sdk';
 import { Address, ApiContext } from '../../types';
 import getCurrentBearerToken from '../authentication/getCurrentBearerToken';
 import { deserializeAddress } from '../serializers/address';

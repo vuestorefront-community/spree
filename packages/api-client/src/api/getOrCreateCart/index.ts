@@ -1,5 +1,8 @@
-import { SpreeError } from '@spree/storefront-api-v2-sdk/types/errors';
-import { RequiredAnyToken, OptionalAccountToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
+import {
+  SpreeError,
+  RequiredAnyToken,
+  OptionalAccountToken
+} from '@spree/storefront-api-v2-sdk/dist/server';
 import { ApiContext, Cart } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializeCart } from '../serializers/cart';

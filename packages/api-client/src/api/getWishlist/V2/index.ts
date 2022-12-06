@@ -1,6 +1,6 @@
 import getCurrentBearerToken from '../../authentication/getCurrentBearerToken';
 import { ApiContext, Wishlist } from '../../../types';
-import { RequiredAccountToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
+import type { RequiredAccountToken } from '@spree/storefront-api-v2-sdk';
 import { deserializeWishlist } from '../../serializers/wishlist';
 import { emptyWishlist, wishedProductDocumentTypeV2, wishedProductsRelationshipNameV2 } from '../../common/wishlist';
 

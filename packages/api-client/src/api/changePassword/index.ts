@@ -1,5 +1,5 @@
 import { ApiContext, ChangePasswordParams } from '../../types';
-import { RequiredAccountToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
+import type { RequiredAccountToken } from '@spree/storefront-api-v2-sdk';
 import getCurrentBearerToken from '../authentication/getCurrentBearerToken';
 
 export default async function changePassword({ client, config }: ApiContext, params: ChangePasswordParams): Promise<void> {

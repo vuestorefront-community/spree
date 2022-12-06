@@ -1,4 +1,4 @@
-import type { JsonApiDocument } from '@spree/storefront-api-v2-sdk/types/interfaces/JsonApi';
+import type { JsonApiDocument } from '@spree/storefront-api-v2-sdk';
 
 export const filterAttachments = (attachments: JsonApiDocument[], type: string, ids: string[]): JsonApiDocument[] =>
   attachments

@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { ApiContext } from '../../types';
-import { RequiredAnyToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
+import type { RequiredAnyToken } from '@spree/storefront-api-v2-sdk';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 
 export default async function savePaymentMethod({ client, config }: ApiContext, methodId: number, payload: any): Promise<void> {

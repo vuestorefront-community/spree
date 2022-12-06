@@ -2,7 +2,7 @@ import axios from 'axios';
 import getCurrentBearerToken from '../../authentication/getCurrentBearerToken';
 import getAuthorizationHeaders from '../../authentication/getAuthorizationHeaders';
 import { AddToWishlistParams, ApiContext } from '../../../types';
-import { RequiredAccountToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
+import type { RequiredAccountToken } from '@spree/storefront-api-v2-sdk';
 import { serializeWishedProduct } from '../../serializers/wishlist';
 
 export default async function addToWishlistV1({ client, config }: ApiContext, { wishlistToken, product }: AddToWishlistParams): Promise<void> {

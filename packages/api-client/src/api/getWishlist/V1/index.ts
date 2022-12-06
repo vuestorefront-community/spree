@@ -2,7 +2,7 @@ import axios from 'axios';
 import getCurrentBearerToken from '../../authentication/getCurrentBearerToken';
 import getAuthorizationHeaders from '../../authentication/getAuthorizationHeaders';
 import { ApiContext, Wishlist } from '../../../types';
-import { RequiredAccountToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
+import type { RequiredAccountToken } from '@spree/storefront-api-v2-sdk';
 import { deserializeWishlist } from '../../serializers/wishlist';
 import { emptyWishlist, wishedProductDocumentTypeV1, wishedProductsRelationshipNameV1 } from '../../common/wishlist';
 

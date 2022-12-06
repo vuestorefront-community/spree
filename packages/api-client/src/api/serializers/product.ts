@@ -1,6 +1,11 @@
-import type { JsonApiDocument, JsonApiResponse } from '@spree/storefront-api-v2-sdk/types/interfaces/JsonApi';
-import type { IProduct, IProducts, ProductAttr } from '@spree/storefront-api-v2-sdk/types/interfaces/Product';
-import type { RelationType } from '@spree/storefront-api-v2-sdk/types/interfaces/Relationships';
+import type {
+  JsonApiDocument,
+  JsonApiResponse,
+  IProduct,
+  IProducts,
+  ProductAttr,
+  RelationType
+} from '@spree/storefront-api-v2-sdk/dist/server';
 import type { ApiConfig, ProductVariant, OptionType, OptionValue, Image } from '../../types';
 import { extractRelationships, filterAttachments } from './common';
 

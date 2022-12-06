@@ -1,5 +1,5 @@
 import { ApiContext, Cart } from '../../types';
-import { RequiredAnyToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
+import type { RequiredAnyToken } from '@spree/storefront-api-v2-sdk';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializeCart } from '../serializers/cart';
 import { cartParams } from '../common/cart';

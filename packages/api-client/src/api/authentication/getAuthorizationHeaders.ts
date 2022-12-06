@@ -1,4 +1,4 @@
-import { OptionalAnyToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
+import type { OptionalAnyToken } from '@spree/storefront-api-v2-sdk';
 
 const orderTokenHeaderName = 'X-Spree-Order-Token';
 

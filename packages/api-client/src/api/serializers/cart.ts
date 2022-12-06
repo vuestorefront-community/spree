@@ -1,5 +1,5 @@
 import { OrderAttr } from '@spree/storefront-api-v2-sdk/types/interfaces/Order';
-import { JsonApiDocument } from '@spree/storefront-api-v2-sdk/types/interfaces/JsonApi';
+import type { JsonApiDocument } from '@spree/storefront-api-v2-sdk';
 import { CouponCode as CouponCodeAttr } from '@spree/storefront-api-v2-sdk/types/interfaces/endpoints/CartClass';
 import { Cart, LineItem, ApiConfig } from '../../types';
 

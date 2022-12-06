@@ -1,4 +1,4 @@
-import { OptionalAnyToken, IToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
+import type { OptionalAnyToken, IToken } from '@spree/storefront-api-v2-sdk';
 
 // This function is a migration helper
 // It will be removed once all the endpoints handle the new token interface

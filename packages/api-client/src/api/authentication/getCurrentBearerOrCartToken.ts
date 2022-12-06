@@ -1,4 +1,4 @@
-import { OptionalAnyToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
+import type { OptionalAnyToken } from '@spree/storefront-api-v2-sdk';
 import { ApiContext } from '../../types';
 import getCurrentBearerToken from './getCurrentBearerToken';
 import getCurrentCartToken from './getCurrentCartToken';
