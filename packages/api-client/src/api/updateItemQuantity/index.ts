@@ -10,9 +10,7 @@ export default async function updateItemQuantity({ client, config }: ApiContext,
 
     const result = await client.cart.setQuantity(
       {
-        orderToken: token
-      },
-      {
+        order_token: token,
         line_item_id: lineItemId,
         quantity,
         currency,

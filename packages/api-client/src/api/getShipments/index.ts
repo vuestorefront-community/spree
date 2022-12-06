@@ -1,14 +1,14 @@
+import { RequiredAccountToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
 import { Logger } from '@vue-storefront/core';
 import { ApiContext } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializeShipment } from '../serializers/shipping';
-import toOldToken from '../common/toOldToken';
 
 export default async function getShipments({ client, config }: ApiContext) {
   try {
-    const token = await getCurrentBearerOrCartToken({ client, config });
+    const token = await getCurrentBearerOrCartToken({ client, config }) as RequiredAccountToken;
     const currency = await config.internationalization.getCurrency();
-    const result = await client.checkout.shippingMethods(toOldToken(token), { currency });
+    const result = await client.checkout.shippingRates({ ...token, currency });
 
     if (result.isSuccess()) {
       const payload = result.success();
