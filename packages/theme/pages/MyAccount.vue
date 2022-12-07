@@ -4,7 +4,29 @@
       class="breadcrumbs desktop-only"
       :breadcrumbs="breadcrumbs"
     />
-    <div class="my-account">
+    <SfTabs
+      :openTab="1"
+      tabShowText="show"
+      tabHideText="hide"
+      class="smartphone-only"
+    >
+      <SfTab :title="$t('pages.my_account.content_page_title_my_profile')">
+        <MyProfile />
+      </SfTab>
+      <SfTab :title="$t('pages.my_account.content_page_title_saved_addresses')">
+        <SavedAddressesDetails />
+      </SfTab>
+      <SfTab :title="$t('pages.my_account.content_page_title_order_history')">
+        <OrderHistory />
+      </SfTab>
+      <SfMenuItem
+        :label="$t('pages.my_account.content_page_title_log_out')"
+        class="sf-accordion-item__header"
+        @click="handleLogout"
+      />
+    </SfTabs>
+
+    <div class="my-account desktop-only">
       <div class="my-account__sidebar">
         <h1>{{ $t('pages.my_account.content_page_title_my_account') }}</h1>
         <h2>{{ $t('pages.my_account.content_category_title_personal_details') }}</h2>
@@ -21,7 +43,7 @@
   </div>
 </template>
 <script>
-import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
+import { SfBreadcrumbs, SfContentPages, SfTabs, SfMenuItem } from '@storefront-ui/vue';
 import {
   useRouter
 } from '@nuxtjs/composition-api';
@@ -30,18 +52,18 @@ import MyProfile from './MyAccount/MyProfile';
 import SavedAddressesDetails from './MyAccount/SavedAddressesDetails';
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
-import OrderDetails from './MyAccount/OrderDetails';
 
 export default {
   name: 'MyAccount',
   components: {
     SfBreadcrumbs,
     SfContentPages,
+    SfTabs,
+    SfMenuItem,
     MyProfile,
     SavedAddressesDetails,
     MyNewsletter,
-    OrderHistory,
-    OrderDetails
+    OrderHistory
   },
   middleware: ['is-authenticated', 'my-profile'],
   setup(props, context) {
@@ -90,6 +112,8 @@ export default {
 
   &__sidebar {
     width: var(--sidebar-width);
+    padding: 2rem;
+    background-color: var(--c-light);
     font-family: var(--font-family--secondary);
 
     h1 {
@@ -114,6 +138,7 @@ export default {
   }
   &__view {
     width: calc(100% - var(--sidebar-width));
+    padding: 2rem;
   }
   &__logout {
     cursor: pointer;
