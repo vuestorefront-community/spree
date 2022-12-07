@@ -7,7 +7,7 @@ export default async function removeFromCart({ client, config }: ApiContext, { l
   try {
     config.auth.changeCartToken(token);
     const currency = await config.internationalization.getCurrency();
-    const result = await client.cart.removeItem({ orderToken: token }, lineItemId, { ...cartParams, currency });
+    const result = await client.cart.removeItem({ id: lineItemId, order_token: token, ...cartParams, currency });
 
     if (result.isSuccess()) {
       const payload = result.success();

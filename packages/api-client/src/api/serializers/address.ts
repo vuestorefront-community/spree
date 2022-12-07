@@ -1,5 +1,4 @@
-import { AccountAddressAttr } from '@spree/storefront-api-v2-sdk/types/interfaces/Account';
-import { IAddress } from '@spree/storefront-api-v2-sdk/types/interfaces/attributes/Address';
+import type { AccountAddressAttr, IAddress } from '@spree/storefront-api-v2-sdk/dist/server';
 import { Address } from '../../types';
 
 export const deserializeAddress = (apiAddress: AccountAddressAttr): Address => ({

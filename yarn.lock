@@ -3128,10 +3128,15 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@spree/storefront-api-v2-sdk@5.1.8":
-  version "5.1.8"
-  resolved "https://registry.yarnpkg.com/@spree/storefront-api-v2-sdk/-/storefront-api-v2-sdk-5.1.8.tgz#e9a6d3dd9d5d744f233f8075816963350408607d"
-  integrity sha512-Pyhjm6HaGzb1JsIJt48vN1CmaDDeYgtF+DS8i4AJ9CCrI0cjYdqifqDBgQlOkv/2EkKSPrkug/59GijSoKkDMw==
+"@spree/axios-fetcher@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@spree/axios-fetcher/-/axios-fetcher-1.0.0.tgz#d990ed38ee8bc33706f196a797f90117f8bd4d6d"
+  integrity sha512-mflTBxdhiYAlVvHqZnzsDOs2w4e3CDIUTa4SvK6X9jZy7VhWhPocS9u8Zo8nsLm77kus2oeq3jcZljbEJEbEhw==
+
+"@spree/storefront-api-v2-sdk@6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@spree/storefront-api-v2-sdk/-/storefront-api-v2-sdk-6.0.1.tgz#6e3cc7c97e26a2134c670e0528743a0a37e72be1"
+  integrity sha512-QJ8Idpgy/usYi/+rLoL0Cr7L4ldVnsRx25A8VKDQy5WuKa1NtI6EPZc2mzmU2y4jJgOQ07XpE/s+uqGdI0rvrA==
 
 "@storefront-ui/shared@0.11.0":
   version "0.11.0"

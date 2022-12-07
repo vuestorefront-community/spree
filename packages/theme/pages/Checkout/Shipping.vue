@@ -373,7 +373,7 @@ export default {
     };
 
     const populateSelectedAddressId = () => {
-      if (checkoutShippingAddress.value && savedAddresses.value?.addresses) {
+      if (checkoutShippingAddress.value && savedAddresses.value?.addresses && savedAddresses.value?.addresses?.length) {
         selectedSavedAddressId.value = savedAddresses.value.addresses.find(e => isEqualAddress(e, checkoutShippingAddress.value))?._id;
       }
     };

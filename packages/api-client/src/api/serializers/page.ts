@@ -1,6 +1,8 @@
-import { JsonApiDocument } from '@spree/storefront-api-v2-sdk/types/interfaces/JsonApi';
+import type {
+  JsonApiDocument,
+  RelationType
+} from '@spree/storefront-api-v2-sdk';
 import type { PageAttr } from '@spree/storefront-api-v2-sdk/types/interfaces/Page';
-import type { RelationType } from '@spree/storefront-api-v2-sdk/types/interfaces/Relationships';
 import { CmsSection, ContentPage, PagesSearchResult } from '../../types';
 
 export const deserializeLinks = (links: string[]): string[] => {

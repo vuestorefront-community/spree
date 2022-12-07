@@ -1,20 +1,23 @@
-import { SpreeError } from '@spree/storefront-api-v2-sdk/types/errors';
-import { IToken } from '@spree/storefront-api-v2-sdk/types/interfaces/Token';
+import {
+  SpreeError,
+  RequiredAnyToken,
+  OptionalAccountToken
+} from '@spree/storefront-api-v2-sdk/dist/server';
 import { ApiContext, Cart } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializeCart } from '../serializers/cart';
 import { cartParams } from '../common/cart';
 import { Logger } from '@vue-storefront/core';
 
-async function createCart({ client, config }: ApiContext, token: IToken): Promise<Cart> {
+async function createCart({ client, config }: ApiContext, token: OptionalAccountToken): Promise<Cart> {
   const currency = await config.internationalization.getCurrency();
-  const createCartResult = await client.cart.create(token, { ...cartParams, currency });
+  const createCartResult = await client.cart.create({ ...token, ...cartParams, currency });
 
   if (createCartResult.isSuccess()) {
     const payload = createCartResult.success();
     const cart = deserializeCart(payload.data, payload.included, config);
 
-    const isGuestUser = !(token?.bearerToken);
+    const isGuestUser = !(token?.bearer_token);
     if (isGuestUser) {
       const newCartToken = payload.data.attributes.token;
       await config.auth.changeCartToken(newCartToken);
@@ -28,9 +31,9 @@ async function createCart({ client, config }: ApiContext, token: IToken): Promis
 
 export default async function getOrCreateCart({ client, config }: ApiContext): Promise<Cart> {
   try {
-    const token = await getCurrentBearerOrCartToken({ client, config });
+    const token = await getCurrentBearerOrCartToken({ client, config }) as RequiredAnyToken;
     const currency = await config.internationalization.getCurrency();
-    const result = await client.cart.show(token, { ...cartParams, currency });
+    const result = await client.cart.show({ ...token, ...cartParams, currency });
 
     if (result.isSuccess()) {
       const payload = result.success();

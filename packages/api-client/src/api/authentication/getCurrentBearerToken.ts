@@ -1,17 +1,16 @@
+import type { OptionalAnyToken } from '@spree/storefront-api-v2-sdk';
 import { Logger } from '@vue-storefront/core';
 import { ApiContext } from '../../types';
 
-export default async function getCurrentBearerToken({ client, config }: ApiContext): Promise<string> {
+export default async function getCurrentBearerToken({ client, config }: ApiContext): Promise<OptionalAnyToken> {
   const token = await config.auth.getOAuthToken();
-  if (!token) {
-    return;
-  }
+  if (!token) return;
 
   const tokenExpiresAt = token.created_at + token.expires_in;
   const currentTime = Date.now() / 1000;
 
   if (currentTime < tokenExpiresAt) {
-    return token.access_token;
+    return { bearer_token: token.access_token };
   }
 
   const result = await client.authentication.refreshToken({ refresh_token: token.refresh_token });
@@ -26,5 +25,5 @@ export default async function getCurrentBearerToken({ client, config }: ApiConte
   const newToken = result.success();
   await config.auth.changeOAuthToken(newToken);
 
-  return newToken.access_token;
+  return { bearer_token: newToken.access_token };
 }

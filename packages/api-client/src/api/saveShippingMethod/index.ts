@@ -1,13 +1,15 @@
 import { Logger } from '@vue-storefront/core';
 import { ApiContext } from '../../types';
+import type { RequiredAnyToken } from '@spree/storefront-api-v2-sdk';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializeCartShipments } from '../serializers/shipping';
 
 export default async ({ client, config }: ApiContext, { selectedShippingRates }) => {
   try {
-    const token = await getCurrentBearerOrCartToken({ client, config });
+    const token = await getCurrentBearerOrCartToken({ client, config }) as RequiredAnyToken;
     const currency = await config.internationalization.getCurrency();
-    const result = await client.checkout.orderUpdate(token, {
+    const result = await client.checkout.orderUpdate({
+      ...token,
       order: {
         shipments_attributes: Object.entries(selectedShippingRates).map(([shipmentId, shippingRateId]: [string, number]) => ({
           id: shipmentId,
