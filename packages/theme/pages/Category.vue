@@ -28,7 +28,7 @@
               :show-chevron="true"
             >
               <SfAccordionItem
-                v-for="(cat, i) in ((menu && menu.items) || (categoryTree && categoryTree.items))"
+                v-for="(cat, i) in (categoryTree && categoryTree.items)"
                 :key="i"
                 :header="cat.name || cat.label"
               >
@@ -213,8 +213,8 @@ import {
   SfColor,
   SfProperty
 } from '@storefront-ui/vue';
-import { computed, onMounted, useContext } from '@nuxtjs/composition-api';
-import { useCart, useWishlist, productGetters, useFacet, facetGetters, useUser, wishlistGetters, useMenus } from '@vue-storefront/spree';
+import { computed, useContext } from '@nuxtjs/composition-api';
+import { useCart, useWishlist, productGetters, useFacet, facetGetters, useUser, wishlistGetters } from '@vue-storefront/spree';
 import { useUiHelpers, useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
@@ -236,19 +236,14 @@ export default {
     const { result, search, loading, error } = useFacet();
     const { wishlist, addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist } = useWishlist();
     const { isAuthenticated } = useUser();
-    const { menu, loadMenu } = useMenus('header');
     const products = computed(() => facetGetters.getProducts(result.value));
     const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(result.value).map(e => ({...e, link: context.localePath(e.link)})));
     const pagination = computed(() => facetGetters.getPagination(result.value));
     const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
-    const { locale } = context.app.i18n;
 
     const getRoute = (category) => {
-      const slugBasedRoute = `/c/${category.slug}`;
-      if (menu.value.isDisabled) {
-        return slugBasedRoute;
-      }
-      return category.link || slugBasedRoute;
+      if (category.slug) return `/c/${category.slug}`;
+      return '';
     };
 
     const activeCategory = computed(() => {
@@ -274,10 +269,6 @@ export default {
       }
     };
 
-    onMounted(async () => {
-      await loadMenu({menuType: 'header', menuName: 'Main menu', locale: locale});
-    });
-
     onSSR(async () => {
       await search(th.getFacetsFromURL());
       if (error?.value?.search) context.app.nuxt.error({ statusCode: 404 });
@@ -297,8 +288,7 @@ export default {
       isInCart,
       handleWishlistClick,
       isWishlistDisabled,
-      getRoute,
-      menu
+      getRoute
     };
   },
   components: {
