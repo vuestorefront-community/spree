@@ -67,6 +67,7 @@ export default {
     SfButton,
     SfProperty
   },
+  middleware: ['order-details'],
   setup(_, context) {
     const route = useRoute();
     const router = useRouter();

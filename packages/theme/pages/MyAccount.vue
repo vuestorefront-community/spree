@@ -4,114 +4,78 @@
       class="breadcrumbs desktop-only"
       :breadcrumbs="breadcrumbs"
     />
-    <SfContentPages
-      v-e2e="'my-account-content-pages'"
-      :title="$t('pages.my_account.content_page_title_my_account')"
-      :active="activePage.localizedTitle"
-      class="my-account"
-      @click:change="changeActivePage"
+    <SfTabs
+      :openTab="1"
+      tabShowText="show"
+      tabHideText="hide"
+      class="smartphone-only"
     >
-      <SfContentCategory :title="$t('pages.my_account.content_category_title_personal_details')">
-        <SfContentPage :title="$t('pages.my_account.content_page_title_my_profile')">
-          <MyProfile />
-        </SfContentPage>
+      <SfTab :title="$t('pages.my_account.content_page_title_my_profile')">
+        <MyProfile />
+      </SfTab>
+      <SfTab :title="$t('pages.my_account.content_page_title_saved_addresses')">
+        <SavedAddressesDetails />
+      </SfTab>
+      <SfTab :title="$t('pages.my_account.content_page_title_order_history')">
+        <OrderHistory />
+      </SfTab>
+      <SfMenuItem
+        :label="$t('pages.my_account.content_page_title_log_out')"
+        class="sf-accordion-item__header"
+        @click="handleLogout"
+      />
+    </SfTabs>
 
-        <SfContentPage :title="$t('pages.my_account.content_page_title_saved_addresses')">
-          <SavedAddressesDetails />
-        </SfContentPage>
-      </SfContentCategory>
-
-      <SfContentCategory :title="$t('pages.my_account.content_category_title_order_details')">
-        <SfContentPage :title="$t('pages.my_account.content_page_title_order_history')">
-          <OrderHistory />
-        </SfContentPage>
-        <OrderDetails v-if="activePage.pageName === 'order-details'" />
-      </SfContentCategory>
-
-      <SfContentPage :title="$t('pages.my_account.content_page_title_log_out')" />
-    </SfContentPages>
+    <div class="my-account desktop-only">
+      <div class="my-account__sidebar">
+        <h1>{{ $t('pages.my_account.content_page_title_my_account') }}</h1>
+        <h2>{{ $t('pages.my_account.content_category_title_personal_details') }}</h2>
+        <NuxtLink to="/my-account/my-profile">{{ $t('pages.my_account.content_page_title_my_profile') }}</NuxtLink>
+        <NuxtLink to="/my-account/saved-addresses">{{ $t('pages.my_account.content_page_title_saved_addresses') }}</NuxtLink>
+        <h2>{{ $t('pages.my_account.content_category_title_order_details') }}</h2>
+        <NuxtLink to="/my-account/order-history">{{ $t('pages.my_account.content_page_title_order_history') }}</NuxtLink>
+        <button class="my-account__logout" @click="handleLogout">{{ $t('pages.my_account.content_page_title_log_out') }}</button>
+      </div>
+      <div class="my-account__view">
+        <NuxtChild />
+      </div>
+    </div>
   </div>
 </template>
 <script>
-import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
+import { SfBreadcrumbs, SfContentPages, SfTabs, SfMenuItem } from '@storefront-ui/vue';
 import {
-  computed,
-  useRoute,
-  useRouter,
-  onBeforeUnmount
+  useRouter
 } from '@nuxtjs/composition-api';
 import { useUser } from '@vue-storefront/spree';
 import MyProfile from './MyAccount/MyProfile';
 import SavedAddressesDetails from './MyAccount/SavedAddressesDetails';
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
-import OrderDetails from './MyAccount/OrderDetails';
-import {
-  mapMobileObserver,
-  unMapMobileObserver
-} from '@storefront-ui/vue/src/utilities/mobile-observer.js';
 
 export default {
   name: 'MyAccount',
   components: {
     SfBreadcrumbs,
     SfContentPages,
+    SfTabs,
+    SfMenuItem,
     MyProfile,
     SavedAddressesDetails,
     MyNewsletter,
-    OrderHistory,
-    OrderDetails
+    OrderHistory
   },
-  middleware: ['is-authenticated'],
+  middleware: ['is-authenticated', 'my-profile'],
   setup(props, context) {
-    const route = useRoute();
     const router = useRouter();
     const { logout } = useUser();
-    const isMobile = computed(mapMobileObserver().isMobile);
 
-    const handleOpenPage = async ({ pageName }) => {
-      const pageRoute = {
-        ...route.value,
-        path: context.root.localePath(route.value.path),
-        params: { pageName }
-      };
-      router.push(pageRoute);
+    const handleLogout = async () => {
+      await logout();
+      router.replace(context.root.localePath({ name: 'home' }));
     };
 
-    const handleLogout = async () =>
-      logout()
-        .then(() => context.root.localePath({ name: 'home' }))
-        .then(path => router.push(path));
-
-    const pages = computed(() => [
-      { pageName: 'my-profile', i18nKey: 'pages.my_account.content_page_title_my_profile', onActive: handleOpenPage },
-      { pageName: 'saved-addresses', i18nKey: 'pages.my_account.content_page_title_saved_addresses', onActive: handleOpenPage },
-      { pageName: 'order-history', i18nKey: 'pages.my_account.content_page_title_order_history', onActive: handleOpenPage },
-      { pageName: 'order-details', i18nKey: 'pages.my_account.content_page_title_order_details' },
-      { pageName: 'log-out', i18nKey: 'pages.my_account.content_page_title_log_out', onActive: handleLogout }
-    ].map((page) => ({ ...page, localizedTitle: context.root.$i18n.t(page.i18nKey) })));
-
-    const findPageByPageName = (name) => pages.value.find(({ pageName }) => pageName === name);
-
-    const findPageByLocalizedTitle = (title) => pages.value.find(({ localizedTitle }) => localizedTitle === title);
-
-    const changeActivePage = async (title) => {
-      const page = findPageByLocalizedTitle(title);
-      if (!page) return handleOpenPage({ pageName: undefined });
-      await page?.onActive?.(page);
-    };
-
-    const activePage = computed(() => {
-      const { pageName } = route.value.params;
-      if (!pageName) return isMobile.value ? {} : findPageByPageName('my-profile');
-      return findPageByPageName(pageName);
-    });
-
-    onBeforeUnmount(() => {
-      unMapMobileObserver();
-    });
-
-    return { changeActivePage, activePage };
+    return { handleLogout };
   },
 
   data(root) {
@@ -139,19 +103,50 @@ export default {
     margin: 0 auto;
   }
 }
-.my-account {
-  @include for-mobile {
-    --content-pages-sidebar-category-title-font-weight: var(
-      --font-weight--normal
-    );
-    --content-pages-sidebar-category-title-margin: var(--spacer-sm)
-      var(--spacer-sm) var(--spacer-sm) var(--spacer-base);
-  }
-  @include for-desktop {
-    --content-pages-sidebar-category-title-margin: var(--spacer-xl) 0 0 0;
-  }
-}
 .breadcrumbs {
   margin: var(--spacer-base) 0 var(--spacer-lg);
+}
+.my-account {
+  display: flex;
+  --sidebar-width: 300px;
+
+  &__sidebar {
+    width: var(--sidebar-width);
+    padding: 2rem;
+    background-color: var(--c-light);
+    font-family: var(--font-family--secondary);
+
+    h1 {
+      font-weight: var(--content-pages-sidebar-title-font-weight);
+      font-size: var(--h3-font-size);
+      margin: var(--content-pages-sidebar-title-margin, 0 0 var(--spacer-xl) 0);
+    }
+    h2 {
+      font-weight: var(--font-weight--bold);
+      font-size: var(--font-size--lg);
+      margin: var(--content-pages-sidebar-category-title-margin, var(--spacer-sm) 0);
+    }
+
+    a {
+      display: block;
+      color: var(--c-dark-variant);
+      margin: var(--spacer-base) 0;
+    }
+    .nuxt-link-active {
+      color: var(--c-primary)
+    }
+  }
+  &__view {
+    width: calc(100% - var(--sidebar-width));
+    padding: 2rem;
+  }
+  &__logout {
+    cursor: pointer;
+    outline: none;
+    border: none;
+    background: transparent;
+    padding: 0;
+    font-size: inherit;
+  }
 }
 </style>

@@ -48,16 +48,28 @@ export const getRoutes = (themeDir = __dirname): NuxtRouteConfig[] => {
       chunkName: '_theme/pages/MyAccount.vue',
       children: [
         {
-          name: 'MyAccount-Page',
-          path: '/my-account/:pageName?',
-          component: resolve(themeDir, '_theme/pages/MyAccount.vue'),
-          chunkName: '_theme/pages/MyAccount.vue'
+          name: 'MyAccount-MyProfile',
+          path: '/my-account/my-profile',
+          component: resolve(themeDir, '_theme/pages/MyAccount/MyProfile.vue'),
+          chunkName: '_theme/pages/MyAccount/MyProfile.vue'
         },
         {
-          name: 'MyAccount-Subpage',
-          path: '/my-account/:pageName/:id?',
-          component: resolve(themeDir, '_theme/pages/MyAccount.vue'),
-          chunkName: '_theme/pages/MyAccount.vue'
+          name: 'MyAccount-SavedAddresses',
+          path: '/my-account/saved-addresses',
+          component: resolve(themeDir, '_theme/pages/MyAccount/SavedAddressesDetails.vue'),
+          chunkName: '_theme/pages/MyAccount/SavedAddressesDetails.vue'
+        },
+        {
+          name: 'MyAccount-OrderHistory',
+          path: '/my-account/order-history',
+          component: resolve(themeDir, '_theme/pages/MyAccount/OrderHistory.vue'),
+          chunkName: '_theme/pages/MyAccount/OrderHistory.vue'
+        },
+        {
+          name: 'MyAccount-OrderDetails',
+          path: '/my-account/order-details/:id?',
+          component: resolve(themeDir, '_theme/pages/MyAccount/OrderDetails.vue'),
+          chunkName: '_theme/pages/MyAccount/OrderDetails.vue'
         }
       ]
     },
