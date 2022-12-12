@@ -10,12 +10,11 @@ export default async function getPaymentConfirmationData({ client, config }: Api
     const currency = await config.internationalization.getCurrency();
     const endpoint = config.backendUrl.concat('/api/v2/storefront/intents/payment_confirmation_data');
     const response = await axios.post(
-      endpoint,
+      endpoint, {
+        currency: currency
+      },
       {
-        headers: getAuthorizationHeaders(token),
-        params: {
-          currency
-        }
+        headers: getAuthorizationHeaders(token)
       }
     );
 
