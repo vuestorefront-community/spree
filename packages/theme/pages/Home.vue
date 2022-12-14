@@ -19,6 +19,7 @@
               background="#eceff1"
               :image="section.imgOneXl"
               :buttonText="section.buttonText"
+              link="/c/categories"
             />
           </SfHero>
         </LazyHydrate>
