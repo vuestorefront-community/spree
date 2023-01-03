@@ -11,8 +11,8 @@
       "value": "https://demo.spreecommerce.org"
     },
     "SPREE_VERSION": {
-      "description": "Spree version of the backend. Either \"spree42\" or \"spree43\".",
-      "value": "spree42"
+      "description": "Spree version of the backend. Either \"spree43\", \"spree44\" or \"spree45\".",
+      "value": "spree45"
     }
   },
   "buildpacks": [
