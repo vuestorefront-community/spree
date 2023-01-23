@@ -1,4 +1,4 @@
 #!/bin/bash
 set -o errexit
 
-yarn dev
+docker compose up

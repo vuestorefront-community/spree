@@ -24,25 +24,29 @@ This integration is being developed and maintained by [Upside](https://upsidelab
 ## Requirements
 
 - Node 14.15+
-- Spree-based store with V2 API available. Some API endpoints used by the integration are only available in Spree 4.2+, so you may need to either upgrade the store or backport these features to your backend.
+- Spree 4.3+
 
 ## Deploy in the cloud
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 ## Getting Started
 
+The easiest way to setup a new Spree + Vue Storefront setup, is to follow out [Quick Start Guide](https://dev-docs.spreecommerce.org/getting-started/quick-start-guide).
+
+Simply run the Spree CLI and follow the instructions:
+
+```sh
+npx @spree/cli new app
+```
+
+## Manually adding Vue Storefront to an existing Spree project
+
 1. Clone this repository
 ```sh
 git clone https://github.com/vuestorefront/spree.git
 ```
 
-2. Install all required dependencies:
-
-```sh
-yarn install
-```
-
-3. Set backend URL via env variable
+2. Set backend URL via env variable
 ```sh
 export BACKEND_URL=https://demo.spreecommerce.org
 ```
@@ -51,44 +55,19 @@ Or via `.env.development` file:
 BACKEND_URL=https://demo.spreecommerce.org
 ```
 
-4. Then build all three projects:
+3. Then install dependencies and build the required packages
 
 ```sh
-yarn build
+bin/setup
 ```
 
 5. If everything built properly, you can start working on your new frontend with:
 
 ```sh
-yarn dev
+bin/start
 ```
 
 Changing some parts of the code (notably the `api-client`) will trigger a re-build but the change will not be hot-reloaded. To ensure that the app sees you changes, re-run either `yarn build` or `yarn dev`.
-
-## Running Vue Storefront + Spree in Docker
-
-1. Initialize the Git submodules and setup Spree images
-```sh
-./bin/setup
-```
-
-2. (optional) Seed the backend database
-```sh
-./bin/seed
-```
-
-3. Start the application
-```sh
-./bin/start
-```
-
-The Vue Storefront application is available at `http://localhost:3000`.
-The Spree backend is exposed at `http://localhost:4000`.
-
-4. Stopping the application
-```sh
-./bin/stop
-```
 
 ## Enabling optional features
 
@@ -127,32 +106,6 @@ The monorepo contains three submodules:
 
 For more details, refer to the official [project structure](https://docs.vuestorefront.io/v2/getting-started/project-structure.html).
 
-## Feature support
-
-| Feature | Status | Notes |
-| --- | --- | --- |
-| Sign in | Available | |
-| Sign up | Available | |
-| Product catalog | Available | Default implementation uses /v2/storefront/products endpoint for filtering, it's advisable to use ElasticSearch for best performance | Product details page | Available | |
-| Account | Partial | Requires Spree 4.2 |
-| Account - saved addresses | Available | Requires Spree 4.2 |
-| Account - reset password | Available | URL from password reset emails should point to: `/resetPassword?token=...` |
-| Account - order history | Available | |
-| Cart | Available | Associating guest orders upon login requires Spree 4.3 and needs to be enable via configuration |
-| Checkout | Available | |
-| Checkout - Shipping methods | Available | |
-| Checkout - Payment methods | Available | Cash and Stripe Elements gateways supported out of the box. |
-| Wishlists | Available | Available only for logged in users. By default, this feature is disabled and can be enabled in `middleware.config.js` |
-| Multi-currency support | Available | Requires Spree 4.2 or spree_multi_currency extension |
-
-## Caching and performance concerns
-
-### Spree 4.3
-
-V2 API endpoints include built-in cache.
-
-### Spree 4.2
-In Spree < 4.3, API endpoints aren't cached out of the box. To ensure smooth operation of the frontend, you need to add caching to GET actions of the API. Putting e.g. AWS Cloudfront in front of the API is a fairly simple option and can do wonders in that regard. If your application uses custom logic (e.g. different price for each user), remember to make sure that your cache keys reflect that.
 
 ## Resources
 
