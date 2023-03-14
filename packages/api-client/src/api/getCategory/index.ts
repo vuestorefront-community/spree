@@ -4,8 +4,13 @@ import { deserializeCategories } from '../serializers/category';
 
 const findCategory = (categories: Category[], slug: string) => categories.find(e => e.slug === slug);
 
-export default async function getCategory({ client }: ApiContext, { categorySlug }: GetCategoryParams): Promise<CategorySearchResult> {
-  const result = await client.taxons.list({ fields: { taxon: 'name,permalink,children,parent,is_root' }, per_page: 500 });
+export default async function getCategory({ client, config }: ApiContext, { categorySlug }: GetCategoryParams): Promise<CategorySearchResult> {
+  const locale = await config.internationalization.getLocale();
+  const result = await client.taxons.list({
+    fields: { taxon: 'name,permalink,children,parent,is_root' },
+    per_page: 500,
+    locale
+  });
 
   if (result.isSuccess()) {
     try {

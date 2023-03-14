@@ -4,6 +4,7 @@ import { addHostToProductImages, deserializeSingleProductVariants } from '../ser
 
 export default async function getProduct({ client, config }: ApiContext, { slug }: GetProductParams): Promise<ProductVariant[]> {
   const currency = await config.internationalization.getCurrency();
+  const locale = await config.internationalization.getLocale();
 
   let include;
 
@@ -21,7 +22,8 @@ export default async function getProduct({ client, config }: ApiContext, { slug 
         variant: 'sku,price,display_price,in_stock,product,images,option_values,is_master'
       },
       include,
-      currency
+      currency,
+      locale
     }
   );
 
