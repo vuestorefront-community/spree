@@ -5,11 +5,17 @@ import * as dotenv from 'dotenv';
 
 dotenv.config({ path: `./../../.env.${process.env.NODE_ENV}` });
 
+const serverConfig = {
+  port: process.env.PORT || 3000,
+  host: process.env.HOST || '0.0.0.0',
+  baseUrl: process.env.BASE_URL || 'http://localhost:3000'
+};
+
 export default {
   ssr: true,
   server: {
-    port: process.env.PORT || 3000,
-    host: process.env.HOST || '0.0.0.0'
+    port: serverConfig.port,
+    host: serverConfig.host
   },
   head: {
     title: 'Vue Storefront',
@@ -96,7 +102,7 @@ export default {
       }
     }],
     ['nuxt-i18n', {
-      baseUrl: process.env.BASE_URL || 'http://localhost:3000'
+      baseUrl: serverConfig.baseUrl
     }],
     'cookie-universal-nuxt',
     'vue-scrollto/nuxt',
@@ -190,6 +196,6 @@ export default {
       { code: 'EUR', label: 'Euro' }
     ],
     backendUrl: process.env.BACKEND_URL,
-    middlewareUrl: 'http://localhost:3000/api/'
+    middlewareUrl: new URL('/api', serverConfig.baseUrl).href
   }
 };
