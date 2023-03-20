@@ -7,7 +7,7 @@
         </p>
         <div v-if="orders.length === 0" class="no-orders">
           <p class="no-orders__title">{{ $t('pages.my_account.order_history.you_currently_have_no_orders') }}</p>
-          <SfButton class="no-orders__button">{{ $t('pages.my_account.order_history.start_shopping') }}</SfButton>
+          <SfButton class="no-orders__button" link="/c/categories">{{ $t('pages.my_account.order_history.start_shopping') }}</SfButton>
         </div>
         <SfTable v-else class="orders">
           <SfTableHeading>
@@ -103,7 +103,7 @@ export default {
   &__button {
     --button-width: 100%;
     @include for-desktop {
-      --button-width: 17,5rem;
+      --button-width: 17.5rem;
     }
   }
 }
