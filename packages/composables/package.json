@@ -13,7 +13,7 @@
     "prepublish": "yarn build"
   },
   "dependencies": {
-    "@vue-storefront/core": "^2.5.0",
+    "@vue-storefront/core": "2.5.7",
     "@vue-storefront/spree-api": "1.3.0",
     "lodash": "^4.17.21"
   },

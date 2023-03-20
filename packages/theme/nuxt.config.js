@@ -189,6 +189,7 @@ export default {
       { code: 'USD', label: 'Dollar' },
       { code: 'EUR', label: 'Euro' }
     ],
-    backendUrl: process.env.BACKEND_URL
+    backendUrl: process.env.BACKEND_URL,
+    middlewareUrl: 'http://localhost:3000/api/'
   }
 };
