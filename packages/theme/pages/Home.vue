@@ -155,14 +155,9 @@ import NewsletterModal from '~/components/NewsletterModal.vue';
 import LazyHydrate from 'vue-lazy-hydration';
 import { useUiState } from '../composables';
 import { useContent } from '@vue-storefront/spree';
-import cacheControl from './../helpers/cacheControl';
 
 export default {
   name: 'Home',
-  middleware: cacheControl({
-    'max-age': 60,
-    'stale-when-revalidate': 5
-  }),
   components: {
     InstagramFeed,
     SfHero,

@@ -1,5 +1,5 @@
 <template>
-  <SfFooter v-if="!menu.isDisabled" :column="parseInt(menuSize)" multiple class="footer">
+  <SfFooter v-if="menu && !menu.isDisabled" :column="parseInt(menuSize)" multiple class="footer">
     <SfFooterColumn
       v-for="(column, i) in menu && menu.items"
       :key="i"
