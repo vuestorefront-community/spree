@@ -33,7 +33,7 @@ export default {
     }
   },
   setup(props) {
-    const isMenuAvailable = computed(() => !props.menu.isDisabled);
+    const isMenuAvailable = computed(() => props.menu && !props.menu.isDisabled);
 
     return {
       isMenuAvailable
