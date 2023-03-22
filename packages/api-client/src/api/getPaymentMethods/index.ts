@@ -1,4 +1,5 @@
 import axios from 'axios';
+import type { AxiosResponse } from 'axios';
 import { ApiContext } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializePaymentMethods } from '../serializers/payment';
@@ -11,7 +12,7 @@ export default async function getPaymentMethods({ client, config }: ApiContext) 
     // TODO check if new spree sdk supports additional params here
     const currency = await config.internationalization.getCurrency();
 
-    const response = await axios.get(
+    const response: AxiosResponse<{ data: Array<any> }> = await axios.get(
       `${config.backendUrl}/api/v2/storefront/checkout/payment_methods`,
       {
         params: {
