@@ -60,15 +60,25 @@ const defaultSettings = {
   }
 };
 
-const onCreate = (settings) => {
+const init = (settings) => {
+  const client = makeClient({ host: settings.backendUrl || defaultSettings.backendUrl, createFetcher: createAxiosFetcher });
+
   return {
-    config: {
-      ...defaultSettings,
-      ...settings
-    },
-    client: makeClient({ host: settings.backendUrl || defaultSettings.backendUrl, createFetcher: createAxiosFetcher })
+    config: settings,
+    client
   };
 };
+
+function onCreate(settings) {
+  if (!settings?.client) {
+    return init(settings);
+  }
+
+  return {
+    config: settings,
+    client: settings.client
+  };
+}
 
 const tokenExtension: ApiClientExtension = {
   name: 'tokenExtension',
@@ -140,5 +150,6 @@ const { createApiClient } = apiClientFactory<any, any>({
 });
 
 export {
-  createApiClient
+  createApiClient,
+  init
 };
