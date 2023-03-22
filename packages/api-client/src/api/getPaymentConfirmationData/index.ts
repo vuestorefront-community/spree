@@ -1,4 +1,5 @@
 import axios from 'axios';
+import type { AxiosResponse } from 'axios';
 import { ApiContext } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import getAuthorizationHeaders from '../authentication/getAuthorizationHeaders';
@@ -9,7 +10,8 @@ export default async function getPaymentConfirmationData({ client, config }: Api
     const token = await getCurrentBearerOrCartToken({ client, config });
     const currency = await config.internationalization.getCurrency();
     const endpoint = config.backendUrl.concat('/api/v2/storefront/intents/payment_confirmation_data');
-    const response = await axios.post(
+    /* eslint-disable camelcase */
+    const response: AxiosResponse<{ client_secret: string }> = await axios.post(
       endpoint,
       {
         headers: getAuthorizationHeaders(token),
