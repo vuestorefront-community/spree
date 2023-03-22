@@ -3748,17 +3748,7 @@
     "@typescript-eslint/types" "4.33.0"
     eslint-visitor-keys "^2.0.0"
 
-"@vue-storefront/core@2.7.0":
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/@vue-storefront/core/-/core-2.7.0.tgz#95875cfd3b768322da0f68385d17c5fa52416c66"
-  integrity sha512-Wf2v6n0QWN7gfjvLV+ewWJoWW4FGmyE8bu6k3wo97bnd9z23XtMzl3F6+h1gEZa5lRrwBie8dXt+k0vb1+RSGQ==
-  dependencies:
-    axios "0.21.1"
-    express "^4.17.1"
-    lodash-es "^4.17.15"
-    vue "^2.6.11"
-
-"@vue-storefront/core@~2.7.0":
+"@vue-storefront/core@2.7.5", "@vue-storefront/core@~2.7.5":
   version "2.7.5"
   resolved "https://registry.yarnpkg.com/@vue-storefront/core/-/core-2.7.5.tgz#69b629d1c540f52e39220de18fb6e836552ea240"
   integrity sha512-mtUXY5FtFEUKUDcaOWGvOuYpPzT9nMvbJ1Z8CjcT48y4bEEnaq6doiAsMFGXGvUFJzOXqXiN3jpRZ3q9QRAsyA==
@@ -3768,32 +3758,32 @@
     lodash-es "^4.17.15"
     vue "^2.6.11"
 
-"@vue-storefront/middleware@2.7.0":
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/@vue-storefront/middleware/-/middleware-2.7.0.tgz#478fce0997c8a7fcde275086f35837d170f73632"
-  integrity sha512-EAapEgkRF2weurhNzUjF/ixL8bXDq/RURlqnyIkDNHXL1Mn5OgSGOMPYiC+q3cScjfyuH7hcMFSdVjN/vbo8rA==
+"@vue-storefront/middleware@2.7.5":
+  version "2.7.5"
+  resolved "https://registry.yarnpkg.com/@vue-storefront/middleware/-/middleware-2.7.5.tgz#b4654a7a08264973347153daa3d11345d35233bb"
+  integrity sha512-K79iuf8vLF5XbW65Ycx46jahTpIaI4Nim+Yl3guT+k8it3U3OQsjbI0K0ExALPOGDxwpIMxbQzKlCa3ACvF0+w==
   dependencies:
-    "@vue-storefront/core" "~2.7.0"
+    "@vue-storefront/core" "~2.7.5"
     consola "2.15.3"
     cookie-parser "^1.4.5"
     cors "^2.8.5"
     express "^4.17.1"
     helmet "^5.0.2"
 
-"@vue-storefront/nuxt-theme@2.7.0":
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/@vue-storefront/nuxt-theme/-/nuxt-theme-2.7.0.tgz#dd511513dbb03b62f45992c6520a1b5fb49a399e"
-  integrity sha512-kKc6E+xMpKcA4oN5b+ogDsdQUvPMWiyeOEvnteNDquYTeUO4o6tiMFaXSrPuwHZxt6Ty+bpjvHP3MvtV0MMHfg==
+"@vue-storefront/nuxt-theme@2.7.5":
+  version "2.7.5"
+  resolved "https://registry.yarnpkg.com/@vue-storefront/nuxt-theme/-/nuxt-theme-2.7.5.tgz#be4671a6692e0db50d24950ca61fe3e1316fb1dc"
+  integrity sha512-6R3qpWlezBA9n5unRMvBk7BVjCLETCxEuTEXYtxGRuSqoJKm7jrAVwxVJ/UiJTrz7G/Wuxh20EX+MecgLRqWyQ==
   dependencies:
     ejs "^3.0.2"
     lodash.debounce "^4.0.8"
     lodash.merge "^4.6.2"
     vue-lazy-hydration "^2.0.0-beta.4"
 
-"@vue-storefront/nuxt@2.7.0":
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/@vue-storefront/nuxt/-/nuxt-2.7.0.tgz#5abcaefc1f736109b31cd86536a37009d9e1e5e7"
-  integrity sha512-RqcaYPidTcs/fpvbCEKllRIu+WrnnRc6Vn2m88O/Ai5/TUbF3682lIkJtkQMtF6zJAsxgy5+WwOPTkWCsmrLqg==
+"@vue-storefront/nuxt@2.7.5":
+  version "2.7.5"
+  resolved "https://registry.yarnpkg.com/@vue-storefront/nuxt/-/nuxt-2.7.5.tgz#bb79f17aa8cb7233bf460e827362c16dfc0e3cb3"
+  integrity sha512-I0hoxPy5Re2honlvETQsrgSlyy7zdfpOmkqZ/ME6cH4rpfRN317B+5ijqVQzY9j+K64AKyoHqhg0Os0yjypWIA==
   dependencies:
     "@nuxt/typescript-build" "^2.0.0"
     "@nuxtjs/composition-api" "^0.29.3"
@@ -4614,13 +4604,6 @@ aws4@^1.8.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.11.0.tgz#d61f46d83b2519250e2784daf5b09479a8b41c59"
   integrity sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==
-
-axios@0.21.1:
-  version "0.21.1"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
-  integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
-  dependencies:
-    follow-redirects "^1.10.0"
 
 axios@0.22.0:
   version "0.22.0"
@@ -7915,11 +7898,6 @@ flush-write-stream@^1.0.0:
   dependencies:
     inherits "^2.0.3"
     readable-stream "^2.3.6"
-
-follow-redirects@^1.10.0:
-  version "1.14.4"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.4.tgz#838fdf48a8bbdd79e52ee51fb1c94e3ed98b9379"
-  integrity sha512-zwGkiSXC1MUJG/qmeIFH2HBJx9u0V46QGUe3YR1fXG8bXQxq7fLj0RjLZQ5nubr9qNJUZrH+xUcwXEoXNpfS+g==
 
 follow-redirects@^1.14.4:
   version "1.15.2"
