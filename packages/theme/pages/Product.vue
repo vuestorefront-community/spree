@@ -6,7 +6,7 @@
     />
     <div class="product">
       <LazyHydrate when-idle>
-        <SfGallery :images="productGallery" class="product__gallery" />
+        <SfGallery :images="productGallery" :imageWidth="422" :imageHeight="664" class="product__gallery" />
       </LazyHydrate>
 
       <div class="product__info">
@@ -373,6 +373,11 @@ export default {
   }
   &__gallery {
     flex: 1;
+
+    ::v-deep img {
+      width: 100%;
+      height: auto;
+    }
   }
 }
 .breadcrumbs {

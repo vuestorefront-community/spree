@@ -22,7 +22,7 @@
         class="table__row"
       >
         <SfTableData class="table__image">
-          <SfImage :src="cartGetters.getItemImage(product)" :alt="cartGetters.getItemName(product)" />
+          <SfImage :src="cartGetters.getItemImage(product)" :alt="cartGetters.getItemName(product)" :width="82" :height="100"/>
         </SfTableData>
         <SfTableData class="table__data table__description table__data">
           <div class="product-title">{{ cartGetters.getItemName(product) }}</div>
@@ -67,7 +67,7 @@
         <SfCheckbox v-e2e="'terms'" v-model="terms" name="terms" class="summary__terms">
           <template #label>
             <div class="sf-checkbox__label">
-              {{ $t('pages.checkout.payment.i_agree_to') }} <SfLink href="#"> {{ $t('pages.checkout.payment.terms_and_conditions') }}</SfLink>
+              {{ $t('pages.checkout.payment.i_agree_to') }} <SfLink link="/"> {{ $t('pages.checkout.payment.terms_and_conditions') }}</SfLink>
             </div>
           </template>
         </SfCheckbox>
@@ -201,7 +201,10 @@ export default {
       flex: 0 0 12rem;
     }
     &__image {
-      --image-width: 5.125rem;
+      ::v-deep img {
+        width: 5.125rem;
+        height: auto;
+      }
       text-align: left;
       margin: 0 var(--spacer-xl) 0 0;
     }
