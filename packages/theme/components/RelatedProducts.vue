@@ -9,6 +9,8 @@
           <SfProductCard
             :title="productGetters.getName(product)"
             :image="productGetters.getCoverImage(product)"
+            :imageWidth="216"
+            :imageHeight="240"
             :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
             :special-price="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
             :max-rating="5"
@@ -94,6 +96,12 @@ export default {
   }
   &__item {
     margin: 1.9375rem 0 2.4375rem 0;
+  }
+  .product-card {
+    ::v-deep img {
+      width: 100%;
+      height: auto;
+    }
   }
 }
 

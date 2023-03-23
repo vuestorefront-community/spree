@@ -91,6 +91,8 @@
               :style="{ '--index': i }"
               :title="productGetters.getName(product)"
               :image="productGetters.getCoverImage(product)"
+              :imageWidth="216"
+              :imageHeight="240"
               :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
               :special-price="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
               :show-add-to-cart-button="true"
@@ -120,6 +122,8 @@
               :title="productGetters.getName(product)"
               :description="productGetters.getDescription(product)"
               :image="productGetters.getCoverImage(product)"
+              :imageWidth="216"
+              :imageHeight="240"
               :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
               :special-price="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
               :is-in-wishlist="isInWishlist({ product })"
@@ -394,6 +398,10 @@ export default {
       --product-card-title-font-weight: var(--font-weight--normal);
       --product-card-add-button-bottom: var(--spacer-base);
       --product-card-title-margin: var(--spacer-sm) 0 0 0;
+    }
+    ::v-deep img {
+      width: 100%;
+      height: auto;
     }
   }
   &__product-card-horizontal {

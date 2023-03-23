@@ -9,7 +9,7 @@
       <!-- TODO: add mobile view buttons after SFUI team PR -->
       <template #logo>
         <a :href="localePath('/')" class="sf-header__logo">
-          <SfImage src="/icons/logo.svg" :alt="$t('components.app_header.alt_header_logo')" class="sf-header__logo-image"/>
+          <SfImage src="/icons/logo.svg" :alt="$t('components.app_header.alt_header_logo')" class="sf-header__logo-image" width="35" height="35"/>
         </a>
       </template>
       <template #navigation>

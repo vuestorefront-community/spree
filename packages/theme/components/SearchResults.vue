@@ -43,6 +43,8 @@
                   :score-rating="productGetters.getAverageRating(product)"
                   :reviews-count="7"
                   :image="productGetters.getCoverImage(product)"
+                  :imageWidth="216"
+                  :imageHeight="240"
                   :alt="productGetters.getName(product)"
                   :title="productGetters.getName(product)"
                   :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
@@ -60,6 +62,8 @@
                 :score-rating="productGetters.getAverageRating(product)"
                 :reviews-count="7"
                 :image="productGetters.getCoverImage(product)"
+                :imageWidth="216"
+                :imageHeight="240"
                 :alt="productGetters.getName(product)"
                 :title="productGetters.getName(product)"
                 :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
@@ -73,7 +77,7 @@
           </div>
         </div>
         <div v-else key="no-results" class="before-results">
-          <SfImage src="/error/error.svg" class="before-results__picture" :alt="$t('components.search_results.alt_error')" loading="lazy"/>
+          <SfImage src="/error/error.svg" class="before-results__picture" :alt="$t('components.search_results.alt_error')" loading="lazy" width="300" height="300" />
           <template v-if="term">
             <p class="before-results__paragraph">{{ $t('components.search_results.we_havent_found_any_results_for_given_phrase') }}</p>
           </template>
@@ -233,6 +237,10 @@ export default {
   @include for-desktop {
     margin: var(--spacer-2xs) 0;
   }
+  ::deep img {
+    width: 100%;
+    height: auto;
+  }
 }
 
 .before-results {
@@ -244,10 +252,12 @@ export default {
     padding: 0;
   }
   &__picture {
-    --image-width: 230px;
     margin-top: var(--spacer-2xl);
     @include for-desktop {
-      --image-width: 18.75rem;
+      ::v-deep img {
+        width: 18.75rem;
+        height: auto;
+      }
       margin-top: var(--spacer-base);
     }
   }
