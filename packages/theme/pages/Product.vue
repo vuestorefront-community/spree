@@ -134,10 +134,11 @@ import {
 
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
-import { ref, computed, useRoute, useRouter, useContext } from '@nuxtjs/composition-api';
+import { ref, computed, useRoute, useRouter, useContext, watch } from '@nuxtjs/composition-api';
 import { useProduct, useCart, productGetters } from '@vue-storefront/spree';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
+import localizedSlugsToRouteParams from '~/helpers/localizedSlugsToRouteParams';
 
 export default {
   name: 'Product',
@@ -166,6 +167,13 @@ export default {
       await search({ slug });
       await searchRelatedProducts({ categoryId: [categories.value[0]], limit: 8 });
     });
+
+    watch(product, (value) => {
+      if (value && value.localizedSlugs) {
+        const routeParams = localizedSlugsToRouteParams(product.value.localizedSlugs);
+        context.store.dispatch('i18n/setRouteParams', routeParams);
+      }
+    }, { immediate: true });
 
     const updateFilter = (filter) => {
       router.push({

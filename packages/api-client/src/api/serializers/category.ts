@@ -1,3 +1,9 @@
+const serializeCategoryBase = (category) => ({
+  id: category.id,
+  name: category.attributes.name,
+  slug: category.attributes.permalink,
+  localizedSlugs: category.attributes.localized_slugs
+});
 
 const findParent = (taxon, apiTaxons) => {
   if (taxon.attributes.is_root) {
@@ -9,9 +15,7 @@ const findParent = (taxon, apiTaxons) => {
   const parent = apiTaxons.find(taxon => taxon.id === parentId);
 
   return {
-    id: parent.id,
-    name: parent.attributes.name,
-    slug: parent.attributes.permalink,
+    ...serializeCategoryBase(parent),
     parent: findParent(parent, apiTaxons)
   };
 };
@@ -23,9 +27,7 @@ const findItems = (taxon, apiTaxons) => {
   const items = apiTaxons.filter(taxon => taxonIds.includes(taxon.id));
 
   return items.map(item => ({
-    id: item.id,
-    name: item.attributes.name,
-    slug: item.attributes.permalink,
+    ...serializeCategoryBase(item),
     items: findItems(item, apiTaxons),
     parent: findParent(item, apiTaxons)
   }));
@@ -33,9 +35,7 @@ const findItems = (taxon, apiTaxons) => {
 
 export const deserializeCategories = (apiTaxons) =>
   apiTaxons.map(taxon => ({
-    id: taxon.id,
-    name: taxon.attributes.name,
-    slug: taxon.attributes.permalink,
+    ...serializeCategoryBase(taxon),
     items: findItems(taxon, apiTaxons),
     parent: findParent(taxon, apiTaxons)
   }));
