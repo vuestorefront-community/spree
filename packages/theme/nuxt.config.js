@@ -2,6 +2,7 @@ import { getRoutes } from './routes';
 import theme from './themeConfig';
 import webpack from 'webpack';
 import * as dotenv from 'dotenv';
+import path from 'path';
 
 dotenv.config({ path: `./../../.env.${process.env.NODE_ENV}` });
 
@@ -196,6 +197,6 @@ export default {
       { code: 'EUR', label: 'Euro' }
     ],
     backendUrl: process.env.BACKEND_URL,
-    middlewareUrl: new URL('/api', serverConfig.baseUrl).href
+    middlewareUrl: path.join(serverConfig.baseUrl, '/api')
   }
 };
