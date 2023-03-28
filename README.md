@@ -97,6 +97,12 @@ module.exports = {
 
 ```
 
+## Serving under a subpath
+
+You might want to serve your store under a subpath (for example: `https://example.com/shop/`). In order to do that, you just have to add a `BASE_URL` environment variable to the `.env.production` file containing a full url.
+
+Note that in development it will still be served on the root path (`http://localhost:3000` by default) unless you change the `.env.development` file too.
+
 ## Repository structure
 
 The monorepo contains three submodules:
