@@ -23,7 +23,7 @@
     "cookie-universal-nuxt": "^2.1.5",
     "nuxt": "^2.15.8",
     "nuxt-i18n": "^6.28.0",
-    "path": "^0.12.7",
+    "url-join": "^5.0.0",
     "vee-validate": "^3.4.13",
     "vue-demi": "latest",
     "vue-scrollto": "^2.20.0",
