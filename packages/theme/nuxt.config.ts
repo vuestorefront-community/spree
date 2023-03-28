@@ -177,6 +177,7 @@ export default {
     ]
   },
   router: {
+    base: new URL(serverConfig.baseUrl).pathname,
     middleware: ['checkout'],
     scrollBehavior (_to, _from, savedPosition) {
       if (savedPosition) {
