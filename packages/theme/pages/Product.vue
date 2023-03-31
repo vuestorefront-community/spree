@@ -169,8 +169,8 @@ export default {
     });
 
     watch(product, (value) => {
-      if (value && value.localizedSlugs) {
-        const routeParams = localizedSlugsToRouteParams(product.value.localizedSlugs);
+      if (value && value.localizedSlugs && Object.keys(value.localizedSlugs).length) {
+        const routeParams = localizedSlugsToRouteParams(value.localizedSlugs);
         context.store.dispatch('i18n/setRouteParams', routeParams);
       }
     }, { immediate: true });

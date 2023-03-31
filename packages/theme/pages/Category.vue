@@ -270,7 +270,7 @@ export default {
     };
 
     watch(result, (value) => {
-      if (value && value.data) {
+      if (value && value.data && Object.keys(value.data.categories.current.localizedSlugs).length) {
         const routeParams = localizedSlugsToRouteParams(value.data.categories.current.localizedSlugs);
         context.store.dispatch('i18n/setRouteParams', routeParams);
       }

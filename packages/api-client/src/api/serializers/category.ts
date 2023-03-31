@@ -2,7 +2,7 @@ const serializeCategoryBase = (category) => ({
   id: category.id,
   name: category.attributes.name,
   slug: category.attributes.permalink,
-  localizedSlugs: category.attributes.localized_slugs
+  localizedSlugs: category.attributes.localized_slugs || {}
 });
 
 const findParent = (taxon, apiTaxons) => {
