@@ -11,12 +11,14 @@ const serverConfig = {
   port: process.env.PORT || 3000,
   host: process.env.HOST || '0.0.0.0',
   baseUrl: process.env.BASE_URL || 'http://localhost:3000',
-  backendUrl: process.env.BACKEND_URL
+  backendUrl: process.env.BACKEND_URL,
+  storeApiRoute: process.env.STORE_API_ROUTE || '/api/v2/storefront/store'
 };
 
 export default async () => {
   const store = await getStore({
-    backendUrl: serverConfig.backendUrl
+    backendUrl: serverConfig.backendUrl,
+    storeApiRoute: serverConfig.storeApiRoute
   });
 
   return {

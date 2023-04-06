@@ -3,6 +3,7 @@ import urlJoin from 'url-join';
 
 interface StoreConfig {
   backendUrl: string
+  storeApiRoute: string
 }
 
 /* eslint-disable camelcase */
@@ -35,8 +36,6 @@ interface Store {
   seoTitle?: string
 }
 
-const apiRoute = '/api/v2/storefront/store';
-
 const deserializeStore = ({ data: { attributes } }: StoreResponse): Store => ({
   name: attributes.name,
   url: attributes.url,
@@ -50,7 +49,9 @@ const deserializeStore = ({ data: { attributes } }: StoreResponse): Store => ({
 });
 
 const getStore = async (config: StoreConfig): Promise<Store> => {
-  const { data } = (await axios.get(urlJoin(config.backendUrl, apiRoute))) as { data: StoreResponse };
+  const { data } = (
+    await axios.get(urlJoin(config.backendUrl, config.storeApiRoute))
+  ) as { data: StoreResponse };
   return deserializeStore(data);
 };
 
