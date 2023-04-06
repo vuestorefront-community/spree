@@ -93,6 +93,8 @@
             <SfProductCard
               :title="productGetters.getName(product)"
               :image="productGetters.getCoverImage(product)"
+              :imageWidth="240"
+              :imageHeight="240"
               :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
               :max-rating="5"
               :score-rating="productGetters.getAverageRating(product)"
@@ -342,6 +344,10 @@ export default {
     }
     &__product {
       --product-card-add-button-transform: translate3d(0, 30%, 0);
+      ::deep img {
+        width: 100%;
+        height: auto;
+      }
     }
   }
   ::v-deep .sf-arrow--long .sf-arrow--right {
