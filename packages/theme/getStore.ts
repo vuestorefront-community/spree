@@ -49,9 +49,9 @@ const deserializeStore = ({ data: { attributes } }: StoreResponse): Store => ({
 });
 
 const getStore = async (config: StoreConfig): Promise<Store> => {
-  const { data } = (
-    await axios.get(urlJoin(config.backendUrl, config.storeApiRoute))
-  ) as { data: StoreResponse };
+  const requestUrl = urlJoin(config.backendUrl, config.storeApiRoute);
+  const { data } = await axios.get<StoreResponse>(requestUrl);
+
   return deserializeStore(data);
 };
 
