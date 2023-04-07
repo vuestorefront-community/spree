@@ -1,3 +1,6 @@
+import { TaxonAttr } from '@spree/storefront-api-v2-sdk';
+import { Category } from '../../types';
+
 const serializeCategoryBase = (category) => ({
   id: category.id,
   name: category.attributes.name,
@@ -5,7 +8,7 @@ const serializeCategoryBase = (category) => ({
   localizedSlugs: category.attributes.localized_slugs || {}
 });
 
-const findParent = (taxon, apiTaxons) => {
+const findParent = (taxon, apiTaxons: TaxonAttr[]): Category => {
   if (taxon.attributes.is_root) {
     return undefined;
   }
@@ -20,21 +23,21 @@ const findParent = (taxon, apiTaxons) => {
   };
 };
 
-const findItems = (taxon, apiTaxons) => {
+const findItems = (taxon, apiTaxons: TaxonAttr[]): Category[] => {
   if (taxon.attributes.is_leaf) return [];
 
   const taxonIds = taxon.relationships.children.data.map(child => child.id);
   const items = apiTaxons.filter(taxon => taxonIds.includes(taxon.id));
 
-  return items.map(item => ({
+  return items.map<Category>(item => ({
     ...serializeCategoryBase(item),
     items: findItems(item, apiTaxons),
     parent: findParent(item, apiTaxons)
   }));
 };
 
-export const deserializeCategories = (apiTaxons) =>
-  apiTaxons.map(taxon => ({
+export const deserializeCategories = (apiTaxons: TaxonAttr[]): Category[] =>
+  apiTaxons.map<Category>(taxon => ({
     ...serializeCategoryBase(taxon),
     items: findItems(taxon, apiTaxons),
     parent: findParent(taxon, apiTaxons)

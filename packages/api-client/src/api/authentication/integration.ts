@@ -1,9 +1,10 @@
 import { AuthIntegration } from '../../types';
+import { Request, Response } from 'express';
 
 const oauthTokenCookieName = 'spree-bearer-token';
 const cartTokenCookieName = 'spree-cart-token';
 
-export default function createAuthIntegration(req, res): AuthIntegration {
+export default function createAuthIntegration(req: Request, res: Response): AuthIntegration {
   const currentOAuthSerializedToken = req.cookies[oauthTokenCookieName];
   const currentOAuthToken = currentOAuthSerializedToken ? JSON.parse(currentOAuthSerializedToken) : null;
   const currentBearerToken = currentOAuthToken?.access_token;

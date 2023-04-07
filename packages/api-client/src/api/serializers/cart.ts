@@ -79,7 +79,7 @@ const findAddress = (data, included) => {
   };
 };
 
-export const deserializeCart = (apiCart: OrderAttr, included: any[], config: any): Cart => ({
+export const deserializeCart = (apiCart: OrderAttr, included: any[], config: ApiConfig): Cart => ({
   _id: parseInt(apiCart.id, 10),
   email: apiCart.attributes.email,
   number: apiCart.attributes.number,

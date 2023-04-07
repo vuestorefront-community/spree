@@ -1,3 +1,6 @@
+import { JsonApiDocument } from '@spree/storefront-api-v2-sdk';
+import { Menu } from '../../types';
+
 const findItems = (menu, apiMenus) => {
   if (menu.attributes.is_leaf) return [];
 
@@ -12,9 +15,9 @@ const findItems = (menu, apiMenus) => {
   }));
 };
 
-export const deserializeMenu = (apiMenus) =>
-  apiMenus.map(menu => ({
-    id: menu.id,
+export const deserializeMenu = (apiMenus: JsonApiDocument[]): Menu[] =>
+  apiMenus.map<Menu>(menu => ({
+    id: parseInt(menu.id),
     name: menu.attributes.name,
     link: menu.attributes.link,
     items: findItems(menu, apiMenus)

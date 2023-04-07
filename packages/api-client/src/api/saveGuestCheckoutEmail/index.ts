@@ -1,9 +1,12 @@
 import { Logger } from '@vue-storefront/core';
 import { ApiContext } from '../../types';
-import type { RequiredAnyToken } from '@spree/storefront-api-v2-sdk';
+import type { RequiredAnyToken, OrderAttr } from '@spree/storefront-api-v2-sdk';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 
-export default async function saveGuestCheckoutEmail({ client, config }: ApiContext, email: string) {
+export default async function saveGuestCheckoutEmail(
+  { client, config }: ApiContext,
+  email: string
+): Promise<OrderAttr> {
   try {
     const token = await getCurrentBearerOrCartToken({ client, config }) as RequiredAnyToken;
     const currency = await config.internationalization.getCurrency();

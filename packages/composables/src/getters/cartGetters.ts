@@ -20,7 +20,7 @@ export const getCartItemTotalPrice = (lineItem: LineItem): string => lineItem?.d
 
 export const getCartItemQty = (lineItem: LineItem): number => lineItem.qty;
 
-export const getCartItemAttributes = (lineItem: LineItem, filters?: Array<string>) => {
+export const getCartItemAttributes = (lineItem: LineItem, filters?: Array<string>): LineItem['options'] => {
   const { options } = lineItem;
   return filters.length > 0
     ? filters.reduce((filteredOptions, filter) => ({ ...filteredOptions, [filter]: options[filter] }), {})

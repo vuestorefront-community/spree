@@ -1,16 +1,16 @@
-import type { JsonApiDocument } from '@spree/storefront-api-v2-sdk';
+import type { JsonApiDocument, EstimatedShippingMethodAttr } from '@spree/storefront-api-v2-sdk';
 import { Shipment, ShippingRate } from '../..';
 import { extractRelationships } from './common';
 
-export const deserializeShippingRate = (method): ShippingRate => ({
+export const deserializeShippingRate = (method: EstimatedShippingMethodAttr): ShippingRate => ({
   id: method.id,
-  methodId: method.attributes.shipping_method_id,
+  methodId: method.attributes.shipping_method_id.toString(),
   name: method.attributes.name,
   selected: method.attributes.selected,
   cost: method.attributes.cost
 });
 
-export const deserializeShipment = (shipment, included: JsonApiDocument[]): Shipment => {
+export const deserializeShipment = (shipment: JsonApiDocument, included: JsonApiDocument[]): Shipment => {
   const shippingRates = extractRelationships(included, 'shipping_rate', 'shipping_rates', shipment);
 
   return {

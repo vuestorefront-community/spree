@@ -1,10 +1,11 @@
 import { VSF_LOCALE_COOKIE } from '@vue-storefront/core';
 import { VSF_SPREE_CURRENCY_COOKIE } from '../../';
 import { InternationalizationIntegration } from '../../types';
+import { Request, Response } from 'express';
 
 export default function createInternationalizationIntegration(
-  req,
-  res
+  req: Request,
+  res: Response
 ): InternationalizationIntegration {
   const currentCurrency = req.cookies[VSF_SPREE_CURRENCY_COOKIE];
   const currentLocale = req.cookies[VSF_LOCALE_COOKIE];
