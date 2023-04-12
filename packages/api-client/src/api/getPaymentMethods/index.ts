@@ -1,29 +1,21 @@
-import axios from 'axios';
-import type { AxiosResponse } from 'axios';
-import { ApiContext } from '../../types';
+import { ApiContext, PaymentMethods } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializePaymentMethods } from '../serializers/payment';
-import getAuthorizationHeaders from '../authentication/getAuthorizationHeaders';
-import { Logger } from '@vue-storefront/core';
+import { RequiredAnyToken } from '@spree/storefront-api-v2-sdk';
 
-export default async function getPaymentMethods({ client, config }: ApiContext) {
-  try {
-    const token = await getCurrentBearerOrCartToken({ client, config });
-    // TODO check if new spree sdk supports additional params here
-    const currency = await config.internationalization.getCurrency();
+export default async function getPaymentMethods({ client, config }: ApiContext): Promise<PaymentMethods> {
+  const token = await getCurrentBearerOrCartToken({ client, config }) as RequiredAnyToken;
+  const currency = await config.internationalization.getCurrency();
 
-    const response: AxiosResponse<{ data: Array<any> }> = await axios.get(
-      `${config.backendUrl}/api/v2/storefront/checkout/payment_methods`,
-      {
-        params: {
-          currency: currency
-        },
-        headers: getAuthorizationHeaders(token)
-      }
-    );
-    return response.data.data.map(deserializePaymentMethods);
-  } catch (e) {
-    Logger.error(e);
-    throw e;
+  const response = await client.checkout.paymentMethods({
+    ...token,
+    currency
+  });
+
+  if (response.isSuccess()) {
+    const payload = response.success();
+    return deserializePaymentMethods(payload);
+  } else {
+    throw response.fail();
   }
 }

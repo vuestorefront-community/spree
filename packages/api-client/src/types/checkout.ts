@@ -27,4 +27,15 @@ export type ShippingRate = {
 export type Shipment = {
   id: string;
   availableShippingRates: ShippingRate[];
-}
+};
+
+export type PaymentMethod = {
+  id: string
+  type: string
+  label: string
+  description: string
+  preferences: {
+    [key: string]: string
+  }
+};
+export type PaymentMethods = PaymentMethod[];
