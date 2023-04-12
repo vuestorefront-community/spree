@@ -3133,10 +3133,10 @@
   resolved "https://registry.yarnpkg.com/@spree/axios-fetcher/-/axios-fetcher-1.0.0.tgz#d990ed38ee8bc33706f196a797f90117f8bd4d6d"
   integrity sha512-mflTBxdhiYAlVvHqZnzsDOs2w4e3CDIUTa4SvK6X9jZy7VhWhPocS9u8Zo8nsLm77kus2oeq3jcZljbEJEbEhw==
 
-"@spree/storefront-api-v2-sdk@6.0.3":
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/@spree/storefront-api-v2-sdk/-/storefront-api-v2-sdk-6.0.3.tgz#b04886216258fe6565ca0af3fb84b6e7818d6c44"
-  integrity sha512-C2aoaGzQqJRBFxipxecDOk3Sy6auzJsVsqVgJuUJyfkf6vtb78U3sqJPZ80S8XrlnCaw2M6an+Hm5uDW1byzqA==
+"@spree/storefront-api-v2-sdk@6.0.6":
+  version "6.0.6"
+  resolved "https://registry.yarnpkg.com/@spree/storefront-api-v2-sdk/-/storefront-api-v2-sdk-6.0.6.tgz#e6b4a847e6409474bfb0f2fbf50308f6570475b6"
+  integrity sha512-22y90GmxJyIxaXKPmUB/jjMTnlw405B/CIy8jA8ZW9ox2afJTPw6w2Q3tn3pL/M7t/p+IlLIf4jBkoD2oVUSMg==
 
 "@storefront-ui/shared@0.12.3":
   version "0.12.3"
