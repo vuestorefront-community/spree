@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@spree/axios-fetcher": "^1.0.0",
-    "@spree/storefront-api-v2-sdk": "6.0.3",
+    "@spree/storefront-api-v2-sdk": "6.0.6",
     "@vue-storefront/core": "2.7.5"
   },
   "files": [
