@@ -15,6 +15,11 @@ const defaultFeatures = {
     associateGuestCart: true,
     fetchPrimaryVariant: true,
     useMenuApi: true
+  },
+  spree46: {
+    associateGuestCart: true,
+    fetchPrimaryVariant: true,
+    useMenuApi: true
   }
 };
 
@@ -26,7 +31,7 @@ module.exports = {
         backendUrl: process.env.BACKEND_URL,
         assetsUrl: process.env.ASSETS_URL,
         spreeFeatures: {
-          ...defaultFeatures[process.env.SPREE_VERSION || 'spree45'],
+          ...defaultFeatures[process.env.SPREE_VERSION || 'spree46'],
           // Accepted wishlist values:
           // 'enabled' (Spree 4.4+)
           // 'legacy' (Spree older than 4.4 with spree_wishlist gem installed)
