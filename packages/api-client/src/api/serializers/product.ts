@@ -235,11 +235,17 @@ const addHostToImage = (image, config: ApiConfig) => ({
   ...image,
   attributes: {
     ...image.attributes,
-    styles: image.attributes?.styles ? image.attributes.styles.map((style) => ({
-      width: style.width,
-      height: style.height,
-      url: (config.assetsUrl || config.backendUrl) + style.url
-    })) : []
+    styles: image.attributes?.styles ? image.attributes.styles.map((style) => {
+      const host = style.url.startsWith('http://') || style.url.startsWith('https://')
+        ? ''
+        : (config.assetsUrl || config.backendUrl);
+
+      return {
+        width: style.width,
+        height: style.height,
+        url: `${host}${style.url}`
+      };
+    }) : []
   }
 });
 
