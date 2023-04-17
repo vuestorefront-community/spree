@@ -142,6 +142,7 @@ const partialDeserializeProductVariant = (
   _categoriesRef: product.relationships.taxons.data.map((taxon) => taxon.id),
   name: product.attributes.name,
   slug: product.attributes.slug,
+  localizedSlugs: product.attributes.localized_slugs || {},
   sku: product.attributes.sku,
   optionTypes: deserializeOptionTypes(attachments, product),
   optionValues: deserializeOptionValues(attachments, variant),

@@ -217,12 +217,13 @@ import {
   SfColor,
   SfProperty
 } from '@storefront-ui/vue';
-import { computed, useContext } from '@nuxtjs/composition-api';
+import { computed, useContext, watch } from '@nuxtjs/composition-api';
 import { useCart, useWishlist, productGetters, useFacet, facetGetters, useUser, wishlistGetters } from '@vue-storefront/spree';
 import { useUiHelpers, useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import CategoryPageHeader from '~/components/CategoryPageHeader';
+import localizedSlugsToRouteParams from '~/helpers/localizedSlugsToRouteParams';
 
 // TODO(addToCart qty, horizontal): https://github.com/vuestorefront/storefront-ui/issues/1606
 export default {
@@ -267,6 +268,13 @@ export default {
         await removeItemFromWishlist({ product });
       }
     };
+
+    watch(result, (value) => {
+      if (value && value.data && Object.keys(value.data.categories.current.localizedSlugs).length) {
+        const routeParams = localizedSlugsToRouteParams(value.data.categories.current.localizedSlugs);
+        context.store.dispatch('i18n/setRouteParams', routeParams);
+      }
+    }, { immediate: true, deep: true });
 
     onSSR(async () => {
       await search(th.getFacetsFromURL());

@@ -41,6 +41,9 @@ export type ProductVariant = {
   _categoriesRef: string[];
   name: string;
   slug: string;
+  localizedSlugs: {
+    [key: string]: string;
+  };
   sku: string;
   images: Image[];
   properties: Property[];

@@ -1,5 +1,5 @@
-import { CategoryGetters, AgnosticCategoryTree, AgnosticBreadcrumb } from '@vue-storefront/core';
-import { Category } from '@vue-storefront/spree-api/src/types';
+import { CategoryGetters, AgnosticBreadcrumb } from '@vue-storefront/core';
+import { Category, AgnosticCategoryTree } from './../../../api-client/src/types';
 
 export const getCategoryTree = (categories: any): AgnosticCategoryTree => {
   const { root, current } = categories;
@@ -7,6 +7,7 @@ export const getCategoryTree = (categories: any): AgnosticCategoryTree => {
   const itemToTree = (category: Category) => ({
     label: category.name,
     slug: category.slug,
+    localizedSlugs: category.localizedSlugs,
     items: category.items.map(itemToTree),
     isCurrent: category.id === current.id
   });

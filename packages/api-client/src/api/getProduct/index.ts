@@ -18,7 +18,7 @@ export default async function getProduct({ client, config }: ApiContext, { slug 
     {
       id: slug,
       fields: {
-        product: 'name,slug,sku,description,primary_variant,default_variant,variants,option_types,product_properties,taxons',
+        product: 'name,slug,localized_slugs,sku,description,primary_variant,default_variant,variants,option_types,product_properties,taxons',
         variant: 'sku,price,display_price,in_stock,product,images,option_values,is_master'
       },
       include,
