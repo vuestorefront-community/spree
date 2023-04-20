@@ -5,3 +5,8 @@ export type Menu = {
     items?: Menu[]
     isDisabled?: boolean
 };
+
+export type GetMenuParams = {
+    menuType: string
+    menuName: string
+};

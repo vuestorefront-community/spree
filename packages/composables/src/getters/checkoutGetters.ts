@@ -9,7 +9,7 @@ export const getShippingMethodDescription = (shippingMethod: ShippingRate): stri
 
 export const getShippingMethodPrice = (shippingMethod: ShippingRate): string => shippingMethod?.cost || '';
 
-export const getFormattedPrice = (price: number) => String(price);
+export const getFormattedPrice = (price: number): string => String(price);
 
 const checkoutGetters = {
   getShippingMethodId,

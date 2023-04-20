@@ -63,6 +63,10 @@ export type ApiContext = {
   config: ApiConfig;
 }
 
+export type PaymentConfirmationData = {
+  clientSecret: string
+};
+
 export type GetProductsOptionTypeFilter = {
   optionTypeName: string;
   optionValueId: number;
@@ -95,6 +99,17 @@ export type ResetPasswordParams = {
   password: string;
 };
 
+export type LogInParams = {
+  username: string
+  password: string
+  guestCartToken: string
+};
+
 export type GetOrderParams = {
   orderId: string;
+};
+
+export type RemoveFromCartParams = {
+  lineItemId: string
+  token: string
 };

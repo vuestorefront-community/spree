@@ -1,5 +1,5 @@
 import type { IOAuthToken } from '@spree/storefront-api-v2-sdk';
-import { ApiConfig, ApiContext } from '../../types';
+import { ApiConfig, ApiContext, LogInParams } from '../../types';
 
 async function associateCart(client, config: ApiConfig, guestCartToken: string, bearerToken: IOAuthToken) {
   const response = await client.cart.associateGuestCart({
@@ -12,9 +12,10 @@ async function associateCart(client, config: ApiConfig, guestCartToken: string, 
   }
 }
 
-export default async function logIn({ client, config }: ApiContext, params): Promise<void> {
-  const { username, password, guestCartToken } = params;
-
+export default async function logIn(
+  { client, config }: ApiContext,
+  { username, password, guestCartToken }: LogInParams
+): Promise<void> {
   const response = await client.authentication.getToken({ username, password });
 
   if (response.isSuccess()) {

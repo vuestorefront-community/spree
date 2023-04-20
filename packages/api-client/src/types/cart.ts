@@ -1,3 +1,4 @@
+import { RequiredAnyToken } from '@spree/storefront-api-v2-sdk';
 import { Address } from './checkout';
 
 export type LineItem = {
@@ -57,6 +58,11 @@ export type ApplyCouponParams = {
   couponCode: string;
 };
 
+export type RemoveCouponParams = {
+  token: RequiredAnyToken
+  couponCode: string
+};
+
 export type ClearCartParams = {
   token: string;
 }
@@ -64,4 +70,10 @@ export type ClearCartParams = {
 export type GetChangeCartParams = {
   currency: string;
   newCurrency: string;
+}
+
+export type UpdateItemQuantityParams = {
+  lineItemId: string
+  quantity: number
+  token: string
 }

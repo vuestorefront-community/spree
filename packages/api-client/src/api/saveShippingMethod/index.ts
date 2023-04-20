@@ -1,10 +1,17 @@
 import { Logger } from '@vue-storefront/core';
-import { ApiContext } from '../../types';
+import {
+  ApiContext,
+  Shipment,
+  SaveShippingMethodParams
+} from '../../types';
 import type { RequiredAnyToken } from '@spree/storefront-api-v2-sdk';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import { deserializeCartShipments } from '../serializers/shipping';
 
-export default async ({ client, config }: ApiContext, { selectedShippingRates }) => {
+export default async (
+  { client, config }: ApiContext,
+  { selectedShippingRates }: SaveShippingMethodParams
+): Promise<Shipment[]> => {
   try {
     const token = await getCurrentBearerOrCartToken({ client, config }) as RequiredAnyToken;
     const currency = await config.internationalization.getCurrency();

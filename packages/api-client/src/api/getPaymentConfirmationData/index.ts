@@ -4,8 +4,9 @@ import { ApiContext } from '../../types';
 import getCurrentBearerOrCartToken from '../authentication/getCurrentBearerOrCartToken';
 import getAuthorizationHeaders from '../authentication/getAuthorizationHeaders';
 import { Logger } from '@vue-storefront/core';
+import { PaymentConfirmationData } from '../../types';
 
-export default async function getPaymentConfirmationData({ client, config }: ApiContext) {
+export default async function getPaymentConfirmationData({ client, config }: ApiContext): Promise<PaymentConfirmationData> {
   try {
     const token = await getCurrentBearerOrCartToken({ client, config });
     const currency = await config.internationalization.getCurrency();

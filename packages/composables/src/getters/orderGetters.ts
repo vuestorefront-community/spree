@@ -25,7 +25,7 @@ export const getItemQty = (item: OrderItem): number => item?.qty || 0;
 
 export const getItemPrice = (item: OrderItem): number => item?.price?.current || 0;
 
-export const getFormattedPrice = (price: number) => String(price);
+export const getFormattedPrice = (price: number): string => String(price);
 
 export const getOrdersTotal = (orders: any): number => orders?.length || 0;
 
