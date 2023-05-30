@@ -1,6 +1,6 @@
 {
   "name": "@vue-storefront/spree",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "sideEffects": false,
   "main": "lib/index.cjs.js",
@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@vue-storefront/core": "2.7.5",
-    "@vue-storefront/spree-api": "1.4.0",
+    "@vue-storefront/spree-api": "1.5.0",
     "lodash": "^4.17.21"
   },
   "peerDependencies": {

@@ -1,6 +1,6 @@
 {
   "name": "@vue-storefront/spree-api",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "sideEffects": false,
   "server": "server/index.js",
