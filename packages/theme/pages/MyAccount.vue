@@ -34,7 +34,7 @@
         <NuxtLink to="/my-account/saved-addresses">{{ $t('pages.my_account.content_page_title_saved_addresses') }}</NuxtLink>
         <h2>{{ $t('pages.my_account.content_category_title_order_details') }}</h2>
         <NuxtLink to="/my-account/order-history">{{ $t('pages.my_account.content_page_title_order_history') }}</NuxtLink>
-        <button class="my-account__logout" @click="handleLogout">{{ $t('pages.my_account.content_page_title_log_out') }}</button>
+        <TextButton @click="handleLogout">{{ $t('pages.my_account.content_page_title_log_out') }}</TextButton>
       </div>
       <div class="my-account__view">
         <NuxtChild />
@@ -52,6 +52,7 @@ import MyProfile from './MyAccount/MyProfile';
 import SavedAddressesDetails from './MyAccount/SavedAddressesDetails';
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
+import TextButton from './../components/TextButton';
 
 export default {
   name: 'MyAccount',
@@ -63,7 +64,8 @@ export default {
     MyProfile,
     SavedAddressesDetails,
     MyNewsletter,
-    OrderHistory
+    OrderHistory,
+    TextButton
   },
   middleware: ['is-authenticated', 'my-profile'],
   setup(props, context) {
@@ -139,14 +141,6 @@ export default {
   &__view {
     width: calc(100% - var(--sidebar-width));
     padding: 2rem;
-  }
-  &__logout {
-    cursor: pointer;
-    outline: none;
-    border: none;
-    background: transparent;
-    padding: 0;
-    font-size: inherit;
   }
 }
 </style>
