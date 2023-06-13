@@ -14,30 +14,21 @@
       <div v-if="!isPasswordChanged">
         <ValidationObserver v-slot="{ handleSubmit }" key="log-in">
           <form class="form" @submit.prevent="handleSubmit(setNewPassword)">
-            <ValidationProvider rules="required" v-slot="{ errors }">
-              <SfInput
-                v-e2e="'reset-password-modal-password'"
-                v-model="form.password"
-                :valid="!errors[0]"
-                :errorMessage="errors[0]"
-                :label="$t('pages.reset_password.password')"
-                name="password"
-                type="password"
-                class="form__element"
-              />
-            </ValidationProvider>
-            <ValidationProvider rules="required" v-slot="{ errors }">
-              <SfInput
-                v-e2e="'reset-password-modal-password-repeat'"
-                v-model="form.repeatPassword"
-                :valid="!errors[0]"
-                :errorMessage="errors[0]"
-                :label="$t('pages.reset_password.repeat_password')"
-                name="repeat-password"
-                type="password"
-                class="form__element"
-              />
-            </ValidationProvider>
+            <ValidatedInput
+              v-model="form.password"
+              :label="$t('pages.reset_password.password')"
+              name="password"
+              type="password"
+              rules="required"
+              v-e2e="'reset-password-modal-password'"
+            />
+            <ValidatedInput
+              v-model="form.repeatPassword"
+              :label="$t('pages.reset_password.repeat_password')"
+              name="repeat-password"
+              type="password"
+              v-e2e="'reset-password-modal-password-repeat'"
+            />
             <div v-if="passwordMatchError || forgotPasswordError.setNew">
               {{ passwordMatchError || forgotPasswordError.setNew.message }}
             </div>
@@ -67,8 +58,9 @@
 import { SfModal, SfButton, SfLoader, SfBar, SfInput } from '@storefront-ui/vue';
 import { ref, computed, useRoute } from '@nuxtjs/composition-api';
 import { useForgotPassword, forgotPasswordGetters } from '@vue-storefront/spree';
-import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import { ValidationObserver, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
+import ValidatedInput from '~/components/ValidatedInputs/ValidatedInput';
 
 export default {
   name: 'ResetPassword',
@@ -84,7 +76,7 @@ export default {
     SfLoader,
     SfBar,
     SfInput,
-    ValidationProvider,
+    ValidatedInput,
     ValidationObserver
   },
   created() {

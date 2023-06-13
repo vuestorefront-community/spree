@@ -6,41 +6,29 @@
       @submit.prevent="handleSubmit(submitForm)"
     >
       <div class="form__horizontal">
-        <ValidationProvider
+        <ValidatedInput
+          v-model="form.newPassword"
+          :label="$t('components.my_account.password_reset_form.new_password_label')"
+          name="newPassword"
+          type="password"
           rules="required|password"
-          v-slot="{ errors }"
-          class="form__element"
           vid="confirmation"
-        >
-          <SfInput
-            type="password"
-            data-cy="password-reset-input_newPassword"
-            v-model="form.newPassword"
-            name="newPassword"
-            :label="$t('components.my_account.password_reset_form.new_password_label')"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
+          required
+          fullWidth
+          data-cy="password-reset-input_newPassword"
+        />
       </div>
       <div class="form__horizontal">
-        <ValidationProvider
+        <ValidatedInput
+          v-model="form.newPasswordConfirmation"
+          :label="$t('components.my_account.password_reset_form.confirm_password_label')"
+          name="newPasswordConfirmation"
+          type="password"
           rules="required|password|confirmed:confirmation"
-          v-slot="{ errors }"
-          class="form__element"
-        >
-          <SfInput
-            type="password"
-            data-cy="password-reset-input_newPasswordConfirmation"
-            v-model="form.newPasswordConfirmation"
-            name="newPasswordConfirmation"
-            :label="$t('components.my_account.password_reset_form.confirm_password_label')"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
+          required
+          fullWidth
+          data-cy="password-reset-input_newPasswordConfirmation"
+        />
       </div>
       <SfButton class="form__button">
         {{ "Change password" }}
@@ -56,9 +44,10 @@ import {
   SfSelect
 } from '@storefront-ui/vue';
 import { required, confirmed } from 'vee-validate/dist/rules';
-import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import { ValidationObserver, extend } from 'vee-validate';
 import { reactive} from '@nuxtjs/composition-api';
 import { useUser } from '@vue-storefront/spree';
+import ValidatedInput from '~/components/ValidatedInputs/ValidatedInput';
 
 export default {
   name: 'PasswordResetForm',
@@ -66,7 +55,7 @@ export default {
     SfInput,
     SfButton,
     SfSelect,
-    ValidationProvider,
+    ValidatedInput,
     ValidationObserver
   },
   password: {
@@ -111,11 +100,11 @@ export default {
 
 <style lang='scss' scoped>
 .form {
-  &__element {
+  ::v-deep &__element {
     display: block;
     margin-bottom: var(--spacer-base);
   }
-  &__select {
+  ::v-deep &__select {
     display: flex;
     align-items: center;
     --select-option-font-size: var(--font-size--lg);

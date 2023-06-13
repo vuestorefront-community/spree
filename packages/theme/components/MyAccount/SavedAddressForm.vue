@@ -6,52 +6,33 @@
       @submit.prevent="handleSubmit(submitForm)"
     >
       <div class="form__horizontal">
-        <ValidationProvider
-          rules="required|min:2"
-          v-slot="{ errors }"
-          class="form__element"
-        >
-          <SfInput
-            data-cy="savedAddress-details-input_firstName"
-            v-model="form.firstName"
-            name="firstName"
-            :label="$t('components.my_account.saved_address_form.first_name_label')"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          rules="required|min:2"
-          v-slot="{ errors }"
-          class="form__element"
-        >
-          <SfInput
-            data-cy="savedAddress-details-input_lastName"
-            v-model="form.lastName"
-            name="lastName"
-            :label="$t('components.my_account.saved_address_form.last_name_label')"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-      </div>
-      <ValidationProvider
-        rules="required|min:2"
-        v-slot="{ errors }"
-        class="form__element"
-      >
-        <SfInput
-          data-cy="savedAddress-details-input_streetName"
-          v-model="form.addressLine1"
-          name="streetName"
-          :label="$t('components.my_account.saved_address_form.street_label')"
+        <ValidatedInput
+          v-model="form.firstName"
+          :label="$t('components.my_account.saved_address_form.first_name_label')"
+          name="firstName"
           required
-          :valid="!errors[0]"
-          :errorMessage="errors[0]"
+          horizontal
+          rules="required|min:2"
+          data-cy="savedAddress-details-input_firstName"
         />
-      </ValidationProvider>
+        <ValidatedInput
+          v-model="form.lastName"
+          :label="$t('components.my_account.saved_address_form.last_name_label')"
+          name="lastName"
+          required
+          horizontal
+          rules="required|min:2"
+          data-cy="savedAddress-details-input_lastName"
+        />
+      </div>
+      <ValidatedInput
+        v-model="form.addressLine1"
+        :label="$t('components.my_account.saved_address_form.street_label')"
+        name="streetName"
+        required
+        rules="required|min:2"
+        data-cy="savedAddress-details-input_streetName"
+      />
       <SfInput
         data-cy="savedAddress-details-input_apartment"
         v-model="form.addressLine2"
@@ -60,104 +41,77 @@
         class="form__element"
       />
       <div class="form__horizontal">
-        <ValidationProvider
+        <ValidatedInput
+          v-model="form.city"
+          :label="$t('components.my_account.saved_address_form.city_label')"
+          name="city"
+          required
+          horizontal
           rules="required|min:2"
-          v-slot="{ errors }"
-          class="form__element"
-        >
-          <SfInput
-            data-cy="savedAddress-details-input_city"
-            v-model="form.city"
-            name="city"
-            :label="$t('components.my_account.saved_address_form.city_label')"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          :rules="`required|oneOf:${states.map(s => s.name).join(',')}`"
+          data-cy="savedAddress-details-input_city"
+        />
+
+        <ValidatedSelect
           v-if="states && states.length > 0"
-          v-slot="{ errors }"
-          class="form__element"
+          v-model="form.state"
+          :label="$t('components.my_account.saved_address_form.state_label')"
+          name="state"
+          slim
+          horizontal
+          :required="isStateRequired"
+          :rules="`required|oneOf:${states.map(s => s.name).join(',')}`"
+          class="form__select sf-select--underlined"
+          data-cy="savedAddress-details-input_state"
         >
-          <SfSelect
-            data-cy="savedAddress-details-input_state"
-            class="form__select sf-select--underlined"
-            v-model="form.state"
-            name="state"
-            :label="$t('components.my_account.saved_address_form.state_label')"
-            :required="isStateRequired"
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
+          <SfSelectOption
+            v-for="{ code, name } in states"
+            :key="code"
+            :value="name"
           >
-            <SfSelectOption
-              v-for="{ code, name } in states"
-              :key="code"
-              :value="name"
-            >
-              {{ name }}
-            </SfSelectOption>
-          </SfSelect>
-        </ValidationProvider>
+            {{ name }}
+          </SfSelectOption>
+        </ValidatedSelect>
       </div>
       <div class="form__horizontal">
-        <ValidationProvider
-          rules="required|min:4"
-          v-slot="{ errors }"
-          class="form__element"
-        >
-          <SfInput
-            data-cy="savedAddress-details-input_zipCode"
-            v-model="form.postalCode"
-            name="zipCode"
-            :label="$t('components.my_account.saved_address_form.postal_code_label')"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          v-if="countries"
-          :rules="`required|oneOf:${countries.map(c => c.key).join(',')}`"
-          v-slot="{ errors }"
-          class="form__element"
-        >
-          <SfSelect
-            data-cy="savedAddress-details-select_country"
-            class="form__select sf-select--underlined"
-            v-model="form.country"
-            name="country"
-            :label="$t('components.my_account.saved_address_form.country_label')"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          >
-            <SfSelectOption
-              v-for="{ key, label } in countries"
-              :key="key"
-              :value="key"
-            >
-              {{ label }}
-            </SfSelectOption>
-          </SfSelect>
-        </ValidationProvider>
-      </div>
-      <ValidationProvider
-        rules="required|min:8"
-        v-slot="{ errors }"
-        class="form__element"
-      >
-        <SfInput
-          data-cy="savedAddress-details-input_phoneNumber"
-          v-model="form.phone"
-          name="phone"
-          :label="$t('components.my_account.saved_address_form.phone_number_label')"
+        <ValidatedInput
+          v-model="form.postalCode"
+          :label="$t('components.my_account.saved_address_form.postal_code_label')"
+          name="zipCode"
           required
-          :valid="!errors[0]"
-          :errorMessage="errors[0]"
+          horizontal
+          rules="required|min:4"
+          data-cy="savedAddress-details-input_zipCode"
         />
-      </ValidationProvider>
+
+        <ValidatedSelect
+          v-if="countries"
+          v-model="form.country"
+          :label="$t('components.my_account.saved_address_form.country_label')"
+          name="country"
+          slim
+          horizontal
+          required
+          :rules="`required|oneOf:${countries.map(c => c.key).join(',')}`"
+          class="form__select sf-select--underlined"
+          data-cy="savedAddress-details-select_country"
+        >
+          <SfSelectOption
+            v-for="{ key, label } in countries"
+            :key="key"
+            :value="key"
+          >
+            {{ label }}
+          </SfSelectOption>
+        </ValidatedSelect>
+      </div>
+      <ValidatedInput
+        v-model="form.phone"
+        :label="$t('components.my_account.saved_address_form.phone_number_label')"
+        name="phone"
+        required
+        rules="required|min:8"
+        data-cy="savedAddress-details-input_phoneNumber"
+      />
       <SfCheckbox
         v-model="form.isDefault"
         name="isDefault"
@@ -179,10 +133,12 @@ import {
   SfCheckbox
 } from '@storefront-ui/vue';
 import { required, min, oneOf } from 'vee-validate/dist/rules';
-import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import { ValidationObserver, extend } from 'vee-validate';
 import { reactive, watch, computed, onMounted } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
 import { useCountry } from '@vue-storefront/spree';
+import ValidatedInput from '~/components/ValidatedInputs/ValidatedInput';
+import ValidatedSelect from '~/components/ValidatedInputs/ValidatedSelect';
 
 export default {
   name: 'SavedAddressForm',
@@ -191,7 +147,8 @@ export default {
     SfButton,
     SfSelect,
     SfCheckbox,
-    ValidationProvider,
+    ValidatedInput,
+    ValidatedSelect,
     ValidationObserver
   },
   props: {
@@ -292,7 +249,7 @@ export default {
 
 <style lang='scss' scoped>
 .form {
-  &__element {
+  ::v-deep &__element {
     display: block;
     margin-bottom: var(--spacer-base);
   }
@@ -317,11 +274,7 @@ export default {
       flex-direction: row;
       justify-content: space-between;
     }
-    .form__element {
-      @include for-desktop {
-        flex: 1;
-        margin-right: var(--spacer-lg);
-      }
+    &__input {
       &:last-child {
         margin-right: 0;
       }

@@ -14,57 +14,36 @@
     />
     <form @submit.prevent="handleSubmit(handleFormSubmit)">
       <div v-if="!selectedSavedAddressId" class="form">
-        <ValidationProvider
+        <ValidatedInput
+          v-model="form.firstName"
+          :label="$t('pages.checkout.billing.first_name_label')"
           name="firstName"
-          rules="required|min:2"
-          v-slot="{ errors }"
           slim
-        >
-          <SfInput
-            v-e2e="'billing-firstName'"
-            v-model="form.firstName"
-            :label="$t('pages.checkout.billing.first_name_label')"
-            name="firstName"
-            class="form__element form__element--half"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
+          required
+          rules="required|min:2"
+          class="form__element--half"
+          v-e2e="'billing-firstName'"
+        />
+        <ValidatedInput
+          v-model="form.lastName"
+          :label="$t('pages.checkout.billing.last_name_label')"
           name="lastName"
-          rules="required|min:2"
-          v-slot="{ errors }"
           slim
-        >
-          <SfInput
-            v-e2e="'billing-lastName'"
-            v-model="form.lastName"
-            :label="$t('pages.checkout.billing.last_name_label')"
-            name="lastName"
-            class="form__element form__element--half form__element--half-even"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
+          required
+          rules="required|min:2"
+          class="form__element--half form__element--half-even"
+          v-e2e="'shipping-firstName'"
+        />
+        <ValidatedInput
+          v-model="form.addressLine1"
+          :label="$t('pages.checkout.billing.street_label')"
           name="streetName"
-          rules="required|min:2"
-          v-slot="{ errors }"
           slim
-        >
-          <SfInput
-            v-e2e="'billing-streetName'"
-            v-model="form.addressLine1"
-            :label="$t('pages.checkout.billing.street_label')"
-            name="streetName"
-            class="form__element"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
+          required
+          rules="required|min:2"
+          v-e2e="'billing-streetName'"
+          @click="() => getBackToShippingDetails()"
+        />
         <SfInput
           v-e2e="'billing-apartment'"
           v-model="form.addressLine2"
@@ -72,107 +51,72 @@
           name="apartment"
           class="form__element"
         />
-        <ValidationProvider
+        <ValidatedInput
+          v-model="form.city"
+          :label="$t('pages.checkout.billing.city_label')"
           name="city"
-          rules="required|min:2"
-          v-slot="{ errors }"
           slim
-        >
-          <SfInput
-            v-e2e="'billing-city'"
-            v-model="form.city"
-            :label="$t('pages.checkout.billing.city_label')"
-            name="city"
-            class="form__element"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
+          required
+          rules="required|min:2"
+          v-e2e="'billing-city'"
+        />
+        <ValidatedSelect
+          v-model="form.country"
+          :disabled="isFormSubmitted"
+          :label="$t('pages.checkout.billing.country_label')"
           name="country"
-          rules="required|min:2"
-          v-slot="{ errors }"
           slim
+          required
+          rules="required|min:2"
+          class="form__element--half sf-select--underlined"
+          v-e2e="'billing-country'"
         >
-          <SfSelect
-            v-e2e="'billing-country'"
-            v-model="form.country"
-            :label="$t('pages.checkout.billing.country_label')"
-            name="country"
-            class="form__element form__element--half form__select sf-select--underlined"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
+          <SfSelectOption
+            v-for="countryOption in countries"
+            :key="countryOption.key"
+            :value="countryOption.key"
           >
-            <SfSelectOption
-              v-for="countryOption in countries"
-              :key="countryOption.key"
-              :value="countryOption.key"
-            >
-              {{ countryOption.label }}
-            </SfSelectOption>
-          </SfSelect>
-        </ValidationProvider>
-        <ValidationProvider
+            {{ countryOption.label }}
+          </SfSelectOption>
+        </ValidatedSelect>
+        <ValidatedInput
+          v-model="form.postalCode"
+          :label="$t('pages.checkout.billing.postal_code_label')"
           name="zipCode"
+          slim
+          required
           rules="required|min:2"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'billing-zipcode'"
-            v-model="form.postalCode"
-            :label="$t('pages.checkout.billing.postal_code_label')"
-            name="zipCode"
-            class="form__element form__element--half form__element--half-even"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
+          class="form__element--half form__element--half-even"
+          v-e2e="'billing-zipcode'"
+        />
+        <ValidatedSelect
           v-if="states && states.length > 0"
-          v-slot="{ errors }"
+          v-model="form.state"
+          :label="$t('pages.checkout.billing.state_label')"
           name="state"
+          slim
+          :required="isStateRequired"
           rules="required"
-          slim
+          class="form sf-select--underlined"
         >
-          <SfSelect
-            class="form__element form form__select sf-select--underlined"
-            v-model="form.state"
-            name="state"
-            :label="$t('pages.checkout.billing.state_label')"
-            :required="isStateRequired"
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
+          <SfSelectOption
+            v-for="{ code, name } in states"
+            :key="code"
+            :value="code"
           >
-            <SfSelectOption
-              v-for="{ code, name } in states"
-              :key="code"
-              :value="code"
-            >
-              {{ name }}
-            </SfSelectOption>
-          </SfSelect>
-        </ValidationProvider>
-        <ValidationProvider
+            {{ name }}
+          </SfSelectOption>
+        </ValidatedSelect>
+        <ValidatedInput
+          v-model="form.phone"
+          :label="$t('pages.checkout.billing.phone_number_label')"
           name="phone"
-          rules="required|digits:9"
-          v-slot="{ errors }"
           slim
-        >
-          <SfInput
-            v-e2e="'billing-phone'"
-            v-model="form.phone"
-            :label="$t('pages.checkout.billing.phone_number_label')"
-            name="phone"
-            class="form__element form__element--half"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
+          required
+          rules="required|digits:9"
+          class="form__element--half"
+          v-e2e="'billing-phone'"
+        />
       </div>
       <div class="form">
         <div class="form__action">
@@ -209,8 +153,9 @@ import { ref, watch, computed, onMounted, useRouter } from '@nuxtjs/composition-
 import { onSSR } from '@vue-storefront/core';
 import { useBilling, useCountry, useUser, useUserBilling } from '@vue-storefront/spree';
 import { required, min, digits } from 'vee-validate/dist/rules';
-import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import { ValidationObserver, extend } from 'vee-validate';
 import AddressPicker from '~/components/Checkout/AddressPicker';
+import ValidatedInput from '~/components/ValidatedInputs/ValidatedInput';
 import _ from 'lodash';
 
 export default {
@@ -223,7 +168,7 @@ export default {
     SfRadio,
     SfCheckbox,
     AddressPicker,
-    ValidationProvider,
+    ValidatedInput,
     ValidationObserver
   },
   created() {
@@ -354,7 +299,7 @@ export default {
   margin: var(--spacer-xl) 0 var(--spacer-base) 0;
 }
 .form {
-  &__select {
+  ::v-deep &__select {
     display: flex;
     align-items: center;
     --select-option-font-size: var(--font-size--lg);
@@ -370,22 +315,6 @@ export default {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-  }
-  &__element {
-    margin: 0 0 var(--spacer-xl) 0;
-    @include for-desktop {
-      flex: 0 0 100%;
-    }
-    &--half {
-      @include for-desktop {
-        flex: 1 1 50%;
-      }
-      &-even {
-        @include for-desktop {
-          padding: 0 0 0 var(--spacer-xl);
-        }
-      }
-    }
   }
   &__group {
     display: flex;
